@@ -1,0 +1,224 @@
+
+
+
+
+Network Working Group                                        D. Abraitis
+Internet-Draft                                                 Hostinger
+Intended status: Informational                               May 1, 2019
+Expires: November 2, 2019
+
+
+                       Version Capability for BGP
+                draft-abraitis-bgp-version-capability-00
+
+Abstract
+
+   In this document, we introduce a new BGP capability that allows the
+   advertisement of a BGP speaker's version.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on November 2, 2019.
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+Abraitis                Expires November 2, 2019                [Page 1]
+
+Internet-Draft         Version Capability for BGP               May 2019
+
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
+   3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   2
+   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   3
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   3
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .   4
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
+
+1.  Introduction
+
+   In modern data center designs, we tend to have conventional hosts
+   participating in the routing process.  And the fleet of hosts has
+   different versions of routing daemon.  This means that
+   troubleshooting is a crucial part to quickly identify the root cause.
+   This document introduces new BGP capability to advertise the version
+   of routing daemon.
+
+2.  Specification of Requirements
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+3.  Version Capability
+
+4.  Operation
+
+   The Version capability SHOULD only be used for displaying the version
+   of a speaker in order to make troubleshooting easier.  You have a
+   bunch of routers with a number of upstreams each.  All of them are
+   with a different operating system and routing daemon installed.
+   Assuming that a specific feature is not working or a bug which is not
+   fixed in an appropriate version, would allow us to quickly identify
+   the pattern which versions are affected.  Below is an example of how
+   it looks like with version advertised by a BGP sender:
+
+
+
+
+
+
+
+
+
+
+Abraitis                Expires November 2, 2019                [Page 2]
+
+Internet-Draft         Version Capability for BGP               May 2019
+
+
+u123916+  2804  1.0  0.0 313824 18396 ?        S    21:04   0:00  |   \_ lsphp
+u123916+  2807 25.5  0.0 418288 41812 ?        Ss   21:04   0:00  |   |   \_ lsphp
+u123916+  2882 21.0  0.0 339720 37788 ?        Ss   21:04   0:00  |   |   \_ lsphp
+u465987+  3006  3.0  0.0 313820 18396 ?        S    21:04   0:00  |   \_ lsphp
+u465987+  3014 13.0  0.0 427304 22416 ?        Ss   21:04   0:00  |       \_ lsphp
+root     33925  0.0  0.0  19200   936 ?        S    20:00   0:00  \_ httpd (lscgid)
+apache   33972  9.1  0.1 21475280660 511112 ?  Sl   20:00   5:56  \_ litespeed (lshttpd - #01)
+apache   33975  9.2  0.1 21475273156 488620 ?  Sl   20:00   6:01  \_ litespeed (lshttpd - #02)
+
+
+                                 Figure 1
+
+5.  IANA Considerations
+
+   This memo includes no request to IANA.
+
+   All drafts are required to have an IANA considerations section (see
+   the update of RFC 2434 [I-D.narten-iana-considerations-rfc2434bis]
+   for a guide).  If the draft does not require IANA to do anything, the
+   section contains an explicit statement that this is the case (as
+   above).  If there are no requirements for IANA, the section will be
+   removed during conversion into an RFC by the RFC Editor.
+
+6.  Security Considerations
+
+   All drafts are required to have a security considerations section.
+   See RFC 3552 [RFC3552] for a guide.
+
+7.  References
+
+7.1.  Normative References
+
+   [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+7.2.  Informative References
+
+   [DOMINATION]
+              Mad Dominators, Inc., "Ultimate Plan for Taking Over the
+              World", 1984, <http://www.example.com/dominator.html>.
+
+
+
+
+
+
+
+Abraitis                Expires November 2, 2019                [Page 3]
+
+Internet-Draft         Version Capability for BGP               May 2019
+
+
+   [I-D.narten-iana-considerations-rfc2434bis]
+              Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", draft-narten-iana-
+              considerations-rfc2434bis-09 (work in progress), March
+              2008.
+
+   [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
+              Text on Security Considerations", BCP 72, RFC 3552,
+              DOI 10.17487/RFC3552, July 2003,
+              <https://www.rfc-editor.org/info/rfc3552>.
+
+Appendix A.  Additional Stuff
+
+   This becomes an Appendix.
+
+Author's Address
+
+   Donatas Abraitis
+   Hostinger
+   Jonavos g. 60C
+   Kaunas  44192
+   LT
+
+   Phone: +370 614 18958
+   Email: donatas.abraitis@hostinger.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abraitis                Expires November 2, 2019                [Page 4]
