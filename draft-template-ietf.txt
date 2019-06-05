@@ -63,13 +63,12 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
    3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   2
-   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   3
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   3
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   3
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   3
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .   4
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   4
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
 
 1.  Introduction
@@ -89,22 +88,23 @@ Table of Contents
 
 3.  Version Capability
 
-4.  Operation
+   The Version Capability is a new BGP capability [RFC5492].
 
-   The Version capability SHOULD only be used for displaying the version
-   of a speaker in order to make troubleshooting easier.  You have a
-   bunch of routers with a number of upstreams each.  All of them are
-   with a different operating system and routing daemon installed.
-   Assuming that a specific feature is not working or a bug which is not
-   fixed in an appropriate version, would allow us to quickly identify
-   the pattern which versions are affected.  Below is an example of how
-   it looks like with version advertised by a BGP sender:
+                   +--------------------------------+
+                   |    Version Length (1 octet)    |
+                   +--------------------------------+
+                   |      Version (variable)        |
+                   +--------------------------------+
 
+                                 Figure 1
 
+   Version Length:
 
+      The number of characters in the Version
 
+   Version:
 
-
+      The Version encoded via UTF-8
 
 
 
@@ -114,28 +114,32 @@ Abraitis                Expires November 2, 2019                [Page 2]
 Internet-Draft         Version Capability for BGP               May 2019
 
 
-u123916+  2804  1.0  0.0 313824 18396 ?        S    21:04   0:00  |   \_ lsphp
-u123916+  2807 25.5  0.0 418288 41812 ?        Ss   21:04   0:00  |   |   \_ lsphp
-u123916+  2882 21.0  0.0 339720 37788 ?        Ss   21:04   0:00  |   |   \_ lsphp
-u465987+  3006  3.0  0.0 313820 18396 ?        S    21:04   0:00  |   \_ lsphp
-u465987+  3014 13.0  0.0 427304 22416 ?        Ss   21:04   0:00  |       \_ lsphp
-root     33925  0.0  0.0  19200   936 ?        S    20:00   0:00  \_ httpd (lscgid)
-apache   33972  9.1  0.1 21475280660 511112 ?  Sl   20:00   5:56  \_ litespeed (lshttpd - #01)
-apache   33975  9.2  0.1 21475273156 488620 ?  Sl   20:00   6:01  \_ litespeed (lshttpd - #02)
+4.  Operation
 
+   The Version capability SHOULD only be used for displaying the version
+   of a speaker in order to make troubleshooting easier.  You have a
+   bunch of routers with a number of upstreams each.  All of them are
+   with a different operating system and routing daemon installed.
+   Assuming that a specific feature is not working or a bug which is not
+   fixed in an appropriate version, would allow us to quickly identify
+   the pattern which versions are affected.  Below is an example of
+   implementation in [FRRouting] how it looks like with version
+   advertised by a BGP sender:
 
-                                 Figure 1
+   :~# vtysh -c 'show ip bgp neighbors 192.168.0.1 json' \
+   > | jq '."192.168.0.1".neighborCapabilities.versions'
+   {
+     "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
+     "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+   }
+
+                                 Figure 2
 
 5.  IANA Considerations
 
-   This memo includes no request to IANA.
-
-   All drafts are required to have an IANA considerations section (see
-   the update of RFC 2434 [I-D.narten-iana-considerations-rfc2434bis]
-   for a guide).  If the draft does not require IANA to do anything, the
-   section contains an explicit statement that this is the case (as
-   above).  If there are no requirements for IANA, the section will be
-   removed during conversion into an RFC by the RFC Editor.
+   IANA has assigned capability number 74 for the Version Capability
+   described in this document.  This registration is in the BGP
+   Capability Codes registry.
 
 6.  Security Considerations
 
@@ -146,19 +150,15 @@ apache   33975  9.2  0.1 21475273156 488620 ?  Sl   20:00   6:01  \_ litespeed (
 
 7.1.  Normative References
 
-   [min_ref]  authSurName, authInitials., "Minimal Reference", 2006.
+   [FRRouting]
+              Abraitis, D., "FRRouting - BGP Version Capability", 2019,
+              <https://github.com/ton31337/frr/
+              commit/5fe85a25eb78b02639dbe4dba4c3d4eb7d90851b>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-7.2.  Informative References
-
-   [DOMINATION]
-              Mad Dominators, Inc., "Ultimate Plan for Taking Over the
-              World", 1984, <http://www.example.com/dominator.html>.
-
 
 
 
@@ -170,20 +170,12 @@ Abraitis                Expires November 2, 2019                [Page 3]
 Internet-Draft         Version Capability for BGP               May 2019
 
 
-   [I-D.narten-iana-considerations-rfc2434bis]
-              Narten, T. and H. Alvestrand, "Guidelines for Writing an
-              IANA Considerations Section in RFCs", draft-narten-iana-
-              considerations-rfc2434bis-09 (work in progress), March
-              2008.
+7.2.  Informative References
 
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
               DOI 10.17487/RFC3552, July 2003,
               <https://www.rfc-editor.org/info/rfc3552>.
-
-Appendix A.  Additional Stuff
-
-   This becomes an Appendix.
 
 Author's Address
 
@@ -195,6 +187,14 @@ Author's Address
 
    Phone: +370 614 18958
    Email: donatas.abraitis@hostinger.com
+
+
+
+
+
+
+
+
 
 
 

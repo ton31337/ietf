@@ -9,7 +9,6 @@
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
-<!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -122,13 +121,30 @@
     <section anchor="simple_list" title="Specification of Requirements">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [RFC2119].</t>
+   document are to be interpreted as described in <xref target="RFC2119"></xref>.</t>
     </section>
 
     <section title="Version Capability">
+    <t>The Version Capability is a new BGP capability [RFC5492].</t>
+      <figure align="center" anchor="version_capability">
+        <artwork align="left"><![CDATA[
+                +--------------------------------+
+                |    Version Length (1 octet)    |
+                +--------------------------------+
+                |      Version (variable)        |
+                +--------------------------------+
+            ]]></artwork>
+      </figure>
+      <t>
+        Version Length:
+        <list><t>
+          The number of characters in the Version
+        </t></list></t><t>
+        Version:
+        <list><t>
+          The Version encoded via UTF-8
+        </t></list></t>
     </section>
-
-    <!-- This PI places the pagebreak correctly (before the section title) in the text output. -->
 
     <?rfc needLines="8" ?>
 
@@ -137,33 +153,23 @@
     You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
     Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
     would allow us to quickly identify the pattern which versions are affected.
-    Below is an example of how it looks like with version advertised by a BGP sender:</t>
-      <figure align="center" anchor="xml_happy">
+    Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:</t>
+      <figure align="center" anchor="frr_version">
         <artwork align="left"><![CDATA[
-u123916+  2804  1.0  0.0 313824 18396 ?        S    21:04   0:00  |   \_ lsphp
-u123916+  2807 25.5  0.0 418288 41812 ?        Ss   21:04   0:00  |   |   \_ lsphp
-u123916+  2882 21.0  0.0 339720 37788 ?        Ss   21:04   0:00  |   |   \_ lsphp
-u465987+  3006  3.0  0.0 313820 18396 ?        S    21:04   0:00  |   \_ lsphp
-u465987+  3014 13.0  0.0 427304 22416 ?        Ss   21:04   0:00  |       \_ lsphp
-root     33925  0.0  0.0  19200   936 ?        S    20:00   0:00  \_ httpd (lscgid)
-apache   33972  9.1  0.1 21475280660 511112 ?  Sl   20:00   5:56  \_ litespeed (lshttpd - #01)
-apache   33975  9.2  0.1 21475273156 488620 ?  Sl   20:00   6:01  \_ litespeed (lshttpd - #02)
-
+:~# vtysh -c 'show ip bgp neighbors 192.168.0.1 json' \
+> | jq '."192.168.0.1".neighborCapabilities.versions'
+{
+  "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
+  "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+}
             ]]></artwork>
       </figure>
     </section>
 
-    <!-- Possibly a 'Contributors' section ... -->
-
     <section anchor="IANA" title="IANA Considerations">
-      <t>This memo includes no request to IANA.</t>
-
-      <t>All drafts are required to have an IANA considerations section (see
-      <xref target="I-D.narten-iana-considerations-rfc2434bis">the update of
-      RFC 2434</xref> for a guide). If the draft does not require IANA to do
-      anything, the section contains an explicit statement that this is the
-      case (as above). If there are no requirements for IANA, the section will
-      be removed during conversion into an RFC by the RFC Editor.</t>
+      <t>IANA has assigned capability number 74 for the Version Capability
+   described in this document.  This registration is in the BGP
+   Capability Codes registry.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -192,63 +198,22 @@ apache   33975  9.2  0.1 21475273156 488620 ?  Sl   20:00   6:01  \_ litespeed (
       <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
       &RFC2119;
 
-      <reference anchor="min_ref">
-        <!-- the following is the minimum to make xml2rfc happy -->
-
+      <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/5fe85a25eb78b02639dbe4dba4c3d4eb7d90851b">
         <front>
-          <title>Minimal Reference</title>
+          <title>FRRouting - BGP Version Capability</title>
 
-          <author initials="authInitials" surname="authSurName">
-            <organization></organization>
+          <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
+            <organization abbrev="Hostinger">Hostinger</organization>
           </author>
 
-          <date year="2006" />
+          <date year="2019" />
         </front>
       </reference>
     </references>
 
     <references title="Informative References">
-      <!-- Here we use entities that we defined at the beginning. -->
-
       &RFC3552;
-
-      &I-D.narten-iana-considerations-rfc2434bis;
-
-      <!-- A reference written by by an organization not a person. -->
-
-      <reference anchor="DOMINATION"
-                 target="http://www.example.com/dominator.html">
-        <front>
-          <title>Ultimate Plan for Taking Over the World</title>
-
-          <author>
-            <organization>Mad Dominators, Inc.</organization>
-          </author>
-
-          <date year="1984" />
-        </front>
-      </reference>
     </references>
 
-    <section anchor="app-additional" title="Additional Stuff">
-      <t>This becomes an Appendix.</t>
-    </section>
-
-    <!-- Change Log
-
-v00 2006-03-15  EBD   Initial version
-
-v01 2006-04-03  EBD   Moved PI location back to position 1 -
-                      v3.1 of XMLmind is better with them at this location.
-v02 2007-03-07  AH    removed extraneous nested_list attribute,
-                      other minor corrections
-v03 2007-03-09  EBD   Added comments on null IANA sections and fixed heading capitalization.
-                      Modified comments around figure to reflect non-implementation of
-                      figure indent control.  Put in reference using anchor="DOMINATION".
-                      Fixed up the date specification comments to reflect current truth.
-v04 2007-03-09 AH     Major changes: shortened discussion of PIs,
-                      added discussion of rfc include.
-v05 2007-03-10 EBD    Added preamble to C program example to tell about ABNF and alternative
-                      images. Removed meta-characters from comments (causes problems).  -->
   </back>
 </rfc>
