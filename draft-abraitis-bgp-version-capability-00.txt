@@ -4,7 +4,7 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                               May 1, 2019
+Intended status: Standards Track                             May 1, 2019
 Expires: November 2, 2019
 
 
