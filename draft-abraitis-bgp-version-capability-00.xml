@@ -167,9 +167,9 @@
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA has assigned capability number 74 for the Version Capability
-   described in this document.  This registration is in the BGP
-   Capability Codes registry.</t>
+      <t>IANA is requested to assign a capability number for the Version
+    Capability in this document from the BGP Capabilities Codes
+    registry.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
