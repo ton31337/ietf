@@ -35,7 +35,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-abraitis-bgp-version-capability-01" ipr="trust200902">
+<rfc category="exp" docName="draft-abraitis-bgp-version-capability-01" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -105,23 +105,51 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>In this document, we introduce a new BGP capability that allows the
-   advertisement of a BGP speaker's version.</t>
+      <t>
+        In this document, we introduce a new BGP capability that allows the
+        advertisement of a BGP speaker's version. This new BGP capability is
+        considered experimental and mostly used for testing and development
+        purposes.
+      </t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>In modern data center designs, we tend to have conventional hosts participating in the routing process.
-      And the fleet of hosts has different versions of routing daemon.
-      This means that troubleshooting is a crucial part to quickly identify the root cause.
-      This document introduces new BGP capability to advertise the version of routing daemon.</t>
+      <t>
+        In modern data center designs, we tend to have conventional hosts participating in the routing process.
+        And the fleet of hosts has different versions of routing daemon.
+        This means that troubleshooting is a crucial part to quickly identify the root cause.
+        This document introduces new BGP capability to advertise the version of routing daemon.
+      </t>
+      <t>
+        Despite it is treated as experimental it could be handled separately depending on the routing daemon.
+      </t>
+    </section>
+
+    <section title="Scope of Experimentation">
+      <t>
+        This memo is published as an Experimental RFC. The purpose
+        of the experimental period is to provide the community time
+        to analyze and evaluate the methods defined in this
+        document, particularly with regard to the wide variety of
+        DNS zones in use on the Internet.
+      </t>
+      <t>
+        The duration of the experiment is expected to be no less
+        than two years from the publication of this document.  If
+        the experiment is successful, it is expected that the
+        findings of the experiment will result in an updated document
+        for Standards Track approval.
+      </t>
     </section>
 
     <section anchor="simple_list" title="Specification of Requirements">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in <xref target="RFC2119"></xref>.</t>
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref target="RFC2119"></xref>.
+      </t>
     </section>
 
     <section title="Version Capability">
@@ -149,11 +177,13 @@
     <?rfc needLines="8" ?>
 
     <section title="Operation">
-    <t>The Version capability SHOULD only be used for displaying the version of a speaker in order to make troubleshooting easier.
-    You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
-    Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
-    would allow us to quickly identify the pattern which versions are affected.
-    Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:</t>
+      <t>
+        The Version capability SHOULD only be used for displaying the version of a speaker in order to make troubleshooting easier.
+        You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
+        Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
+        would allow us to quickly identify the pattern which versions are affected.
+        Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:
+      </t>
       <figure align="center" anchor="frr_version">
         <artwork align="left"><![CDATA[
 :~# vtysh -c 'show ip bgp neighbors 192.168.0.1 json' \
@@ -167,14 +197,18 @@
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to assign a capability number for the Version
-    Capability in this document from the BGP Capabilities Codes
-    registry.</t>
+      <t>
+        IANA is requested to assign a capability number for the Version
+        Capability in this document from the BGP Capabilities Codes
+        registry.
+      </t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>All drafts are required to have a security considerations section.
-      See <xref target="RFC3552">RFC 3552</xref> for a guide.</t>
+      <t>
+        All drafts are required to have a security considerations section.
+        See <xref target="RFC3552">RFC 3552</xref> for a guide.
+      </t>
     </section>
   </middle>
 
