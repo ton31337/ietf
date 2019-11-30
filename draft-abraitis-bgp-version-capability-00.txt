@@ -4,12 +4,12 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Standards Track                             May 1, 2019
-Expires: November 2, 2019
+Intended status: Informational                          December 1, 2019
+Expires: June 3, 2020
 
 
                        Version Capability for BGP
-                draft-abraitis-bgp-version-capability-00
+                draft-abraitis-bgp-version-capability-03
 
 Abstract
 
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 2, 2019.
+   This Internet-Draft will expire on June 3, 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Abraitis                Expires November 2, 2019                [Page 1]
+Abraitis                  Expires June 3, 2020                  [Page 1]
 
-Internet-Draft         Version Capability for BGP               May 2019
+Internet-Draft         Version Capability for BGP          December 2019
 
 
 Table of Contents
@@ -66,10 +66,10 @@ Table of Contents
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   3
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   3
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
      7.2.  Informative References  . . . . . . . . . . . . . . . . .   4
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
 1.  Introduction
 
@@ -83,12 +83,16 @@ Table of Contents
 2.  Specification of Requirements
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [RFC2119].
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 3.  Version Capability
 
-   The Version Capability is a new BGP capability [RFC5492].
+   The Version Capability is a new BGP capability [RFC5492].  The
+   implementation is specific to the vendor.  The version is
+   unstructured and can be defined in any format the vendor decides.
 
                    +--------------------------------+
                    |    Version Length (1 octet)    |
@@ -102,21 +106,21 @@ Table of Contents
 
       The number of characters in the Version
 
+
+
+
+Abraitis                  Expires June 3, 2020                  [Page 2]
+
+Internet-Draft         Version Capability for BGP          December 2019
+
+
    Version:
 
       The Version encoded via UTF-8
 
-
-
-
-Abraitis                Expires November 2, 2019                [Page 2]
-
-Internet-Draft         Version Capability for BGP               May 2019
-
-
 4.  Operation
 
-   The Version capability SHOULD only be used for displaying the version
+   The Version capability MUST only be used for displaying the version
    of a speaker in order to make troubleshooting easier.  You have a
    bunch of routers with a number of upstreams each.  All of them are
    with a different operating system and routing daemon installed.
@@ -126,8 +130,8 @@ Internet-Draft         Version Capability for BGP               May 2019
    implementation in [FRRouting] how it looks like with version
    advertised by a BGP sender:
 
-   :~# vtysh -c 'show ip bgp neighbors 192.168.0.1 json' \
-   > | jq '."192.168.0.1".neighborCapabilities.versions'
+   :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+   > | jq '."198.51.100.1".neighborCapabilities.versions'
    {
      "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
      "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
@@ -137,14 +141,57 @@ Internet-Draft         Version Capability for BGP               May 2019
 
 5.  IANA Considerations
 
-   IANA has assigned capability number 74 for the Version Capability
-   described in this document.  This registration is in the BGP
-   Capability Codes registry.
+   IANA maintains the "Border Gateway Protocol (BGP) Parameters"
+   registry with a subregistry called "Capabilities Codes".  IANA is
+   requested to assign a capability number from the First Come First
+   Served range for the Version Capability in this document as follows:
+
+   +-------+-----------------+-----------------------------------------+
+   | Value |   Description   |                Reference                |
+   +-------+-----------------+-----------------------------------------+
+   |  TBD  |     Version     | [draft-abraitis-bgp-version-capability] |
+   |       |    Capability   |                                         |
+   +-------+-----------------+-----------------------------------------+
+
+                        Table 1: Version Capability
 
 6.  Security Considerations
 
-   All drafts are required to have a security considerations section.
-   See RFC 3552 [RFC3552] for a guide.
+   The Version Capability can be treated as sensitive information, thus
+   it would be easier for an attacker to exploit by knowing the specific
+   version of the BGP speaker.  This information can be gathered in BGP
+   OPEN messages.
+
+
+
+
+Abraitis                  Expires June 3, 2020                  [Page 3]
+
+Internet-Draft         Version Capability for BGP          December 2019
+
+
+   The Version Capability MUST be configurable with a vendor-specific
+   knob to be able to enable or disable the capability.  The vendor
+   might implement to disable this capability per neighbor.
+
+   It would be safe to enable this for iBGP or inside the same tenant
+   where you have full control and the BGP speaker is behind exit
+   points.
+
+   The Version Capability information can be gathered in BGP OPEN
+   messages.
+
+   Modifying the information advertised by a router might lead to
+   attacks including bogus software upgrades and also might mask the
+   causes of faults in the network.
+
+   Advertising which versions of code and from which vendor it comes may
+   facilitate a number of social-engineering attacks.
+
+   Sensitive information leaks can be minimized by using the [RFC5082]
+   mechanism or firewalls to filter out TCP 179 port from untrusted
+   networks.  This capability can be disabled per neighbor, thus the
+   sensitive information can't be disclosed to untrusted neighbors.
 
 7.  References
 
@@ -160,22 +207,24 @@ Internet-Draft         Version Capability for BGP               May 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-
-
-Abraitis                Expires November 2, 2019                [Page 3]
-
-Internet-Draft         Version Capability for BGP               May 2019
-
-
 7.2.  Informative References
 
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
               DOI 10.17487/RFC3552, July 2003,
               <https://www.rfc-editor.org/info/rfc3552>.
+
+
+
+
+
+
+
+
+Abraitis                  Expires June 3, 2020                  [Page 4]
+
+Internet-Draft         Version Capability for BGP          December 2019
+
 
 Author's Address
 
@@ -221,4 +270,11 @@ Author's Address
 
 
 
-Abraitis                Expires November 2, 2019                [Page 4]
+
+
+
+
+
+
+
+Abraitis                  Expires June 3, 2020                  [Page 5]
