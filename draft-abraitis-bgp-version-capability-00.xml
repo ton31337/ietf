@@ -38,7 +38,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-abraitis-bgp-version-capability-03" ipr="trust200902">
+<rfc category="info" docName="draft-abraitis-bgp-version-capability-04" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -82,7 +82,7 @@
       </address>
     </author>
 
-    <date month="December" year="2019" />
+    <date month="February" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -121,7 +121,7 @@
         In modern data center designs, we tend to have conventional hosts participating in the routing process.
         And the fleet of hosts has different versions of routing daemon.
         This means that troubleshooting is a crucial part to quickly identify the root cause.
-        This document introduces new BGP capability to advertise the version of routing daemon.
+        This document introduces the new BGP capability to advertise the version of the routing daemon.
       </t>
     </section>
 
@@ -165,12 +165,28 @@
 
     <section title="Operation">
       <t>
-        The Version capability MUST only be used for displaying the version of a speaker in order to make troubleshooting easier.
+        The Version capability MUST only be used for displaying the version of a speaker to make troubleshooting easier.
         You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
         Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
         would allow us to quickly identify the pattern which versions are affected.
         Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:
       </t>
+      <figure align="center" anchor="frr_failed">
+        <artwork align="left"><![CDATA[
+:~# vtysh -c 'show ip bgp summary failed'
+IPv4 Unicast Summary:
+BGP router identifier 198.51.100.1, local AS number 65001 vrf-id 0
+BGP table version 19
+RIB entries 21, using 4032 bytes of memory
+Peers 1, using 21 KiB of memory
+
+Neighbor        EstdCnt DropCnt ResetTime Reason
+198.51.100.2          3       3  00:00:35 Waiting for peer OPEN (n/a)
+198.51.100.3          3       3  00:01:12 Peer closed the session (FRRouting 7.2-dev-MyOwnFRRVersion-b3ac21114g)
+198.51.100.4          3       3  00:00:14 Peer closed the session (FRRouting 7.3-dev-MyOwnFRRVersion-g4c566878f)
+198.51.100.5          3       3  00:00:45 Peer closed the session (FRRouting 7.4-dev-MyOwnFRRVersion-a25sg503g2)
+            ]]></artwork>
+      </figure>
       <figure align="center" anchor="frr_version">
         <artwork align="left"><![CDATA[
 :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
@@ -260,7 +276,7 @@
       <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
       &RFC2119;
 
-      <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/5fe85a25eb78b02639dbe4dba4c3d4eb7d90851b">
+      <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
         <front>
           <title>FRRouting - BGP Version Capability</title>
 
