@@ -174,17 +174,13 @@
       <figure align="center" anchor="frr_failed">
         <artwork align="left"><![CDATA[
 :~# vtysh -c 'show ip bgp summary failed'
-IPv4 Unicast Summary:
-BGP router identifier 198.51.100.1, local AS number 65001 vrf-id 0
-BGP table version 19
-RIB entries 21, using 4032 bytes of memory
-Peers 1, using 21 KiB of memory
-
-Neighbor        EstdCnt DropCnt ResetTime Reason
-198.51.100.2          3       3  00:00:35 Waiting for peer OPEN (n/a)
-198.51.100.3          3       3  00:01:12 Peer closed the session (FRRouting 7.2-dev-MyOwnFRRVersion-b3ac21114g)
-198.51.100.4          3       3  00:00:14 Peer closed the session (FRRouting 7.3-dev-MyOwnFRRVersion-g4c566878f)
-198.51.100.5          3       3  00:00:45 Peer closed the session (FRRouting 7.4-dev-MyOwnFRRVersion-a25sg503g2)
+...
+Neighbor      EstdCnt DropCnt ResetTime Reason
+198.51.100.2        3       3  00:00:35 Waiting for peer OPEN (n/a)
+198.51.100.3        3       3  00:01:12 Peer closed the session (FRRouting 7.2-b3ac21114g)
+198.51.100.4        3       3  00:00:14 Peer closed the session (FRRouting 7.3-g4c566878f)
+198.51.100.5        3       3  00:00:45 Peer closed the session (FRRouting 7.4-a25sg503g2)
+...
             ]]></artwork>
       </figure>
       <figure align="center" anchor="frr_version">
