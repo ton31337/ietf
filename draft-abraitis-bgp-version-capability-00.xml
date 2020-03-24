@@ -38,7 +38,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-abraitis-bgp-version-capability-04" ipr="trust200902">
+<rfc category="info" docName="draft-abraitis-bgp-version-capability-05" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -82,7 +82,7 @@
       </address>
     </author>
 
-    <date month="February" year="2020" />
+    <date month="March" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -141,6 +141,28 @@
       The implementation is specific to the vendor. The version is
       unstructured and can be defined in any format the vendor decides.
     </t>
+    <t>
+      The length of the version SHOULD be limited to 64 bytes. This is the
+      limit to allow other capabilities as much space as they require.
+      The version MUST NOT be empty.
+    </t>
+    <t>
+      This capability is OPTIONAL. The vendor MUST implement a capability
+      switch to enable or disable it.
+    </t>
+    <t>
+      In case you reached 255 bytes of capabilities, you can disable this
+      capability. The capability is designed more to non-production
+      environments where you need more visibility for troubleshooting purposes.
+      It's RECOMMENDED to turn it only inside a single Autonomous System
+      domain or Autonomous System Confederations.
+    </t>
+    <t>
+      Such protocols like LLDP, CDP can provide the same information as well,
+      but in containerized environments, it's very hard and NOT RECOMMENDED
+      run background processes. To minimize operational costs it would help
+      having all the necessary information in place.
+    </t>
       <figure align="center" anchor="version_capability">
         <artwork align="left"><![CDATA[
                 +--------------------------------+
@@ -169,6 +191,12 @@
         You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
         Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
         would allow us to quickly identify the pattern which versions are affected.
+      </t>
+      <t>
+        Enabling this capability REQUIRED bouncing all existing BGP sessions.
+        It MUST be explicitly configured to advertise the Version capability.
+      </t>
+      <t>
         Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:
       </t>
       <figure align="center" anchor="frr_failed">
@@ -241,6 +269,9 @@ Neighbor      EstdCnt DropCnt ResetTime Reason
       <t>
         Advertising which versions of code and from which
         vendor it comes may facilitate a number of social-engineering attacks.
+        A lot of BGP implementations leave TCP/179 open and this could lead
+        to sensitive information disclosure. This capability is NOT RECOMMENDED
+        for eBGP use.
       </t>
       <t>
         Sensitive information leaks can be minimized by using the

@@ -4,12 +4,12 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                         February 11, 2020
-Expires: August 14, 2020
+Intended status: Informational                            March 24, 2020
+Expires: September 25, 2020
 
 
                        Version Capability for BGP
-                draft-abraitis-bgp-version-capability-04
+                draft-abraitis-bgp-version-capability-05
 
 Abstract
 
@@ -31,7 +31,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 14, 2020.
+   This Internet-Draft will expire on September 25, 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Abraitis                 Expires August 14, 2020                [Page 1]
+Abraitis               Expires September 25, 2020               [Page 1]
 
-Internet-Draft         Version Capability for BGP          February 2020
+Internet-Draft         Version Capability for BGP             March 2020
 
 
 Table of Contents
@@ -64,10 +64,10 @@ Table of Contents
    2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
    3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   2
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
      7.2.  Informative References  . . . . . . . . . . . . . . . . .   5
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
@@ -94,6 +94,31 @@ Table of Contents
    implementation is specific to the vendor.  The version is
    unstructured and can be defined in any format the vendor decides.
 
+   The length of the version SHOULD be limited to 64 bytes.  This is the
+   limit to allow other capabilities as much space as they require.  The
+   version MUST NOT be empty.
+
+   This capability is OPTIONAL.  The vendor MUST implement a capability
+   switch to enable or disable it.
+
+   In case you reached 255 bytes of capabilities, you can disable this
+   capability.  The capability is designed more to non-production
+   environments where you need more visibility for troubleshooting
+   purposes.  It's RECOMMENDED to turn it only inside a single
+   Autonomous System domain or Autonomous System Confederations.
+
+
+
+Abraitis               Expires September 25, 2020               [Page 2]
+
+Internet-Draft         Version Capability for BGP             March 2020
+
+
+   Such protocols like LLDP, CDP can provide the same information as
+   well, but in containerized environments, it's very hard and NOT
+   RECOMMENDED run background processes.  To minimize operational costs
+   it would help having all the necessary information in place.
+
                    +--------------------------------+
                    |    Version Length (1 octet)    |
                    +--------------------------------+
@@ -105,14 +130,6 @@ Table of Contents
    Version Length:
 
       The number of characters in the Version
-
-
-
-
-Abraitis                 Expires August 14, 2020                [Page 2]
-
-Internet-Draft         Version Capability for BGP          February 2020
-
 
    Version:
 
@@ -126,9 +143,13 @@ Internet-Draft         Version Capability for BGP          February 2020
    different operating system and routing daemon installed.  Assuming
    that a specific feature is not working or a bug which is not fixed in
    an appropriate version, would allow us to quickly identify the
-   pattern which versions are affected.  Below is an example of
-   implementation in [FRRouting] how it looks like with version
-   advertised by a BGP sender:
+   pattern which versions are affected.
+
+   Enabling this capability REQUIRED bouncing all existing BGP sessions.
+   It MUST be explicitly configured to advertise the Version capability.
+
+   Below is an example of implementation in [FRRouting] how it looks
+   like with version advertised by a BGP sender:
 
 :~# vtysh -c 'show ip bgp summary failed'
 ...
@@ -140,6 +161,14 @@ Neighbor      EstdCnt DropCnt ResetTime Reason
 ...
 
                                  Figure 2
+
+
+
+
+Abraitis               Expires September 25, 2020               [Page 3]
+
+Internet-Draft         Version Capability for BGP             March 2020
+
 
    :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
    > | jq '."198.51.100.1".neighborCapabilities.versions'
@@ -156,19 +185,6 @@ Neighbor      EstdCnt DropCnt ResetTime Reason
    registry with a subregistry called "Capabilities Codes".  IANA is
    requested to assign a capability number from the First Come First
    Served range for the Version Capability in this document as follows:
-
-
-
-
-
-
-
-
-
-Abraitis                 Expires August 14, 2020                [Page 3]
-
-Internet-Draft         Version Capability for BGP          February 2020
-
 
    +-------+-----------------+-----------------------------------------+
    | Value |   Description   |                Reference                |
@@ -201,8 +217,20 @@ Internet-Draft         Version Capability for BGP          February 2020
    attacks including bogus software upgrades and also might mask the
    causes of faults in the network.
 
+
+
+
+
+Abraitis               Expires September 25, 2020               [Page 4]
+
+Internet-Draft         Version Capability for BGP             March 2020
+
+
    Advertising which versions of code and from which vendor it comes may
-   facilitate a number of social-engineering attacks.
+   facilitate a number of social-engineering attacks.  A lot of BGP
+   implementations leave TCP/179 open and this could lead to sensitive
+   information disclosure.  This capability is NOT RECOMMENDED for eBGP
+   use.
 
    Sensitive information leaks can be minimized by using the [RFC5082]
    mechanism or firewalls to filter out TCP 179 port from untrusted
@@ -217,14 +245,6 @@ Internet-Draft         Version Capability for BGP          February 2020
               Abraitis, D., "FRRouting - BGP Version Capability", 2019,
               <https://github.com/ton31337/frr/
               commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b>.
-
-
-
-
-Abraitis                 Expires August 14, 2020                [Page 4]
-
-Internet-Draft         Version Capability for BGP          February 2020
-
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -257,24 +277,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Abraitis                 Expires August 14, 2020                [Page 5]
+Abraitis               Expires September 25, 2020               [Page 5]
