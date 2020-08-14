@@ -257,12 +257,11 @@ Internet-Draft         Version Capability for BGP            August 2020
    requested to assign a capability number from the First Come First
    Served range for the Version Capability in this document as follows:
 
-   +-------+-----------------+-----------------------------------------+
-   | Value |   Description   |                Reference                |
-   +-------+-----------------+-----------------------------------------+
-   |  TBD  |     Version     | [draft-abraitis-bgp-version-capability] |
-   |       |    Capability   |                                         |
-   +-------+-----------------+-----------------------------------------+
+                +-------+--------------------+------------+
+                | Value |    Description     | Reference  |
+                +-------+--------------------+------------+
+                |  TBD  | Version Capability | [This.I-D] |
+                +-------+--------------------+------------+
 
                         Table 1: Version Capability
 
@@ -274,6 +273,7 @@ Internet-Draft         Version Capability for BGP            August 2020
    gathered by inspecting BGP OPEN messages that carry the Version
    Capability defined in this document.  Using encryption to protect the
    information exchanged in BGP sessions SHOULD, therefore, be carefully
+
 
 
 
