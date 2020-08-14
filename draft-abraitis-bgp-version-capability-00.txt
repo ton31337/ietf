@@ -4,8 +4,8 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                            March 24, 2020
-Expires: September 25, 2020
+Intended status: Informational                           August 14, 2020
+Expires: February 15, 2021
 
 
                        Version Capability for BGP
@@ -14,7 +14,11 @@ Expires: September 25, 2020
 Abstract
 
    In this document, we introduce a new BGP capability that allows the
-   advertisement of a BGP speaker's version.
+   advertisement of a BGP speaker's routing daemon version.
+
+   This BGP capability is an optional advertisement.  Implementations
+   are not required to advertise the version nor to process received
+   advertisements.
 
 Status of This Memo
 
@@ -31,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 25, 2020.
+   This Internet-Draft will expire on February 15, 2021.
 
 Copyright Notice
 
@@ -45,40 +49,50 @@ Copyright Notice
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 1]
+
+Internet-Draft         Version Capability for BGP            August 2020
+
+
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
-
-
-
-
-
-
-Abraitis               Expires September 25, 2020               [Page 1]
-
-Internet-Draft         Version Capability for BGP             March 2020
-
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
-   3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   2
-   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   5
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   6
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
-   In modern data center designs, we tend to have conventional hosts
-   participating in the routing process.  And the fleet of hosts has
-   different versions of routing daemon.  This means that
-   troubleshooting is a crucial part to quickly identify the root cause.
-   This document introduces the new BGP capability to advertise the
-   version of the routing daemon.
+   In modern data center designs, we tend to have conventional routers
+   participating in the routing process.  And the fleet of routers has
+   different versions of routing daemon.  This means that knowing which
+   versions of the routing daemons are running the various routers in
+   the network can be a crucial factor in quickly identifying the root
+   cause of any protocol or network problems.
+
+   This BGP capability is an optional advertisement.  Implementations
+   are not required to advertise the version nor to process received
+   advertisements.
+
+   Information about the version of the routing daemon could also be
+   exchanged in protocols such as LLDP and CDP.  However, in
+   containerized environments, it is very hard and not recommended to
+   exchange this information between background processes.  Therefore,
+   and to help minimize operational costs, it is helpful to exchange the
+   routing daemon information between BGP peers directly.
 
 2.  Specification of Requirements
 
@@ -88,36 +102,73 @@ Table of Contents
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+
+
+
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 2]
+
+Internet-Draft         Version Capability for BGP            August 2020
+
+
 3.  Version Capability
 
-   The Version Capability is a new BGP capability [RFC5492].  The
-   implementation is specific to the vendor.  The version is
-   unstructured and can be defined in any format the vendor decides.
+   Capabilities avdertisements with BGP are defined in [RFC5492].  They
+   utilise the BGP Capabilities Optional Parameter that contains one or
+   more triples <Capability Code, Capability Length, Capability Value>.
+   This document defines a new BGP capability, the Version Capability,
+   with Capability Code TBD and Capability Length and Capability Value
+   as described below.
 
-   The length of the version SHOULD be limited to 64 bytes.  This is the
-   limit to allow other capabilities as much space as they require.  The
-   version MUST NOT be empty.
+   The inclusion of the Version Capability is OPTIONAL.  If an
+   implementation supports inclusion of the capability, the
+   implementation MUST include a configuration switch to enable or
+   disable its use, and that switch MUST be off by default.
 
-   This capability is OPTIONAL.  The vendor MUST implement a capability
-   switch to enable or disable it.
+   The Version Capability is intended principally more to non-production
+   environments where more visibility is needed for troubleshooting
+   purposes.  It is NOT RECOMMENDED for use outside single Autonomous
+   System domain or Autonomous System Confederations, except you have a
+   topology with a number of routers each with a separate Autonomous
+   Number.
 
-   In case you reached 255 bytes of capabilities, you can disable this
-   capability.  The capability is designed more to non-production
-   environments where you need more visibility for troubleshooting
-   purposes.  It's RECOMMENDED to turn it only inside a single
-   Autonomous System domain or Autonomous System Confederations.
+   An implementation that does not recognize or support the Version
+   Capability but which receives one MUST respond as described in
+   [RFC5492] by ignoring the option.  An implementation that wishes to
+   complain that its neighbor does not support the Version Capability
+   MAY use the 'Unsupported Capability' Error Subcode of a Notification
+   message as described in [RFC5492].
+
+   The triple for the Version Capability is as follows:
+
+   Capability Code
+
+      TBD by IANA
+
+   Capability Length
+
+      The Capability Length for the Version Capability MUST be greater
+      than zero.  A value of zero SHALL be treated as an encoding error
+      and the entire triple MUST be ignored.
+
+      The Capability Length SHOULD be no greater than 64.  This is the
+      limit to allow other capabilities as much space as they require.
+
+   Capability Value
+
+      The Capability Value field is encoded in UTF-8 [RFC3629].  It is
+      unstructured data and can be formatted in any way that the
+      implementor decides.
 
 
 
-Abraitis               Expires September 25, 2020               [Page 2]
+Abraitis                Expires February 15, 2021               [Page 3]
 
-Internet-Draft         Version Capability for BGP             March 2020
+Internet-Draft         Version Capability for BGP            August 2020
 
-
-   Such protocols like LLDP, CDP can provide the same information as
-   well, but in containerized environments, it's very hard and NOT
-   RECOMMENDED run background processes.  To minimize operational costs
-   it would help having all the necessary information in place.
 
                    +--------------------------------+
                    |    Version Length (1 octet)    |
@@ -165,9 +216,14 @@ Neighbor      EstdCnt DropCnt ResetTime Reason
 
 
 
-Abraitis               Expires September 25, 2020               [Page 3]
+
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 4]
 
-Internet-Draft         Version Capability for BGP             March 2020
+Internet-Draft         Version Capability for BGP            August 2020
 
 
    :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
@@ -221,9 +277,9 @@ Internet-Draft         Version Capability for BGP             March 2020
 
 
 
-Abraitis               Expires September 25, 2020               [Page 4]
+Abraitis                Expires February 15, 2021               [Page 5]
 
-Internet-Draft         Version Capability for BGP             March 2020
+Internet-Draft         Version Capability for BGP            August 2020
 
 
    Advertising which versions of code and from which vendor it comes may
@@ -277,4 +333,4 @@ Author's Address
 
 
 
-Abraitis               Expires September 25, 2020               [Page 5]
+Abraitis                Expires February 15, 2021               [Page 6]

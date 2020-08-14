@@ -82,7 +82,7 @@
       </address>
     </author>
 
-    <date month="March" year="2020" />
+    <date month="August" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -156,32 +156,73 @@
     </section>
 
     <section title="Version Capability">
-    <t>
-      Although this document is not an IETF Standards Track document, it
-      makes use of the terminology from BCP 14 in order to clearly state
-      the implementation behaviors.
-    </t>
-    <t>
-      The Version Capability is a new BGP capability [RFC5492].
-      The implementation is specific to the vendor. The version is
-      unstructured and can be defined in any format the vendor decides.
-    </t>
-    <t>
-      The length of the version SHOULD be limited to 64 bytes. This is the
-      limit to allow other capabilities as much space as they require.
-      The version MUST NOT be empty.
-    </t>
-    <t>
-      This capability is OPTIONAL. The vendor MUST implement a capability
-      switch to enable or disable it.
-    </t>
-    <t>
-      In case you reached 255 bytes of capabilities, you can disable this
-      capability. The capability is designed more to non-production
-      environments where you need more visibility for troubleshooting purposes.
-      It's RECOMMENDED to turn it only inside a single Autonomous System
-      domain or Autonomous System Confederations.
-    </t>
+      <t>
+        Capabilities avdertisements with BGP are defined in [RFC5492].
+        They utilise the BGP Capabilities Optional Parameter that contains
+        one or more triples &lt;Capability Code, Capability Length, Capability Value&gt;.
+        This document defines a new BGP capability, the Version Capability,
+        with Capability Code TBD and Capability Length and Capability Value
+        as described below.
+      </t>
+      <t>
+        The inclusion of the Version Capability is OPTIONAL. If an
+        implementation supports inclusion of the capability, the
+        implementation MUST include a configuration switch to enable or
+        disable its use, and that switch MUST be off by default.
+      </t>
+      <t>
+        The Version Capability is intended principally more to non-production
+        environments where more visibility is needed for troubleshooting
+        purposes. It is NOT RECOMMENDED for use outside single Autonomous
+        System domain or Autonomous System Confederations, except you have
+        a topology with a number of routers each with a separate Autonomous
+        Number.
+      </t>
+      <t>
+        An implementation that does not recognize or support the Version
+        Capability but which receives one MUST respond as described in
+        [RFC5492] by ignoring the option. An implementation that wishes to
+        complain that its neighbor does not support the Version Capability
+        MAY use the 'Unsupported Capability' Error Subcode of a Notification
+        message as described in [RFC5492].
+      </t>
+      <t>
+        The triple for the Version Capability is as follows:
+      </t>
+      <t>
+        Capability Code
+      </t>
+      <t>
+      <list>
+        <t>
+          TBD by IANA
+        </t>
+      </list>
+      </t>
+      <t>Capability Length</t>
+      <t>
+      <list>
+        <t>
+          The Capability Length for the Version Capability MUST
+          be greater than zero. A value of zero SHALL be treated
+          as an encoding error and the entire triple MUST be ignored.
+        </t>
+        <t>
+          The Capability Length SHOULD be no greater than 64. This is the
+          limit to allow other capabilities as much space as they require.
+        </t>
+      </list>
+      </t>
+      <t>Capability Value</t>
+      <t>
+      <list>
+        <t>
+          The Capability Value field is encoded in UTF-8 [RFC3629]. It is
+          unstructured data and can be formatted in any way that the
+          implementor decides.
+        </t>
+      </list>
+      </t>
       <figure align="center" anchor="version_capability">
         <artwork align="left"><![CDATA[
                 +--------------------------------+
