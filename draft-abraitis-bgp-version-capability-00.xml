@@ -112,6 +112,11 @@
         In this document, we introduce a new BGP capability that allows the
         advertisement of a BGP speaker's routing daemon version.
       </t>
+      <t>
+        This BGP capability is an optional advertisement. Implementations are
+        not required to advertise the version nor to process received
+        advertisements.
+      </t>
     </abstract>
   </front>
 
@@ -122,6 +127,11 @@
         And the fleet of hosts has different versions of routing daemon.
         This means that troubleshooting is a crucial part to quickly identify the root cause.
         This document introduces the new BGP capability to advertise the version of the routing daemon.
+      </t>
+      <t>
+        This BGP capability is an optional advertisement. Implementations are
+        not required to advertise the version nor to process received
+        advertisements.
       </t>
     </section>
 
