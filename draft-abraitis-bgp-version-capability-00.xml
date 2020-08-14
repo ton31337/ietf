@@ -241,46 +241,66 @@
         <list><t>
           The Version encoded via UTF-8
         </t></list></t>
+      <section title="Capabilities Length Overflow">
+        <t>
+          As defined in [RFC5492] the total length of capabilities that can be
+          carried by the BGP Capabilities Optionl Paramter is 255 bytes.  If an
+          implementation is constructing a BGP Capabilities Optional Parameter
+          and its length exceeds 255 bytes, it is RECOMMENDED to exclude the
+          Version Capability.  An implementation may optimally achieve this by
+          making the Version Capability the last capablity triple to add to the
+          Parameter, and only adding it if there is sufficient space to do so.
+        </t>
+      </section>
     </section>
 
     <?rfc needLines="8" ?>
 
     <section title="Operation">
       <t>
-        The Version capability MUST only be used for displaying the version of a speaker to make troubleshooting easier.
-        You have a bunch of routers with a number of upstreams each. All of them are with a different operating system and routing daemon installed.
-        Assuming that a specific feature is not working or a bug which is not fixed in an appropriate version,
-        would allow us to quickly identify the pattern which versions are affected.
+        The Version Capability MUST only be used for displaying the version
+        of a BGP speaker's router daemon to make troubleshooting easier.
       </t>
       <t>
-        Enabling this capability REQUIRED bouncing all existing BGP sessions.
-        It MUST be explicitly configured to advertise the Version capability.
+        Consider a group of routers each with a number of upstream nodes, and
+        suppose that each router has a different operating system and
+        different routing daemon at a different version installed.  Assuming
+        that a specific feature is not working or that there is a bug which
+        has not been fixed in a particular version of the code, knowledge of
+        hte routing daemon versions would allow an operator to quickly
+        identify the pattern of which versions are affected.
       </t>
       <t>
-        Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:
+        Enabling (i.e., turning on) this capability requires bouncing all
+        existing BGP sessions, and the feature MUST be explicitly configured
+        before an implementation advertizes the Version Capability.
       </t>
-      <figure align="center" anchor="frr_failed">
-        <artwork align="left"><![CDATA[
-:~# vtysh -c 'show ip bgp summary failed'
-...
-Neighbor      EstdCnt DropCnt ResetTime Reason
-198.51.100.2        3       3  00:00:35 Waiting for peer OPEN (n/a)
-198.51.100.3        3       3  00:01:12 Peer closed the session (FRRouting 7.2-b3ac21114g)
-198.51.100.4        3       3  00:00:14 Peer closed the session (FRRouting 7.3-g4c566878f)
-198.51.100.5        3       3  00:00:45 Peer closed the session (FRRouting 7.4-a25sg503g2)
-...
-            ]]></artwork>
-      </figure>
-      <figure align="center" anchor="frr_version">
-        <artwork align="left"><![CDATA[
-:~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
-> | jq '."198.51.100.1".neighborCapabilities.versions'
-{
-  "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
-  "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
-}
-            ]]></artwork>
-      </figure>
+      <section title="Example Usage">
+          <t>
+            Below is an example of implementation in <xref target="FRRouting"></xref> how it looks like with version advertised by a BGP sender:
+          </t>
+          <figure align="center" anchor="frr_failed">
+            <artwork align="left"><![CDATA[
+    :~# vtysh -c 'show ip bgp summary failed'
+    ...
+    Neighbor EstdCnt DropCnt ResetTime Reason
+    ens192         3       3  00:00:35 Waiting for peer OPEN (n/a)
+    ens224         3       3  00:01:12 Waiting for NHT (FRRouting 7.2)
+    eth0           3       3  00:00:14 Neighbor deleted (FRRouting 7.3)
+    ...
+                ]]></artwork>
+          </figure>
+          <figure align="center" anchor="frr_version">
+            <artwork align="left"><![CDATA[
+    :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+    > | jq '."198.51.100.1".neighborCapabilities.versions'
+    {
+      "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
+      "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+    }
+                ]]></artwork>
+          </figure>
+      </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">

@@ -66,7 +66,9 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
    3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   3
+     3.1.  Capabilities Length Overflow  . . . . . . . . . . . . . .   4
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   4
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
@@ -101,8 +103,6 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
-
-
 
 
 
@@ -186,37 +186,37 @@ Internet-Draft         Version Capability for BGP            August 2020
 
       The Version encoded via UTF-8
 
+3.1.  Capabilities Length Overflow
+
+   As defined in [RFC5492] the total length of capabilities that can be
+   carried by the BGP Capabilities Optionl Paramter is 255 bytes.  If an
+   implementation is constructing a BGP Capabilities Optional Parameter
+   and its length exceeds 255 bytes, it is RECOMMENDED to exclude the
+   Version Capability.  An implementation may optimally achieve this by
+   making the Version Capability the last capablity triple to add to the
+   Parameter, and only adding it if there is sufficient space to do so.
+
 4.  Operation
 
-   The Version capability MUST only be used for displaying the version
-   of a speaker to make troubleshooting easier.  You have a bunch of
-   routers with a number of upstreams each.  All of them are with a
-   different operating system and routing daemon installed.  Assuming
-   that a specific feature is not working or a bug which is not fixed in
-   an appropriate version, would allow us to quickly identify the
-   pattern which versions are affected.
+   The Version Capability MUST only be used for displaying the version
+   of a BGP speaker's router daemon to make troubleshooting easier.
 
-   Enabling this capability REQUIRED bouncing all existing BGP sessions.
-   It MUST be explicitly configured to advertise the Version capability.
+   Consider a group of routers each with a number of upstream nodes, and
+   suppose that each router has a different operating system and
+   different routing daemon at a different version installed.  Assuming
+   that a specific feature is not working or that there is a bug which
+   has not been fixed in a particular version of the code, knowledge of
+   hte routing daemon versions would allow an operator to quickly
+   identify the pattern of which versions are affected.
+
+   Enabling (i.e., turning on) this capability requires bouncing all
+   existing BGP sessions, and the feature MUST be explicitly configured
+   before an implementation advertizes the Version Capability.
+
+4.1.  Example Usage
 
    Below is an example of implementation in [FRRouting] how it looks
    like with version advertised by a BGP sender:
-
-:~# vtysh -c 'show ip bgp summary failed'
-...
-Neighbor      EstdCnt DropCnt ResetTime Reason
-198.51.100.2        3       3  00:00:35 Waiting for peer OPEN (n/a)
-198.51.100.3        3       3  00:01:12 Peer closed the session (FRRouting 7.2-b3ac21114g)
-198.51.100.4        3       3  00:00:14 Peer closed the session (FRRouting 7.3-g4c566878f)
-198.51.100.5        3       3  00:00:45 Peer closed the session (FRRouting 7.4-a25sg503g2)
-...
-
-                                 Figure 2
-
-
-
-
-
 
 
 
@@ -226,12 +226,22 @@ Abraitis                Expires February 15, 2021               [Page 4]
 Internet-Draft         Version Capability for BGP            August 2020
 
 
-   :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
-   > | jq '."198.51.100.1".neighborCapabilities.versions'
-   {
-     "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
-     "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
-   }
+     :~# vtysh -c 'show ip bgp summary failed'
+     ...
+     Neighbor EstdCnt DropCnt ResetTime Reason
+     ens192         3       3  00:00:35 Waiting for peer OPEN (n/a)
+     ens224         3       3  00:01:12 Waiting for NHT (FRRouting 7.2)
+     eth0           3       3  00:00:14 Neighbor deleted (FRRouting 7.3)
+     ...
+
+                                 Figure 2
+
+       :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+       > | jq '."198.51.100.1".neighborCapabilities.versions'
+       {
+         "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
+         "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+       }
 
                                  Figure 3
 
@@ -262,6 +272,16 @@ Internet-Draft         Version Capability for BGP            August 2020
    knob to be able to enable or disable the capability.  The vendor
    might implement to disable this capability per neighbor.
 
+
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 5]
+
+Internet-Draft         Version Capability for BGP            August 2020
+
+
    It would be safe to enable this for iBGP or inside the same tenant
    where you have full control and the BGP speaker is behind exit
    points.
@@ -272,15 +292,6 @@ Internet-Draft         Version Capability for BGP            August 2020
    Modifying the information advertised by a router might lead to
    attacks including bogus software upgrades and also might mask the
    causes of faults in the network.
-
-
-
-
-
-Abraitis                Expires February 15, 2021               [Page 5]
-
-Internet-Draft         Version Capability for BGP            August 2020
-
 
    Advertising which versions of code and from which vendor it comes may
    facilitate a number of social-engineering attacks.  A lot of BGP
@@ -316,6 +327,17 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 Author's Address
 
+
+
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 6]
+
+Internet-Draft         Version Capability for BGP            August 2020
+
+
    Donatas Abraitis
    Hostinger
    Jonavos g. 60C
@@ -333,4 +355,38 @@ Author's Address
 
 
 
-Abraitis                Expires February 15, 2021               [Page 6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abraitis                Expires February 15, 2021               [Page 7]
