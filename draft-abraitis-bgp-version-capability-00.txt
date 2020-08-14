@@ -9,7 +9,7 @@ Expires: February 15, 2021
 
 
                        Version Capability for BGP
-                draft-abraitis-bgp-version-capability-05
+                draft-abraitis-bgp-version-capability-06
 
 Abstract
 
@@ -68,13 +68,13 @@ Table of Contents
    3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   3
      3.1.  Capabilities Length Overflow  . . . . . . . . . . . . . .   4
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   4
+     4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   5
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -116,15 +116,15 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 3.  Version Capability
 
-   Capabilities avdertisements with BGP are defined in [RFC5492].  They
-   utilise the BGP Capabilities Optional Parameter that contains one or
+   Capabilities advertisements with BGP are defined in [RFC5492].  They
+   utilize the BGP Capabilities Optional Parameter that contains one or
    more triples <Capability Code, Capability Length, Capability Value>.
    This document defines a new BGP capability, the Version Capability,
    with Capability Code TBD and Capability Length and Capability Value
    as described below.
 
    The inclusion of the Version Capability is OPTIONAL.  If an
-   implementation supports inclusion of the capability, the
+   implementation supports the inclusion of the capability, the
    implementation MUST include a configuration switch to enable or
    disable its use, and that switch MUST be off by default.
 
@@ -189,12 +189,13 @@ Internet-Draft         Version Capability for BGP            August 2020
 3.1.  Capabilities Length Overflow
 
    As defined in [RFC5492] the total length of capabilities that can be
-   carried by the BGP Capabilities Optionl Paramter is 255 bytes.  If an
-   implementation is constructing a BGP Capabilities Optional Parameter
-   and its length exceeds 255 bytes, it is RECOMMENDED to exclude the
-   Version Capability.  An implementation may optimally achieve this by
-   making the Version Capability the last capablity triple to add to the
-   Parameter, and only adding it if there is sufficient space to do so.
+   carried by the BGP Capabilities Optional Parameter is 255 bytes.  If
+   an implementation is constructing a BGP Capabilities Optional
+   Parameter and its length exceeds 255 bytes, it is RECOMMENDED to
+   exclude the Version Capability.  An implementation may optimally
+   achieve this by making the Version Capability the last capability
+   triple to add to the Parameter, and only adding it if there is
+   sufficient space to do so.
 
 4.  Operation
 
@@ -206,17 +207,16 @@ Internet-Draft         Version Capability for BGP            August 2020
    different routing daemon at a different version installed.  Assuming
    that a specific feature is not working or that there is a bug which
    has not been fixed in a particular version of the code, knowledge of
-   hte routing daemon versions would allow an operator to quickly
+   the routing daemon versions would allow an operator to quickly
    identify the pattern of which versions are affected.
 
    Enabling (i.e., turning on) this capability requires bouncing all
-   existing BGP sessions, and the feature MUST be explicitly configured
+   existing BGP sessions and the feature MUST be explicitly configured
    before an implementation advertizes the Version Capability.
 
-4.1.  Example Usage
 
-   Below is an example of implementation in [FRRouting] how it looks
-   like with version advertised by a BGP sender:
+
+
 
 
 
@@ -225,6 +225,11 @@ Abraitis                Expires February 15, 2021               [Page 4]
 
 Internet-Draft         Version Capability for BGP            August 2020
 
+
+4.1.  Example Usage
+
+   Below is an example of implementation in [FRRouting] how it looks
+   like with version advertised by a BGP sender:
 
      :~# vtysh -c 'show ip bgp summary failed'
      ...
@@ -236,12 +241,12 @@ Internet-Draft         Version Capability for BGP            August 2020
 
                                  Figure 2
 
-       :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
-       > | jq '."198.51.100.1".neighborCapabilities.versions'
-       {
-         "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
-         "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
-       }
+     :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+     > | jq '."198.51.100.1".neighborCapabilities.versions'
+     {
+       "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
+       "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+     }
 
                                  Figure 3
 
@@ -263,17 +268,12 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 6.  Security Considerations
 
-   The Version Capability can be treated as sensitive information, thus
-   it would be easier for an attacker to exploit by knowing the specific
-   version of the BGP speaker.  This information can be gathered in BGP
-   OPEN messages.
-
-   The Version Capability MUST be configurable with a vendor-specific
-   knob to be able to enable or disable the capability.  The vendor
-   might implement to disable this capability per neighbor.
-
-
-
+   The Version Capability should be treated as sensitive information: it
+   could be easier for an attacker to exploit the system if they know
+   the specific version of a BGP speaker.  This information could be
+   gathered by inspecting BGP OPEN messages that carry the Version
+   Capability defined in this document.  Using encryption to protect the
+   information exchanged in BGP sessions SHOULD, therefore, be carefully
 
 
 
@@ -282,22 +282,33 @@ Abraitis                Expires February 15, 2021               [Page 5]
 Internet-Draft         Version Capability for BGP            August 2020
 
 
-   It would be safe to enable this for iBGP or inside the same tenant
-   where you have full control and the BGP speaker is behind exit
-   points.
+   considered when this feature is enabled.  Suitable encryption can be
+   achieved by protecting the BGP session using TLS [RFC5246].
 
-   The Version Capability information can be gathered in BGP OPEN
-   messages.
+   Furthermore, knowledge of which versions of code is running on a
+   given router and from which vendor it comes may facilitate a number
+   of social-engineering attacks.  This further adds to the desire to
+   protect this information through encryption.
 
    Modifying the information advertised by a router might lead to
    attacks including bogus software upgrades and also might mask the
-   causes of faults in the network.
+   causes of faults in the network.  This can be mitigated by protecting
+   the BGP session using TLS.
 
-   Advertising which versions of code and from which vendor it comes may
-   facilitate a number of social-engineering attacks.  A lot of BGP
-   implementations leave TCP/179 open and this could lead to sensitive
-   information disclosure.  This capability is NOT RECOMMENDED for eBGP
-   use.
+   Many BGP implementations leave TCP port 179 open in order to be able
+   to establish sessions with new neighbors.  This could lead to an
+   attack where a rogue BGP implementation attempts to open a session
+   and learns the version information from the responding peer.
+
+   The Version Capability MUST be configurable with a vendor-specific
+   knob to be able to enable or disable the capability.  The vendor
+   might implement to disable this capability per neighbor.
+
+   It would be safe to enable this for iBGP or inside the same tenant
+   where you have full control and the BGP speaker is behind the exit
+   points.
+
+   This capability is NOT RECOMMENDED for eBGP use.
 
    Sensitive information leaks can be minimized by using the [RFC5082]
    mechanism or firewalls to filter out TCP 179 port from untrusted
@@ -308,25 +319,14 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 7.1.  Normative References
 
-   [FRRouting]
-              Abraitis, D., "FRRouting - BGP Version Capability", 2019,
-              <https://github.com/ton31337/frr/
-              commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-7.2.  Informative References
-
-   [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
-              Text on Security Considerations", BCP 72, RFC 3552,
-              DOI 10.17487/RFC3552, July 2003,
-              <https://www.rfc-editor.org/info/rfc3552>.
-
-Author's Address
-
+   [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
+              10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
+              2003, <https://www.rfc-editor.org/info/rfc3629>.
 
 
 
@@ -338,6 +338,25 @@ Abraitis                Expires February 15, 2021               [Page 6]
 Internet-Draft         Version Capability for BGP            August 2020
 
 
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <https://www.rfc-editor.org/info/rfc5246>.
+
+7.2.  Informative References
+
+   [FRRouting]
+              Abraitis, D., "FRRouting - BGP Version Capability", 2019,
+              <https://github.com/ton31337/frr/
+              commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b>.
+
+   [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
+              Text on Security Considerations", BCP 72, RFC 3552,
+              DOI 10.17487/RFC3552, July 2003,
+              <https://www.rfc-editor.org/info/rfc3552>.
+
+Author's Address
+
    Donatas Abraitis
    Hostinger
    Jonavos g. 60C
@@ -346,25 +365,6 @@ Internet-Draft         Version Capability for BGP            August 2020
 
    Phone: +370 614 18958
    Email: donatas.abraitis@hostinger.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
