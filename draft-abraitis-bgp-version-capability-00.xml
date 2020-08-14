@@ -276,9 +276,11 @@
       &RFC2119;
       &RFC3629;
       &RFC5246;
+      &RFC5082;
+      &RFC5492;
+      &RFC8174;
     </references>
     <references title="Informative References">
-      &RFC3552;
       <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
         <front>
           <title>FRRouting - BGP Version Capability</title>
