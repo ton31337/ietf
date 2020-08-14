@@ -135,6 +135,14 @@
         not required to advertise the version nor to process received
         advertisements.
       </t>
+      <t>
+        Information about the version of the routing daemon could also be
+        exchanged in protocols such as LLDP and CDP. However, in containerized
+        environments, it is very hard and not recommended to exchange this
+        information between background processes. Therefore, and to help
+        minimize operational costs, it is helpful to exchange the routing
+        daemon information between BGP peers directly.
+      </t>
     </section>
 
     <section anchor="simple_list" title="Specification of Requirements">
@@ -148,6 +156,11 @@
     </section>
 
     <section title="Version Capability">
+    <t>
+      Although this document is not an IETF Standards Track document, it
+      makes use of the terminology from BCP 14 in order to clearly state
+      the implementation behaviors.
+    </t>
     <t>
       The Version Capability is a new BGP capability [RFC5492].
       The implementation is specific to the vendor. The version is
@@ -168,12 +181,6 @@
       environments where you need more visibility for troubleshooting purposes.
       It's RECOMMENDED to turn it only inside a single Autonomous System
       domain or Autonomous System Confederations.
-    </t>
-    <t>
-      Such protocols like LLDP, CDP can provide the same information as well,
-      but in containerized environments, it's very hard and NOT RECOMMENDED
-      run background processes. To minimize operational costs it would help
-      having all the necessary information in place.
     </t>
       <figure align="center" anchor="version_capability">
         <artwork align="left"><![CDATA[
