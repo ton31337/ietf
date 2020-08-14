@@ -125,10 +125,10 @@
       <t>
         In modern data center designs, we tend to have conventional routers
         participating in the routing process. And the fleet of routers has
-        different versions of routing daemon. This means that troubleshooting
-        is a crucial part to quickly identify the root cause. This document
-        introduces the new BGP capability to advertise the version of the
-        routing daemon.
+        different versions of routing daemon. This means that knowing which
+        versions of the routing daemons are running the various routers in
+        the network can be a crucial factor in quickly identifying the root
+        cause of any protocol or network problems.
       </t>
       <t>
         This BGP capability is an optional advertisement. Implementations are
