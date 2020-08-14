@@ -17,7 +17,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="info" docName="draft-abraitis-bgp-version-capability-06" ipr="trust200902">
+<rfc category="info" docName="draft-abraitis-bgp-version-capability-07" ipr="trust200902">
   <front>
     <title abbrev="Version Capability for BGP">Version Capability for BGP</title>
     <author fullname="Donatas Abraitis" initials="D.Abraitis" surname="Abraitis">
@@ -74,6 +74,11 @@
     </section>
 
     <section title="Version Capability">
+      <t>
+        Although this document is not an IETF Standards Track document, it
+        makes use of the terminology from BCP 14 in order to clearly state
+        the implementation behaviors.
+      </t>
       <t>
         Capabilities advertisements with BGP are defined in [RFC5492].
         They utilize the BGP Capabilities Optional Parameter that contains
