@@ -4,11 +4,11 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                           August 14, 2020
-Expires: February 15, 2021
+Intended status: Informational                           August 29, 2020
+Expires: March 2, 2021
 
 
-                       Version Capability for BGP
+                  Software Version Capability for BGP
                 draft-abraitis-bgp-version-capability-07
 
 Abstract
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 15, 2021.
+   This Internet-Draft will expire on March 2, 2021.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Abraitis                Expires February 15, 2021               [Page 1]
+Abraitis                  Expires March 2, 2021                 [Page 1]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -65,7 +65,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
-   3.  Version Capability  . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Software Version Capability . . . . . . . . . . . . . . . . .   3
      3.1.  Capabilities Length Overflow  . . . . . . . . . . . . . .   4
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   5
@@ -109,12 +109,12 @@ Table of Contents
 
 
 
-Abraitis                Expires February 15, 2021               [Page 2]
+Abraitis                  Expires March 2, 2021                 [Page 2]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
-3.  Version Capability
+3.  Software Version Capability
 
    Although this document is not an IETF Standards Track document, it
    makes use of the terminology from BCP 14 in order to clearly state
@@ -123,30 +123,30 @@ Internet-Draft         Version Capability for BGP            August 2020
    Capabilities advertisements with BGP are defined in [RFC5492].  They
    utilize the BGP Capabilities Optional Parameter that contains one or
    more triples <Capability Code, Capability Length, Capability Value>.
-   This document defines a new BGP capability, the Version Capability,
-   with Capability Code TBD and Capability Length and Capability Value
-   as described below.
+   This document defines a new BGP capability, the Software Version
+   Capability, with Capability Code TBD and Capability Length and
+   Capability Value as described below.
 
-   The inclusion of the Version Capability is OPTIONAL.  If an
+   The inclusion of the Software Version Capability is OPTIONAL.  If an
    implementation supports the inclusion of the capability, the
    implementation MUST include a configuration switch to enable or
    disable its use, and that switch MUST be off by default.
 
-   The Version Capability is intended principally more to non-production
-   environments where more visibility is needed for troubleshooting
-   purposes.  It is NOT RECOMMENDED for use outside single Autonomous
-   System domain or Autonomous System Confederations, except you have a
-   topology with a number of routers each with a separate Autonomous
-   Number.
+   The Software Version Capability is intended principally more to non-
+   production environments where more visibility is needed for
+   troubleshooting purposes.  It is NOT RECOMMENDED for use outside
+   single Autonomous System domain or Autonomous System Confederations,
+   except you have a topology with a number of routers each with a
+   separate Autonomous Number.
 
-   An implementation that does not recognize or support the Version
-   Capability but which receives one MUST respond as described in
-   [RFC5492] by ignoring the option.  An implementation that wishes to
-   complain that its neighbor does not support the Version Capability
-   MAY use the 'Unsupported Capability' Error Subcode of a Notification
-   message as described in [RFC5492].
+   An implementation that does not recognize or support the Software
+   Version Capability but which receives one MUST respond as described
+   in [RFC5492] by ignoring the option.  An implementation that wishes
+   to complain that its neighbor does not support the Software Version
+   Capability MAY use the 'Unsupported Capability' Error Subcode of a
+   Notification message as described in [RFC5492].
 
-   The triple for the Version Capability is as follows:
+   The triple for the Software Version Capability is as follows:
 
    Capability Code
 
@@ -154,9 +154,9 @@ Internet-Draft         Version Capability for BGP            August 2020
 
    Capability Length
 
-      The Capability Length for the Version Capability MUST be greater
-      than zero.  A value of zero SHALL be treated as an encoding error
-      and the entire triple MUST be ignored.
+      The Capability Length for the Software Version Capability MUST be
+      greater than zero.  A value of zero SHALL be treated as an
+      encoding error and the entire triple MUST be ignored.
 
       The Capability Length SHOULD be no greater than 64.  This is the
       limit to allow other capabilities as much space as they require.
@@ -165,9 +165,9 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 
 
-Abraitis                Expires February 15, 2021               [Page 3]
+Abraitis                  Expires March 2, 2021                 [Page 3]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
       The Capability Value field is encoded in UTF-8 [RFC3629].  It is
@@ -196,15 +196,16 @@ Internet-Draft         Version Capability for BGP            August 2020
    carried by the BGP Capabilities Optional Parameter is 255 bytes.  If
    an implementation is constructing a BGP Capabilities Optional
    Parameter and its length exceeds 255 bytes, it is RECOMMENDED to
-   exclude the Version Capability.  An implementation may optimally
-   achieve this by making the Version Capability the last capability
-   triple to add to the Parameter, and only adding it if there is
-   sufficient space to do so.
+   exclude the Software Version Capability.  An implementation may
+   optimally achieve this by making the Software Version Capability the
+   last capability triple to add to the Parameter, and only adding it if
+   there is sufficient space to do so.
 
 4.  Operation
 
-   The Version Capability MUST only be used for displaying the version
-   of a BGP speaker's router daemon to make troubleshooting easier.
+   The Software Version Capability MUST only be used for displaying the
+   version of a BGP speaker's router daemon to make troubleshooting
+   easier.
 
    Consider a group of routers each with a number of upstream nodes, and
    suppose that each router has a different operating system and
@@ -216,14 +217,13 @@ Internet-Draft         Version Capability for BGP            August 2020
 
    Enabling (i.e., turning on) this capability requires bouncing all
    existing BGP sessions and the feature MUST be explicitly configured
-   before an implementation advertizes the Version Capability.
+   before an implementation advertizes the Software Version Capability.
 
 
 
-
-Abraitis                Expires February 15, 2021               [Page 4]
+Abraitis                  Expires March 2, 2021                 [Page 4]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 4.1.  Example Usage
@@ -255,35 +255,36 @@ Internet-Draft         Version Capability for BGP            August 2020
    IANA maintains the "Border Gateway Protocol (BGP) Parameters"
    registry with a subregistry called "Capabilities Codes".  IANA is
    requested to assign a capability number from the First Come First
-   Served range for the Version Capability in this document as follows:
+   Served range for the Software Version Capability in this document as
+   follows:
 
-                +-------+--------------------+------------+
-                | Value |    Description     | Reference  |
-                +-------+--------------------+------------+
-                |  TBD  | Version Capability | [This.I-D] |
-                +-------+--------------------+------------+
+           +-------+-----------------------------+------------+
+           | Value |         Description         | Reference  |
+           +-------+-----------------------------+------------+
+           |  TBD  | Software Version Capability | [This.I-D] |
+           +-------+-----------------------------+------------+
 
-                        Table 1: Version Capability
+                   Table 1: Software Version Capability
 
 6.  Security Considerations
 
-   The Version Capability should be treated as sensitive information: it
-   could be easier for an attacker to exploit the system if they know
-   the specific version of a BGP speaker.  This information could be
-   gathered by inspecting BGP OPEN messages that carry the Version
-   Capability defined in this document.  Using encryption to protect the
-   information exchanged in BGP sessions SHOULD, therefore, be carefully
+   The Software Version Capability should be treated as sensitive
+   information: it could be easier for an attacker to exploit the system
+   if they know the specific version of a BGP speaker.  This information
+   could be gathered by inspecting BGP OPEN messages that carry the
+   Software Version Capability defined in this document.  Using
+   encryption to protect the information exchanged in BGP sessions
 
 
 
-
-Abraitis                Expires February 15, 2021               [Page 5]
+Abraitis                  Expires March 2, 2021                 [Page 5]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
-   considered when this feature is enabled.  Suitable encryption can be
-   achieved by protecting the BGP session using TLS [RFC5246].
+   SHOULD, therefore, be carefully considered when this feature is
+   enabled.  Suitable encryption can be achieved by protecting the BGP
+   session using TLS [RFC5246].
 
    Furthermore, knowledge of which versions of code is running on a
    given router and from which vendor it comes may facilitate a number
@@ -300,9 +301,9 @@ Internet-Draft         Version Capability for BGP            August 2020
    attack where a rogue BGP implementation attempts to open a session
    and learns the version information from the responding peer.
 
-   The Version Capability MUST be configurable with a vendor-specific
-   knob to be able to enable or disable the capability.  The vendor
-   might implement to disable this capability per neighbor.
+   The Software Version Capability MUST be configurable with a vendor-
+   specific knob to be able to enable or disable the capability.  The
+   vendor might implement to disable this capability per neighbor.
 
    It would be safe to enable this for iBGP or inside the same tenant
    where you have full control and the BGP speaker is behind the exit
@@ -332,10 +333,9 @@ Internet-Draft         Version Capability for BGP            August 2020
 
 
 
-
-Abraitis                Expires February 15, 2021               [Page 6]
+Abraitis                  Expires March 2, 2021                 [Page 6]
 
-Internet-Draft         Version Capability for BGP            August 2020
+Internet-Draft     Software Version Capability for BGP       August 2020
 
 
    [RFC5082]  Gill, V., Heasley, J., Meyer, D., Savola, P., Ed., and C.
@@ -359,8 +359,8 @@ Internet-Draft         Version Capability for BGP            August 2020
 7.2.  Informative References
 
    [FRRouting]
-              Abraitis, D., "FRRouting - BGP Version Capability", 2019,
-              <https://github.com/ton31337/frr/
+              Abraitis, D., "FRRouting - BGP Software Version
+              Capability", 2019, <https://github.com/ton31337/frr/
               commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b>.
 
 Author's Address
@@ -389,4 +389,4 @@ Author's Address
 
 
 
-Abraitis                Expires February 15, 2021               [Page 7]
+Abraitis                  Expires March 2, 2021                 [Page 7]

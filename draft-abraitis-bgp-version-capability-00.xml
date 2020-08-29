@@ -19,7 +19,7 @@
 <?rfc subcompact="no" ?>
 <rfc category="info" docName="draft-abraitis-bgp-version-capability-07" ipr="trust200902">
   <front>
-    <title abbrev="Version Capability for BGP">Version Capability for BGP</title>
+    <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
     <author fullname="Donatas Abraitis" initials="D.Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
@@ -73,7 +73,7 @@
       </t>
     </section>
 
-    <section title="Version Capability">
+    <section title="Software Version Capability">
       <t>
         Although this document is not an IETF Standards Track document, it
         makes use of the terminology from BCP 14 in order to clearly state
@@ -83,18 +83,18 @@
         Capabilities advertisements with BGP are defined in [RFC5492].
         They utilize the BGP Capabilities Optional Parameter that contains
         one or more triples &lt;Capability Code, Capability Length, Capability Value&gt;.
-        This document defines a new BGP capability, the Version Capability,
+        This document defines a new BGP capability, the Software Version Capability,
         with Capability Code TBD and Capability Length and Capability Value
         as described below.
       </t>
       <t>
-        The inclusion of the Version Capability is OPTIONAL. If an
+        The inclusion of the Software Version Capability is OPTIONAL. If an
         implementation supports the inclusion of the capability, the
         implementation MUST include a configuration switch to enable or
         disable its use, and that switch MUST be off by default.
       </t>
       <t>
-        The Version Capability is intended principally more to non-production
+        The Software Version Capability is intended principally more to non-production
         environments where more visibility is needed for troubleshooting
         purposes. It is NOT RECOMMENDED for use outside single Autonomous
         System domain or Autonomous System Confederations, except you have
@@ -102,15 +102,15 @@
         Number.
       </t>
       <t>
-        An implementation that does not recognize or support the Version
+        An implementation that does not recognize or support the Software Version
         Capability but which receives one MUST respond as described in
         [RFC5492] by ignoring the option. An implementation that wishes to
-        complain that its neighbor does not support the Version Capability
+        complain that its neighbor does not support the Software Version Capability
         MAY use the 'Unsupported Capability' Error Subcode of a Notification
         message as described in [RFC5492].
       </t>
       <t>
-        The triple for the Version Capability is as follows:
+        The triple for the Software Version Capability is as follows:
       </t>
       <t>
         Capability Code
@@ -126,7 +126,7 @@
       <t>
       <list>
         <t>
-          The Capability Length for the Version Capability MUST
+          The Capability Length for the Software Version Capability MUST
           be greater than zero. A value of zero SHALL be treated
           as an encoding error and the entire triple MUST be ignored.
         </t>
@@ -170,8 +170,8 @@
           carried by the BGP Capabilities Optional Parameter is 255 bytes.  If an
           implementation is constructing a BGP Capabilities Optional Parameter
           and its length exceeds 255 bytes, it is RECOMMENDED to exclude the
-          Version Capability.  An implementation may optimally achieve this by
-          making the Version Capability the last capability triple to add to the
+          Software Version Capability.  An implementation may optimally achieve this by
+          making the Software Version Capability the last capability triple to add to the
           Parameter, and only adding it if there is sufficient space to do so.
         </t>
       </section>
@@ -181,7 +181,7 @@
 
     <section title="Operation">
       <t>
-        The Version Capability MUST only be used for displaying the version
+        The Software Version Capability MUST only be used for displaying the version
         of a BGP speaker's router daemon to make troubleshooting easier.
       </t>
       <t>
@@ -196,7 +196,7 @@
       <t>
         Enabling (i.e., turning on) this capability requires bouncing all
         existing BGP sessions and the feature MUST be explicitly configured
-        before an implementation advertizes the Version Capability.
+        before an implementation advertizes the Software Version Capability.
       </t>
       <section title="Example Usage">
         <t>
@@ -231,22 +231,22 @@
         IANA maintains the "Border Gateway Protocol (BGP) Parameters"
         registry with a subregistry called "Capabilities Codes". IANA is
         requested to assign a capability number from the First Come First
-        Served range for the Version Capability in this document as follows:
+        Served range for the Software Version Capability in this document as follows:
       </t>
-      <texttable anchor="table_ex" title="Version Capability">
+      <texttable anchor="table_ex" title="Software Version Capability">
           <ttcol align='center'>Value</ttcol>
           <ttcol align='center'>Description</ttcol>
           <ttcol align='center'>Reference</ttcol>
           <c>TBD</c>
-          <c>Version Capability</c>
+          <c>Software Version Capability</c>
           <c>[This.I-D]</c>
       </texttable>
     </section>
 
     <section anchor="Security" title="Security Considerations">
       <t>
-        The Version Capability should be treated as sensitive information: it could be easier for an attacker to exploit the system if they know the specific version of a BGP speaker.  This information could be
-        gathered by inspecting BGP OPEN messages that carry the Version
+        The Software Version Capability should be treated as sensitive information: it could be easier for an attacker to exploit the system if they know the specific version of a BGP speaker.  This information could be
+        gathered by inspecting BGP OPEN messages that carry the Software Version
         Capability defined in this document.  Using encryption to protect the information exchanged in BGP sessions SHOULD, therefore, be carefully considered when this feature is enabled.  Suitable encryption can be achieved by protecting the BGP session using TLS [RFC5246].
       </t>
       <t>
@@ -260,7 +260,7 @@
         Many BGP implementations leave TCP port 179 open in order to be able to establish sessions with new neighbors.  This could lead to an attack where a rogue BGP implementation attempts to open a session and learns the version information from the responding peer.
       </t>
       <t>
-        The Version Capability MUST be configurable with a vendor-specific
+        The Software Version Capability MUST be configurable with a vendor-specific
         knob to be able to enable or disable the capability.  The vendor might implement to disable this capability per neighbor.
       </t>
       <t>
@@ -288,7 +288,7 @@
     <references title="Informative References">
       <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
         <front>
-          <title>FRRouting - BGP Version Capability</title>
+          <title>FRRouting - BGP Software Version Capability</title>
 
           <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
             <organization abbrev="Hostinger">Hostinger</organization>
