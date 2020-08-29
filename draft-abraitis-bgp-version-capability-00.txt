@@ -9,7 +9,7 @@ Expires: March 2, 2021
 
 
                   Software Version Capability for BGP
-                draft-abraitis-bgp-version-capability-07
+                draft-abraitis-bgp-version-capability-08
 
 Abstract
 
@@ -70,7 +70,7 @@ Table of Contents
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   5
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
      7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
@@ -132,19 +132,14 @@ Internet-Draft     Software Version Capability for BGP       August 2020
    implementation MUST include a configuration switch to enable or
    disable its use, and that switch MUST be off by default.
 
-   The Software Version Capability is intended principally more to non-
-   production environments where more visibility is needed for
-   troubleshooting purposes.  It is NOT RECOMMENDED for use outside
-   single Autonomous System domain or Autonomous System Confederations,
-   except you have a topology with a number of routers each with a
-   separate Autonomous Number.
+   The Software Version Capability is intended for environments where
+   more visibility is needed for troubleshooting purposes.  It is NOT
+   RECOMMENDED for use outside a single Autonomous System, or a set of
+   Autonomous Systems under a common administration.
 
    An implementation that does not recognize or support the Software
-   Version Capability but which receives one MUST respond as described
-   in [RFC5492] by ignoring the option.  An implementation that wishes
-   to complain that its neighbor does not support the Software Version
-   Capability MAY use the 'Unsupported Capability' Error Subcode of a
-   Notification message as described in [RFC5492].
+   Version Capability but receives one must ignore it, as described in
+   [RFC5492].
 
    The triple for the Software Version Capability is as follows:
 
@@ -156,12 +151,17 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
       The Capability Length for the Software Version Capability MUST be
       greater than zero.  A value of zero SHALL be treated as an
-      encoding error and the entire triple MUST be ignored.
+      encoding error and the Capability MUST be ignored.
 
       The Capability Length SHOULD be no greater than 64.  This is the
       limit to allow other capabilities as much space as they require.
 
+      Capability Length is a one-octet unsigned binary integer that
+      contains the length of the Capability Value field in octets.
+
    Capability Value
+
+
 
 
 
@@ -188,18 +188,25 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
    Version:
 
-      The Version encoded via UTF-8
+      The Version field MUST be encoded using UTF-8.  A receiving BGP
+      speaker MUST NOT interpret invalid UTF-8 sequences.
 
 3.1.  Capabilities Length Overflow
 
    As defined in [RFC5492] the total length of capabilities that can be
    carried by the BGP Capabilities Optional Parameter is 255 bytes.  If
    an implementation is constructing a BGP Capabilities Optional
-   Parameter and its length exceeds 255 bytes, it is RECOMMENDED to
-   exclude the Software Version Capability.  An implementation may
-   optimally achieve this by making the Software Version Capability the
-   last capability triple to add to the Parameter, and only adding it if
+   Parameter and its length exceeds 255 bytes, it is REQUIRED to exclude
+   the Software Version Capability.  An implementation may optimally
+   achieve this by making the Software Version Capability the last
+   capability triple to add to the Parameter, and only adding it if
    there is sufficient space to do so.
+
+   A rogue node can prevent the proper operation of a BGP session, or
+   the advertisement of other Capabilities, by not excluding the
+   Software Version Capability as required in Section 3.1.  This risk is
+   equivalent to a rogue node simply not advertising a specific
+   Capability and is not new to BGP.
 
 4.  Operation
 
@@ -211,13 +218,6 @@ Internet-Draft     Software Version Capability for BGP       August 2020
    suppose that each router has a different operating system and
    different routing daemon at a different version installed.  Assuming
    that a specific feature is not working or that there is a bug which
-   has not been fixed in a particular version of the code, knowledge of
-   the routing daemon versions would allow an operator to quickly
-   identify the pattern of which versions are affected.
-
-   Enabling (i.e., turning on) this capability requires bouncing all
-   existing BGP sessions and the feature MUST be explicitly configured
-   before an implementation advertizes the Software Version Capability.
 
 
 
@@ -226,10 +226,18 @@ Abraitis                  Expires March 2, 2021                 [Page 4]
 Internet-Draft     Software Version Capability for BGP       August 2020
 
 
+   has not been fixed in a particular version of the code, knowledge of
+   the routing daemon versions would allow an operator to quickly
+   identify the pattern of which versions are affected.
+
+   Enabling (i.e., turning on) this capability requires bouncing all
+   existing BGP sessions and the feature MUST be explicitly configured
+   before an implementation advertizes the Software Version Capability.
+
 4.1.  Example Usage
 
-   Below is an example of implementation in [FRRouting] how it looks
-   like with version advertised by a BGP sender:
+   Below is an example from the [FRRouting] implementation showing both
+   the received and advertised Software Version Capability:
 
      :~# vtysh -c 'show ip bgp summary failed'
      ...
@@ -252,8 +260,7 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 5.  IANA Considerations
 
-   IANA maintains the "Border Gateway Protocol (BGP) Parameters"
-   registry with a subregistry called "Capabilities Codes".  IANA is
+   The Capability Codes registry is a standalone registry.  IANA is
    requested to assign a capability number from the First Come First
    Served range for the Software Version Capability in this document as
    follows:
@@ -266,14 +273,7 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
                    Table 1: Software Version Capability
 
-6.  Security Considerations
 
-   The Software Version Capability should be treated as sensitive
-   information: it could be easier for an attacker to exploit the system
-   if they know the specific version of a BGP speaker.  This information
-   could be gathered by inspecting BGP OPEN messages that carry the
-   Software Version Capability defined in this document.  Using
-   encryption to protect the information exchanged in BGP sessions
 
 
 
@@ -282,34 +282,32 @@ Abraitis                  Expires March 2, 2021                 [Page 5]
 Internet-Draft     Software Version Capability for BGP       August 2020
 
 
-   SHOULD, therefore, be carefully considered when this feature is
-   enabled.  Suitable encryption can be achieved by protecting the BGP
-   session using TLS [RFC5246].
+6.  Security Considerations
 
-   Furthermore, knowledge of which versions of code is running on a
-   given router and from which vendor it comes may facilitate a number
-   of social-engineering attacks.  This further adds to the desire to
-   protect this information through encryption.
+   The Software Version Capability should be treated as sensitive
+   information: it could be easier for an attacker to exploit the system
+   if they know the specific software version and manufacturer of a BGP
+   speaker.  This information could be gathered by inspecting BGP OPEN
+   messages that carry the Software Version Capability defined in this
+   document.  Furthermore, this knowledge may facilitate a number of
+   social-engineering attacks.
 
    Modifying the information advertised by a router might lead to
    attacks including bogus software upgrades and also might mask the
-   causes of faults in the network.  This can be mitigated by protecting
-   the BGP session using TLS.
+   causes of faults in the network.
 
-   Many BGP implementations leave TCP port 179 open in order to be able
-   to establish sessions with new neighbors.  This could lead to an
-   attack where a rogue BGP implementation attempts to open a session
-   and learns the version information from the responding peer.
+   Users of this mechanism should be aware that unless a transport that
+   provides integrity is used for the BGP session in question, the
+   Software Version Capability can be forged.  Unless a transport that
+   provides confidentiality is used, the Version Capability could be
+   snooped by an attacker.  These issues are common to any BGP message
+   but may be of greater interest in the context of this extension as
+   explained above.  Refer to the related considerations in [RFC4271]
+   and [RFC4272].
 
-   The Software Version Capability MUST be configurable with a vendor-
-   specific knob to be able to enable or disable the capability.  The
-   vendor might implement to disable this capability per neighbor.
-
-   It would be safe to enable this for iBGP or inside the same tenant
-   where you have full control and the BGP speaker is behind the exit
-   points.
-
-   This capability is NOT RECOMMENDED for eBGP use.
+   Users of this mechanism should consider applying data minimization
+   practices as outlined in Section 6.1 of [RFC6973], as appropriate
+   within the deployment context.
 
    Sensitive information leaks can be minimized by using the [RFC5082]
    mechanism or firewalls to filter out TCP 179 port from untrusted
@@ -333,10 +331,21 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
+
+
 Abraitis                  Expires March 2, 2021                 [Page 6]
 
 Internet-Draft     Software Version Capability for BGP       August 2020
 
+
+   [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
+              Border Gateway Protocol 4 (BGP-4)", RFC 4271,
+              DOI 10.17487/RFC4271, January 2006,
+              <https://www.rfc-editor.org/info/rfc4271>.
+
+   [RFC4272]  Murphy, S., "BGP Security Vulnerabilities Analysis",
+              RFC 4272, DOI 10.17487/RFC4272, January 2006,
+              <https://www.rfc-editor.org/info/rfc4272>.
 
    [RFC5082]  Gill, V., Heasley, J., Meyer, D., Savola, P., Ed., and C.
               Pignataro, "The Generalized TTL Security Mechanism
@@ -352,6 +361,12 @@ Internet-Draft     Software Version Capability for BGP       August 2020
               with BGP-4", RFC 5492, DOI 10.17487/RFC5492, February
               2009, <https://www.rfc-editor.org/info/rfc5492>.
 
+   [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
+              Morris, J., Hansen, M., and R. Smith, "Privacy
+              Considerations for Internet Protocols", RFC 6973,
+              DOI 10.17487/RFC6973, July 2013,
+              <https://www.rfc-editor.org/info/rfc6973>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -364,6 +379,20 @@ Internet-Draft     Software Version Capability for BGP       August 2020
               commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b>.
 
 Author's Address
+
+
+
+
+
+
+
+
+
+
+Abraitis                  Expires March 2, 2021                 [Page 7]
+
+Internet-Draft     Software Version Capability for BGP       August 2020
+
 
    Donatas Abraitis
    Hostinger
@@ -389,4 +418,31 @@ Author's Address
 
 
 
-Abraitis                  Expires March 2, 2021                 [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abraitis                  Expires March 2, 2021                 [Page 8]
