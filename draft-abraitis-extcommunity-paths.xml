@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+  <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+  <!ENTITY RFC4360 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4360.xml">
+  <!ENTITY RFC7911 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7911.xml">
+]>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml2rfc.tools.ietf.org. -->
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-extcommunity-paths-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+  <!-- xml2rfc v2v3 conversion 3.12.8 -->
+  <front>
+    <title>BGP Available Paths Count Extended Community</title>
+    <author fullname="Russ White" surname="White">
+      <organization>Akamai, Inc.</organization>
+      <address>
+        <postal>
+          <street/>
+        </postal>
+        <email>russ@riw.us</email>
+      </address>
+    </author>
+    <author fullname="Donatas Abraitis" surname="Abraitis">
+      <organization>NetDef</organization>
+      <address>
+        <postal>
+          <street/>
+        </postal>
+        <email>donatas.abraitis@gmail.com</email>
+      </address>
+    </author>
+    <date year="2023"/>
+    <area>Routing</area>
+    <workgroup>Interdomain Routing</workgroup>
+    <abstract>
+      <t>This document defines a new BGP Opaque Extended Community to carry
+        the number of paths available for an arbitrary prefix.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section numbered="true" toc="default">
+      <name>Introduction</name>
+      <t>This document defines a new BGP Opaque Extended Community to carry
+        the number of paths available for an arbitrary prefix.
+        BGP speakers that receive this extended community can configure
+        local instance to influence their decision process by preferring
+        routes with a higher number of paths over others.</t>
+      <t><xref target="RFC7911"/> defines a BGP extension to send multiple
+        paths for the same address prefix without the new paths implicitly
+        replacing any previous ones. However, if the ADD-PATH capability is not
+        possible to use between BGP speakers, Available Paths Count Extended
+        Community can be another way to prefer a prefix which has more paths.</t>
+    </section>
+    <!-- end of Introduction section -->
+
+    <section numbered="true" toc="default">
+      <name>Available Paths Count Extended Community</name>
+      <t>This is an Transitive Opaque Extended Community <xref target="RFC4360"/>
+         with the following encoding:</t>
+      <figure align="center" anchor="available_paths_count_extcommunity">
+        <artwork align="center"><![CDATA[
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |       0x03    |      TBD      |             Reserved          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                    Reserved                   |     Count     |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            ]]></artwork>
+      </figure>
+      <ol spacing="normal" type="1">
+        <li>The value of the high-order octet of the extended Type field is 0x03,
+          which indicates it is transitive.</li>
+        <li>The value of the low-order octet of the extended Type field as
+          assigned by IANA is TBD.</li>
+        <li>Reserved field MUST be set to 0 and ignored upon the receipt of this
+          community.</li>
+        <li>The last octet of the extended community is an unsigned integer
+          that gives the count of the available paths for an arbitrary prefix.</li>
+      </ol>
+    </section>
+    <!-- end of Available Paths Count Extended Community section -->
+
+    <section numbered="true" toc="default">
+      <name>Deployment Considerations</name>
+      <t>If the BGP speaker supports the extension defined in this
+         document, it SHOULD attach the Available Paths Count Extended Community
+         to BGP UPDATE messages sent to iBGP peers implicitly.</t>
+      <t>The receiving BGP speaker, SHOULD derive a count of available paths
+         from the last octet of the extended community if present.</t>
+      <t>An implementation SHOULD NOT send more than one instance of the
+         Available Paths Count extended community.</t>
+      <t>By default, an implementation SHOULD NOT send this extended community
+         to eBGP peers. However, it SHOULD be possible to configure an implementation
+         to send or accept the community when configured.</t>
+      <t>The implementation SHOULD provide a way to explicitly disable sending
+         this community.</t>
+      <t>Also, the implementation COULD provide a way to involve
+         Available Paths Count Extended Community into best path selection process.
+         The prefix with the higher count of paths SHOULD win.</t>
+    </section>
+    <!-- end of Deployment Considerations section -->
+
+    <section numbered="true" toc="default">
+      <name>IANA Considerations</name>
+      <t>This memo requests IANA assign a number from the Transitive Opaque
+         Extended Community Sub-Types registry for "Available Paths Count"
+         extended community. Registration procedures come under the First
+         Come First Served.</t>
+    </section>
+    <!-- end of IANA Considerations section -->
+
+</middle>
+  <back>
+    <!-- References split into informative and normative -->
+
+  <references title="Normative References">
+    &RFC2119;
+    &RFC4360;
+    &RFC7911;
+  </references>
+  </back>
+</rfc>
