@@ -64,6 +64,13 @@
     </section>
     <!-- end of Introduction section -->
 
+    <section title="Specification of Requirements">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+         document are to be interpreted as described in <xref format="default" pageno="false" target="RFC2119"/>.</t>
+    </section>
+    <!-- end of Specification of Requirements section -->
+
     <section numbered="true" toc="default">
       <name>Available Paths Count Extended Community</name>
       <t>This is an Transitive Opaque Extended Community <xref target="RFC4360"/>
@@ -106,9 +113,19 @@
          to send or accept the community when configured.</t>
       <t>The implementation SHOULD provide a way to explicitly disable sending
          this community.</t>
-      <t>Also, the implementation COULD provide a way to involve
-         Available Paths Count Extended Community into best path selection process.
-         The prefix with the higher count of paths SHOULD win.</t>
+      <t>Also, the implementation could provide an OPTIONAL way to involve
+         Available Paths Count Extended Community into the best path selection process.
+         The prefix with the higher count of paths SHOULD win. If at least one of
+         the routes does not have Available Paths Count Extended Community, the best
+         path selection process is not affected, and this step is ignored.
+         If both routes have the community, defined in this extension, the normal
+         BGP decision is changed so that the Available Paths Count Extended Community
+         is checked before Multi Exit Discriminator (MED). It MUST be possible to
+         enable or disable this extra step (comparing Available Paths Count Extended
+         Community) in the best path selection process.</t>
+      <t>If the count of paths changed, the implementation SHOULD NOT send an UPDATE
+         immediately. Available Paths Count Extended Community SHOULD be adjusted only
+         when the best path changes.</t>
     </section>
     <!-- end of Deployment Considerations section -->
 

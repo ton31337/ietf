@@ -5,8 +5,8 @@
 Interdomain Routing                                             R. White
 Internet-Draft                                              Akamai, Inc.
 Intended status: Standards Track                             D. Abraitis
-Expires: 8 July 2023                                              NetDef
-                                                          4 January 2023
+Expires: 10 July 2023                                             NetDef
+                                                          6 January 2023
 
 
               BGP Available Paths Count Extended Community
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 July 2023.
+   This Internet-Draft will expire on 10 July 2023.
 
 Copyright Notice
 
@@ -44,27 +44,28 @@ Copyright Notice
    license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
 
 
 
 
 
 
-White & Abraitis           Expires 8 July 2023                  [Page 1]
+White & Abraitis          Expires 10 July 2023                  [Page 1]
 
-Internet-DraftBGP Available Paths Count Extended Community  January 2023
+Internet-Draft  BGP Available Paths Count Extended Commu    January 2023
 
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Available Paths Count Extended Community  . . . . . . . . . .   2
-   3.  Deployment Considerations . . . . . . . . . . . . . . . . . .   3
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Normative References  . . . . . . . . . . . . . . . . . . . .   3
+   2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
+   3.  Available Paths Count Extended Community  . . . . . . . . . .   2
+   4.  Deployment Considerations . . . . . . . . . . . . . . . . . .   3
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   4
 
 1.  Introduction
@@ -81,23 +82,37 @@ Table of Contents
    to use between BGP speakers, Available Paths Count Extended Community
    can be another way to prefer a prefix which has more paths.
 
-2.  Available Paths Count Extended Community
+2.  Specification of Requirements
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+3.  Available Paths Count Extended Community
 
    This is an Transitive Opaque Extended Community [RFC4360] with the
    following encoding:
 
-           0                   1                   2                   3
-           0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-          +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-          |       0x03    |      TBD      |             Reserved          |
-          +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-          |                    Reserved                   |     Count     |
-          +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |       0x03    |      TBD      |             Reserved          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                    Reserved                   |     Count     |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                                  Figure 1
+                               Figure 1
 
    1.  The value of the high-order octet of the extended Type field is
        0x03, which indicates it is transitive.
+
+
+
+
+White & Abraitis          Expires 10 July 2023                  [Page 2]
+
+Internet-Draft  BGP Available Paths Count Extended Commu    January 2023
+
 
    2.  The value of the low-order octet of the extended Type field as
        assigned by IANA is TBD.
@@ -105,20 +120,11 @@ Table of Contents
    3.  Reserved field MUST be set to 0 and ignored upon the receipt of
        this community.
 
-
-
-
-
-White & Abraitis           Expires 8 July 2023                  [Page 2]
-
-Internet-DraftBGP Available Paths Count Extended Community  January 2023
-
-
    4.  The last octet of the extended community is an unsigned integer
        that gives the count of the available paths for an arbitrary
        prefix.
 
-3.  Deployment Considerations
+4.  Deployment Considerations
 
    If the BGP speaker supports the extension defined in this document,
    it SHOULD attach the Available Paths Count Extended Community to BGP
@@ -137,18 +143,41 @@ Internet-DraftBGP Available Paths Count Extended Community  January 2023
    The implementation SHOULD provide a way to explicitly disable sending
    this community.
 
-   Also, the implementation COULD provide a way to involve Available
-   Paths Count Extended Community into best path selection process.  The
-   prefix with the higher count of paths SHOULD win.
+   Also, the implementation could provide an OPTIONAL way to involve
+   Available Paths Count Extended Community into the best path selection
+   process.  The prefix with the higher count of paths SHOULD win.  If
+   at least one of the routes does not have Available Paths Count
+   Extended Community, the best path selection process is not affected,
+   and this step is ignored.  If both routes have the community, defined
+   in this extension, the normal BGP decision is changed so that the
+   Available Paths Count Extended Community is checked before Multi Exit
+   Discriminator (MED).  It MUST be possible to enable or disable this
+   extra step (comparing Available Paths Count Extended Community) in
+   the best path selection process.
 
-4.  IANA Considerations
+   If the count of paths changed, the implementation SHOULD NOT send an
+   UPDATE immediately.  Available Paths Count Extended Community SHOULD
+   be adjusted only when the best path changes.
+
+
+
+
+
+
+
+White & Abraitis          Expires 10 July 2023                  [Page 3]
+
+Internet-Draft  BGP Available Paths Count Extended Commu    January 2023
+
+
+5.  IANA Considerations
 
    This memo requests IANA assign a number from the Transitive Opaque
    Extended Community Sub-Types registry for "Available Paths Count"
    extended community.  Registration procedures come under the First
    Come First Served.
 
-5.  Normative References
+6.  Normative References
 
    [RFC2119]  Bradner, S. and RFC Publisher, "Key words for use in RFCs
               to Indicate Requirement Levels", BCP 14, RFC 2119,
@@ -162,14 +191,6 @@ Internet-DraftBGP Available Paths Count Extended Community  January 2023
 
    [RFC7911]  Walton, D., Retana, A., Chen, E., Scudder, J., and RFC
               Publisher, "Advertisement of Multiple Paths in BGP",
-
-
-
-White & Abraitis           Expires 8 July 2023                  [Page 3]
-
-Internet-DraftBGP Available Paths Count Extended Community  January 2023
-
-
               RFC 7911, DOI 10.17487/RFC7911, July 2016,
               <https://www.rfc-editor.org/info/rfc7911>.
 
@@ -177,13 +198,11 @@ Authors' Addresses
 
    Russ White
    Akamai, Inc.
-
    Email: russ@riw.us
 
 
    Donatas Abraitis
    NetDef
-
    Email: donatas.abraitis@gmail.com
 
 
@@ -202,23 +221,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-White & Abraitis           Expires 8 July 2023                  [Page 4]
+White & Abraitis          Expires 10 July 2023                  [Page 4]
