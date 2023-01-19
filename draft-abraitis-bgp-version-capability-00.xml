@@ -20,7 +20,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="info" docName="draft-abraitis-bgp-version-capability-08" ipr="trust200902">
+<rfc category="info" docName="draft-abraitis-bgp-version-capability-10" ipr="trust200902">
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
     <author fullname="Donatas Abraitis" initials="D.Abraitis" surname="Abraitis">
