@@ -1,16 +1,17 @@
-<?xml version="1.0" encoding="US-ASCII"?>
-<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
-<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC3629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml">
-<!ENTITY RFC5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
-<!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
-<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
-<!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
-<!ENTITY RFC5492 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5492.xml">
-<!ENTITY RFC5082 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5082.xml">
-<!ENTITY RFC4272 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4272.xml">
-<!ENTITY RFC4271 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4271.xml">
-<!ENTITY RFC6973 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml">
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+  <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+  <!ENTITY RFC3629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3629.xml">
+  <!ENTITY RFC4271 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4271.xml">
+  <!ENTITY RFC4272 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
+  <!ENTITY RFC5082 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
+  <!ENTITY RFC6973 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml">
+  <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+  <!ENTITY RFC9072 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9072.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc strict="yes" ?>
@@ -20,24 +21,18 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="info" docName="draft-abraitis-bgp-version-capability-10" ipr="trust200902">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-10" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+  <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-10"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
-        <postal>
-          <street>Jonavos g. 60C</street>
-          <city>Kaunas</city>
-          <region></region>
-          <code>44192</code>
-          <country>LT</country>
-        </postal>
-        <phone>+370 614 18958</phone>
         <email>donatas.abraitis@hostinger.com</email>
       </address>
     </author>
-    <date year="2023" />
+    <date year="2023"/>
     <area>General</area>
     <keyword>template</keyword>
     <abstract>
@@ -52,31 +47,41 @@
       </t>
     </abstract>
   </front>
-
   <middle>
-    <section title="Introduction">
+    <section>
+      <name>Introduction</name>
       <t>
-        In modern data center designs, we tend to have conventional routers participating in the routing process. And the fleet of routers has different versions of routing daemon. This means that knowing which versions of the routing daemons are running the various routers in the network can be a crucial factor in quickly identifying the root cause of any protocol or network problems.
+        In modern data center designs, we tend to have conventional routers
+        participating in the routing process. And the fleet of routers has
+        different versions of routing daemon. This means that knowing which
+        versions of the routing daemons are running the various routers in the
+        network can be a crucial factor in quickly identifying the root cause
+        of any protocol or network problems.
       </t>
       <t>
-        This BGP capability is an optional advertisement. Implementations are not required to advertise the version nor to process received advertisements.
+        This BGP capability is an optional advertisement. Implementations are
+        not required to advertise the version nor to process received advertisements.
       </t>
       <t>
-        Information about the version of the routing daemon could also be exchanged in protocols such as LLDP and CDP. However, in containerized environments, it is very hard and not recommended to exchange this information between background processes. Therefore, and to help minimize operational costs, it is helpful to exchange the routing daemon information between BGP peers directly.
+        Information about the version of the routing daemon could also be exchanged
+        in protocols such as LLDP and CDP. However, in containerized environments,
+        it is very hard and not recommended to exchange this information between
+        background processes. Therefore, and to help minimize operational costs, it
+        is helpful to exchange the routing daemon information between BGP peers directly.
       </t>
     </section>
-
-    <section anchor="simple_list" title="Specification of Requirements">
+    <section anchor="simple_list">
+      <name>Specification of Requirements</name>
       <t>
         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
         "OPTIONAL" in this document are to be interpreted as described in BCP
-        14 [RFC2119] [RFC8174] when, and only when, they appear in all
-        capitals, as shown here.
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear
+        in all capitals, as shown here.
       </t>
     </section>
-
-    <section title="Software Version Capability">
+    <section>
+      <name>Software Version Capability</name>
       <t>
         Although this document is not an IETF Standards Track document, it
         makes use of the terminology from BCP 14 in order to clearly state
@@ -112,42 +117,36 @@
       <t>
         Capability Code
       </t>
-      <t>
-      <list>
-        <t>
+      <ul empty="true" spacing="normal">
+        <li>
           TBD by IANA
-        </t>
-      </list>
-      </t>
+        </li>
+      </ul>
       <t>Capability Length</t>
-      <t>
-      <list>
-        <t>
+      <ul empty="true" spacing="normal">
+        <li>
           The Capability Length for the Software Version Capability MUST
           be greater than zero. A value of zero SHALL be treated
           as an encoding error and the Capability MUST be ignored.
-        </t>
-        <t>
+        </li>
+        <li>
           The Capability Length SHOULD be no greater than 64. This is the
           limit to allow other capabilities as much space as they require.
-        </t>
-        <t>
+        </li>
+        <li>
           Capability Length is a one-octet unsigned binary integer that
           contains the length of the Capability Value field in octets.
-        </t>
-      </list>
-      </t>
+        </li>
+      </ul>
       <t>Capability Value</t>
-      <t>
-      <list>
-        <t>
-          The Capability Value field is encoded in UTF-8 [RFC3629]. It is
-          unstructured data and can be formatted in any way that the
+      <ul empty="true" spacing="normal">
+        <li>
+          The Capability Value field is encoded in UTF-8 <xref target="RFC3629"/>.
+          It is unstructured data and can be formatted in any way that the
           implementor decides.
-        </t>
-      </list>
-      </t>
-      <figure align="center" anchor="version_capability">
+        </li>
+      </ul>
+      <figure anchor="version_capability">
         <artwork align="left"><![CDATA[
                 +--------------------------------+
                 |    Version Length (1 octet)    |
@@ -158,23 +157,49 @@
       </figure>
       <t>
         Version Length:
-        <list><t>
+      </t>
+      <ul empty="true" spacing="normal">
+        <li>
           The number of characters in the Version
-        </t></list></t><t>
+        </li>
+      </ul>
+      <t>
         Version:
-        <list><t>
-          The Version field MUST be encoded using UTF-8. A receiving BGP speaker
-          MUST NOT interpret invalid UTF-8 sequences.
-        </t></list></t>
-      <section title="Capabilities Length Overflow">
+      </t>
+      <ul empty="true" spacing="normal">
+        <li>
+            The Version field MUST be encoded using UTF-8. A receiving BGP speaker
+            MUST NOT interpret invalid UTF-8 sequences.
+          </li>
+        <li>
+            The value of consists of one identifier, which identifies
+            the software and its significant version. Software version identifier consists of
+            a product and optional product version.
+          </li>
+        <li>
+            identifier = product ["/" product-version]
+          </li>
+        <li>
+            A sender SHOULD limit generated product identifiers to what is
+            necessary to identify the product; a sender MUST NOT generate
+            advertising or other nonessential information within the product
+            identifier.  A sender SHOULD NOT generate information in
+            product-version that is not a version identifier (i.e., successive
+            versions of the same product name ought to differ only in the
+            product-version portion of the product identifier).
+          </li>
+        <li>Example:</li>
+        <li>frrouting/8.4.2, ios/12.5.1, junos/12.1</li>
+      </ul>
+      <section>
+        <name>Capabilities Length Overflow</name>
         <t>
           As defined in [RFC5492] the total length of capabilities that can be
-          carried by the BGP Capabilities Optional Parameter is 255 bytes.  If an
+          carried by the BGP Capabilities Optional Parameter is 255 bytes. If an
           implementation is constructing a BGP Capabilities Optional Parameter
-          and its length exceeds 255 bytes, it is REQUIRED to exclude the
-          Software Version Capability. An implementation may optimally achieve this by
-          making the Software Version Capability the last capability triple to add to the
-          Parameter, and only adding it if there is sufficient space to do so.
+          and its length exceeds 255 bytes, there is not enough space for other
+          more important capabilities. An implementation is REQUIRED Extended Optional
+          Parameters Length for BGP OPEN Message support as defined in <xref target="RFC9072"/>.
         </t>
         <t>
           A rogue node can prevent the proper operation of a BGP session, or the
@@ -184,10 +209,8 @@
         </t>
       </section>
     </section>
-
-    <?rfc needLines="8" ?>
-
-    <section title="Operation">
+    <section>
+      <name>Operation</name>
       <t>
         The Software Version Capability MUST only be used for displaying the version
         of a BGP speaker's router daemon to make troubleshooting easier.
@@ -206,52 +229,62 @@
         existing BGP sessions and the feature MUST be explicitly configured
         before an implementation advertizes the Software Version Capability.
       </t>
-      <section title="Example Usage">
+      <section>
+        <name>Example Usage</name>
         <t>
-          Below is an example from the <xref target="FRRouting"></xref> implementation showing both the
-          received and advertised Software Version Capability:
+          Below is an example from the <xref target="FRRouting"/> implementation showing
+          both the received and advertised Software Version Capability:
         </t>
-        <figure align="center" anchor="frr_failed">
+        <figure anchor="frr_failed">
           <artwork align="left"><![CDATA[
   :~# vtysh -c 'show ip bgp summary failed'
   ...
   Neighbor EstdCnt DropCnt ResetTime Reason
   ens192         3       3  00:00:35 Waiting for peer OPEN (n/a)
-  ens224         3       3  00:01:12 Waiting for NHT (FRRouting 7.2)
-  eth0           3       3  00:00:14 Neighbor deleted (FRRouting 7.3)
+  ens224         3       3  00:01:12 Waiting for NHT (frrouting/7.2)
+  eth0           3       3  00:00:14 Neighbor deleted (frrouting/7.3)
   ...
               ]]></artwork>
         </figure>
-        <figure align="center" anchor="frr_version">
+        <figure anchor="frr_version">
           <artwork align="left"><![CDATA[
   :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
   > | jq '."198.51.100.1".neighborCapabilities.versions'
   {
-    "advertisedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion",
-    "receivedVersion": "FRRouting 7.2-dev-MyOwnFRRVersion-gc68bb14"
+    "advertisedVersion": "frrouting/7.2",
+    "receivedVersion": "frrouting/7.3"
   }
               ]]></artwork>
         </figure>
       </section>
     </section>
-
-    <section anchor="IANA" title="IANA Considerations">
+    <section anchor="IANA">
+      <name>IANA Considerations</name>
       <t>
         The Capability Codes registry is a standalone registry. IANA is
         requested to assign a capability number from the First Come First
         Served range for the Software Version Capability in this document as follows:
       </t>
-      <texttable anchor="table_ex" title="Software Version Capability">
-          <ttcol align='center'>Value</ttcol>
-          <ttcol align='center'>Description</ttcol>
-          <ttcol align='center'>Reference</ttcol>
-          <c>TBD</c>
-          <c>Software Version Capability</c>
-          <c>[This.I-D]</c>
-      </texttable>
+      <table anchor="table_ex">
+        <name>Software Version Capability</name>
+        <thead>
+          <tr>
+            <th align="center">Value</th>
+            <th align="center">Description</th>
+            <th align="center">Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="center">TBD</td>
+            <td align="center">Software Version Capability</td>
+            <td align="center">[This.I-D]</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
-
-    <section anchor="Security" title="Security Considerations">
+    <section anchor="Security">
+      <name>Security Considerations</name>
       <t>
         The Software Version Capability should be treated as sensitive information: it
         could be easier for an attacker to exploit the system if they know the
@@ -272,46 +305,47 @@
         confidentiality is used, the Version Capability could be snooped by an
         attacker. These issues are common to any BGP message but may be of
         greater interest in the context of this extension as explained above.
-        Refer to the related considerations in [RFC4271] and [RFC4272].
+        Refer to the related considerations in <xref target="RFC4271"/> and
+        <xref target="RFC4272"/>.
       </t>
       <t>
         Users of this mechanism should consider applying data minimization
-        practices as outlined in Section 6.1 of [RFC6973], as appropriate within
-        the deployment context.
+        practices as outlined in Section 6.1 of <xref target="RFC6973"/>, as
+        appropriate within the deployment context.
       </t>
       <t>
-        Sensitive information leaks can be minimized by using the [RFC5082]
+        Sensitive information leaks can be minimized by using the <xref target="RFC5082"/>
         mechanism or firewalls to filter out TCP 179 port from untrusted networks.
         This capability can be disabled per neighbor, thus the sensitive information
         can't be disclosed to untrusted neighbors.
       </t>
     </section>
   </middle>
-
   <back>
-    <references title="Normative References">
-      &RFC2119;
-      &RFC3629;
-      &RFC5246;
-      &RFC5082;
-      &RFC5492;
-      &RFC8174;
-      &RFC4272;
-      &RFC4271;
-      &RFC6973;
-    </references>
-    <references title="Informative References">
-      <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
-        <front>
-          <title>FRRouting - BGP Software Version Capability</title>
-
-          <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
-            <organization abbrev="Hostinger">Hostinger</organization>
-          </author>
-
-          <date year="2019" />
-        </front>
-      </reference>
+    <references>
+      <name>References</name>
+      <references title="Normative References">
+        &RFC2119;
+        &RFC3629;
+        &RFC4271;
+        &RFC4272;
+        &RFC5082;
+        &RFC6973;
+        &RFC8174;
+        &RFC9072;
+      </references>
+      <references>
+        <name>Informative References</name>
+        <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
+          <front>
+            <title>FRRouting - BGP Software Version Capability</title>
+            <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
+              <organization abbrev="Hostinger">Hostinger</organization>
+            </author>
+            <date year="2019"/>
+          </front>
+        </reference>
+      </references>
     </references>
   </back>
 </rfc>
