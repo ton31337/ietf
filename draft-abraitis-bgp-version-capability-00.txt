@@ -4,8 +4,8 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                               August 2020
-Expires: 4 March 2021
+Intended status: Informational                           19 January 2023
+Expires: 23 July 2023
 
 
                   Software Version Capability for BGP
@@ -35,11 +35,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 February 2021.
+   This Internet-Draft will expire on 23 July 2023.
 
 Copyright Notice
 
-   Copyright (c) 2020 IETF Trust and the persons identified as the
+   Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 1]
+Abraitis                  Expires 23 July 2023                  [Page 1]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 2]
+Abraitis                  Expires 23 July 2023                  [Page 2]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
    Capabilities advertisements with BGP are defined in [RFC5492].  They
@@ -165,9 +165,9 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 3]
+Abraitis                  Expires 23 July 2023                  [Page 3]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
                    +--------------------------------+
@@ -221,9 +221,9 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 4]
+Abraitis                  Expires 23 July 2023                  [Page 4]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
    Enabling (i.e., turning on) this capability requires bouncing all
@@ -277,9 +277,9 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 5]
+Abraitis                  Expires 23 July 2023                  [Page 5]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 6.  Security Considerations
@@ -333,9 +333,9 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 6]
+Abraitis                  Expires 23 July 2023                  [Page 6]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
    [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
@@ -389,9 +389,9 @@ Author's Address
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 7]
+Abraitis                  Expires 23 July 2023                  [Page 7]
 
-Internet-Draft     Software Version Capability for BGP       August 2020
+Internet-Draft     Software Version Capability for BGP      January 2023
 
 
    Email: donatas.abraitis@hostinger.com
@@ -445,4 +445,4 @@ Internet-Draft     Software Version Capability for BGP       August 2020
 
 
 
-Abraitis                  Expires 4 March 2021                  [Page 8]
+Abraitis                  Expires 23 July 2023                  [Page 8]
