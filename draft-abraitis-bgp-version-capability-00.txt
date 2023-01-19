@@ -2,7 +2,7 @@
 
 
 
-Network Working Group                               D.Abraitis. Abraitis
+Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
 Intended status: Informational                               August 2020
 Expires: 4 March 2021
