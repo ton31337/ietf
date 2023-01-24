@@ -21,11 +21,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-11" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-12" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-11"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-12"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
@@ -119,7 +119,7 @@
       </t>
       <ul empty="true" spacing="normal">
         <li>
-          TBD by IANA
+          75
         </li>
       </ul>
       <t>Capability Length</t>
@@ -261,9 +261,9 @@
     <section anchor="IANA">
       <name>IANA Considerations</name>
       <t>
-        The Capability Codes registry is a standalone registry. IANA is
-        requested to assign a capability number from the First Come First
-        Served range for the Software Version Capability in this document as follows:
+        IANA has assigned capability number 75 for the Software Version Capability
+        described in this document. This registration is in the BGP Capability Codes
+        registry.
       </t>
       <table anchor="table_ex">
         <name>Software Version Capability</name>
@@ -271,14 +271,12 @@
           <tr>
             <th align="center">Value</th>
             <th align="center">Description</th>
-            <th align="center">Reference</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td align="center">TBD</td>
+            <td align="center">75</td>
             <td align="center">Software Version Capability</td>
-            <td align="center">[This.I-D]</td>
           </tr>
         </tbody>
       </table>

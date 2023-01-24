@@ -4,12 +4,12 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                           19 January 2023
-Expires: 23 July 2023
+Intended status: Informational                           24 January 2023
+Expires: 28 July 2023
 
 
                   Software Version Capability for BGP
-                draft-abraitis-bgp-version-capability-11
+                draft-abraitis-bgp-version-capability-12
 
 Abstract
 
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 July 2023.
+   This Internet-Draft will expire on 28 July 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 1]
+Abraitis                  Expires 28 July 2023                  [Page 1]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 2]
+Abraitis                  Expires 28 July 2023                  [Page 2]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -139,7 +139,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
    Capability Code
 
-      TBD by IANA
+      75
 
    Capability Length
 
@@ -165,7 +165,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 3]
+Abraitis                  Expires 28 July 2023                  [Page 3]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -221,7 +221,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 4]
+Abraitis                  Expires 28 July 2023                  [Page 4]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -277,25 +277,24 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 5]
+Abraitis                  Expires 28 July 2023                  [Page 5]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 5.  IANA Considerations
 
-   The Capability Codes registry is a standalone registry.  IANA is
-   requested to assign a capability number from the First Come First
-   Served range for the Software Version Capability in this document as
-   follows:
+   IANA has assigned capability number 75 for the Software Version
+   Capability described in this document.  This registration is in the
+   BGP Capability Codes registry.
 
-           +=======+=============================+============+
-           | Value |         Description         | Reference  |
-           +=======+=============================+============+
-           |  TBD  | Software Version Capability | [This.I-D] |
-           +-------+-----------------------------+------------+
+                  +=======+=============================+
+                  | Value |         Description         |
+                  +=======+=============================+
+                  |   75  | Software Version Capability |
+                  +-------+-----------------------------+
 
-                   Table 1: Software Version Capability
+                    Table 1: Software Version Capability
 
 6.  Security Considerations
 
@@ -333,15 +332,16 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 6]
+
+Abraitis                  Expires 28 July 2023                  [Page 6]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 7.1.  Normative References
 
-   [RFC2119]  Bradner, S. and RFC Publisher, "Key words for use in RFCs
-              to Indicate Requirement Levels", BCP 14, RFC 2119,
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
@@ -389,7 +389,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 7]
+Abraitis                  Expires 28 July 2023                  [Page 7]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -445,4 +445,4 @@ Author's Address
 
 
 
-Abraitis                  Expires 23 July 2023                  [Page 8]
+Abraitis                  Expires 28 July 2023                  [Page 8]
