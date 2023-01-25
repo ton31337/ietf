@@ -334,7 +334,7 @@
       </references>
       <references>
         <name>Informative References</name>
-        <reference anchor="FRRouting" target="https://github.com/ton31337/frr/commit/4c566878fd1a7df9f8c84ee03f419c0b00ae444b">
+        <reference anchor="FRRouting" target="https://github.com/opensourcerouting/frr/commit/4e91cdb63a9a2008e9ebe11cf0bc1ea5b8020e75">
           <front>
             <title>FRRouting - BGP Software Version Capability</title>
             <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
