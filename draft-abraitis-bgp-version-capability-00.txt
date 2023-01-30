@@ -4,12 +4,12 @@
 
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                 Hostinger
-Intended status: Informational                           25 January 2023
-Expires: 29 July 2023
+Intended status: Informational                           30 January 2023
+Expires: 3 August 2023
 
 
                   Software Version Capability for BGP
-                draft-abraitis-bgp-version-capability-12
+                draft-abraitis-bgp-version-capability-13
 
 Abstract
 
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 July 2023.
+   This Internet-Draft will expire on 3 August 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Abraitis                  Expires 29 July 2023                  [Page 1]
+Abraitis                  Expires 3 August 2023                 [Page 1]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -68,9 +68,9 @@ Table of Contents
      4.1.  Example Usage . . . . . . . . . . . . . . . . . . . . . .   5
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Abraitis                  Expires 29 July 2023                  [Page 2]
+Abraitis                  Expires 3 August 2023                 [Page 2]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -165,7 +165,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 29 July 2023                  [Page 3]
+Abraitis                  Expires 3 August 2023                 [Page 3]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -221,7 +221,7 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 29 July 2023                  [Page 4]
+Abraitis                  Expires 3 August 2023                 [Page 4]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
@@ -249,8 +249,8 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 4.1.  Example Usage
 
-   Below is an example from the [FRRouting] implementation showing both
-   the received and advertised Software Version Capability:
+   Below is an example from the [FRRouting] and [GoBGP] implementation
+   showing both the received and advertised Software Version Capability:
 
      :~# vtysh -c 'show ip bgp summary failed'
      ...
@@ -262,12 +262,11 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
                                   Figure 2
 
-     :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
-     > | jq '."198.51.100.1".neighborCapabilities.versions'
-     {
-       "advertisedVersion": "frrouting/7.2",
-       "receivedVersion": "frrouting/7.3"
-     }
+           software-version:   advertised and received
+             Local:
+                GoBGP/3.10.0
+             Remote:
+                FRRouting/8.5-dev-MyOwnFRRVersion-gdc92f44a4
 
                                   Figure 3
 
@@ -277,10 +276,20 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
 
 
-Abraitis                  Expires 29 July 2023                  [Page 5]
+
+Abraitis                  Expires 3 August 2023                 [Page 5]
 
 Internet-Draft     Software Version Capability for BGP      January 2023
 
+
+     :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+     > | jq '."198.51.100.1".neighborCapabilities.versions'
+     {
+       "advertisedVersion": "frrouting/7.2",
+       "receivedVersion": "frrouting/7.3"
+     }
+
+                                  Figure 4
 
 5.  IANA Considerations
 
@@ -320,6 +329,15 @@ Internet-Draft     Software Version Capability for BGP      January 2023
    and [RFC4272].
 
    Users of this mechanism should consider applying data minimization
+
+
+
+
+Abraitis                  Expires 3 August 2023                 [Page 6]
+
+Internet-Draft     Software Version Capability for BGP      January 2023
+
+
    practices as outlined in Section 6.1 of [RFC6973], as appropriate
    within the deployment context.
 
@@ -329,14 +347,6 @@ Internet-Draft     Software Version Capability for BGP      January 2023
    sensitive information can't be disclosed to untrusted neighbors.
 
 7.  References
-
-
-
-
-Abraitis                  Expires 29 July 2023                  [Page 6]
-
-Internet-Draft     Software Version Capability for BGP      January 2023
-
 
 7.1.  Normative References
 
@@ -375,24 +385,29 @@ Internet-Draft     Software Version Capability for BGP      January 2023
 
    [RFC9072]  Chen, E. and J. Scudder, "Extended Optional Parameters
               Length for BGP OPEN Message", RFC 9072,
+
+
+
+
+Abraitis                  Expires 3 August 2023                 [Page 7]
+
+Internet-Draft     Software Version Capability for BGP      January 2023
+
+
               DOI 10.17487/RFC9072, July 2021,
               <https://www.rfc-editor.org/info/rfc9072>.
 
 7.2.  Informative References
 
    [FRRouting]
-              Abraitis, D.A., "FRRouting - BGP Software Version
-              Capability", 2019,
+              Abraitis, D., "FRRouting - BGP Software Version
+              Capability", 2023,
               <https://github.com/opensourcerouting/frr/
               commit/4e91cdb63a9a2008e9ebe11cf0bc1ea5b8020e75>.
 
-
-
-
-Abraitis                  Expires 29 July 2023                  [Page 7]
-
-Internet-Draft     Software Version Capability for BGP      January 2023
-
+   [GoBGP]    Abraitis, D., "Add Software Version capability", 2023,
+              <https://github.com/osrg/gobgp/
+              commit/52b7cfbd70da6a30d213bcc62f863810f24d52f1>.
 
 Author's Address
 
@@ -430,19 +445,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Abraitis                  Expires 29 July 2023                  [Page 8]
+Abraitis                  Expires 3 August 2023                 [Page 8]

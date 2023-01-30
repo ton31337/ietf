@@ -21,11 +21,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-12" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-13" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-12"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-13"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
@@ -232,8 +232,9 @@
       <section>
         <name>Example Usage</name>
         <t>
-          Below is an example from the <xref target="FRRouting"/> implementation showing
-          both the received and advertised Software Version Capability:
+          Below is an example from the <xref target="FRRouting"/> and
+          <xref target="GoBGP"/> implementation showing both the received
+          and advertised Software Version Capability:
         </t>
         <figure anchor="frr_failed">
           <artwork align="left"><![CDATA[
@@ -244,6 +245,15 @@
   ens224         3       3  00:01:12 Waiting for NHT (frrouting/7.2)
   eth0           3       3  00:00:14 Neighbor deleted (frrouting/7.3)
   ...
+              ]]></artwork>
+        </figure>
+        <figure anchor="gobgp_versions">
+          <artwork align="left"><![CDATA[
+        software-version:   advertised and received
+          Local:
+             GoBGP/3.10.0
+          Remote:
+             FRRouting/8.5-dev-MyOwnFRRVersion-gdc92f44a4
               ]]></artwork>
         </figure>
         <figure anchor="frr_version">
@@ -337,10 +347,19 @@
         <reference anchor="FRRouting" target="https://github.com/opensourcerouting/frr/commit/4e91cdb63a9a2008e9ebe11cf0bc1ea5b8020e75">
           <front>
             <title>FRRouting - BGP Software Version Capability</title>
-            <author initials="D.A." surname="Abraitis" fullname="Donatas Abraitis">
+            <author surname="Abraitis" fullname="Donatas Abraitis">
               <organization abbrev="Hostinger">Hostinger</organization>
             </author>
-            <date year="2019"/>
+            <date year="2023"/>
+          </front>
+        </reference>
+        <reference anchor="GoBGP" target="https://github.com/osrg/gobgp/commit/52b7cfbd70da6a30d213bcc62f863810f24d52f1">
+          <front>
+            <title>Add Software Version capability</title>
+            <author surname="Abraitis" fullname="Donatas Abraitis">
+              <organization abbrev="Hostinger">Hostinger</organization>
+            </author>
+            <date year="2023"/>
           </front>
         </reference>
       </references>
