@@ -344,7 +344,7 @@
       </references>
       <references>
         <name>Informative References</name>
-        <reference anchor="FRRouting" target="https://github.com/opensourcerouting/frr/commit/4e91cdb63a9a2008e9ebe11cf0bc1ea5b8020e75">
+        <reference anchor="FRRouting" target="https://github.com/FRRouting/frr/commit/c4257900c4ca320117bcd1f88b7f036e0c8f7fcb">
           <front>
             <title>FRRouting - BGP Software Version Capability</title>
             <author surname="Abraitis" fullname="Donatas Abraitis">
@@ -353,7 +353,7 @@
             <date year="2023"/>
           </front>
         </reference>
-        <reference anchor="GoBGP" target="https://github.com/osrg/gobgp/commit/52b7cfbd70da6a30d213bcc62f863810f24d52f1">
+        <reference anchor="GoBGP" target="https://github.com/osrg/gobgp/commit/15f9d5c64c98d1db273cc45e95fcc11843fba4b5">
           <front>
             <title>Add Software Version capability</title>
             <author surname="Abraitis" fullname="Donatas Abraitis">
