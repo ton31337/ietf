@@ -1,0 +1,280 @@
+
+
+
+
+Network Working Group                                        D. Abraitis
+Internet-Draft                                                    NetDef
+Intended status: Standards Track                               A. Retana
+Expires: 28 June 2024                       Futurewei Technologies, Inc.
+                                                                 J. Haas
+                                                        Juniper Networks
+                                                        26 December 2023
+
+
+                 Paths Limit for Multiple Paths in BGP
+                 draft-ietf-idr-addpath-paths-limit-00
+
+Abstract
+
+   This document specifies a BGP extension enabling the receiver to
+   communicate the sender about the path limit for multiple paths
+   related to a specific address prefix, thereby optimizing the
+   transmission by selectively relaying pertinent path information
+   instead of the entire set of known paths.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 28 June 2024.
+
+Copyright Notice
+
+   Copyright (c) 2023 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Simplified BSD License text
+
+
+
+Abraitis, et al.          Expires 28 June 2024                  [Page 1]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
+
+   as described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Specification of Requirements . . . . . . . . . . . . . . . .   2
+   3.  Paths Limit capability  . . . . . . . . . . . . . . . . . . .   2
+   4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   The BGP specification [RFC7911] defines a BGP extension that allows
+   the advertisement of multiple paths for the same address prefix
+   without the new paths implicitly replacing any previous ones.
+
+   Multiple paths for a large number of prefixes may be received by a
+   BGP speaker, potentially depleting memory resources or even causing
+   network-wide instability, which can be considered a denial-of-service
+   attack.
+
+   Without knowing the path limit the receiver is capable of accepting,
+   we can't tell the sender to send an arbitrary number of paths for the
+   same prefix.  Without this information, the sender can send as many
+   paths as it wants.
+
+   This document defines a BGP extension that allows the receiver to
+   inform the sender of the path limit of multiple paths for the same
+   address prefix instead of sending all known paths.
+
+2.  Specification of Requirements
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Paths Limit capability
+
+   The ADD-PATH Capability [RFC7911] value field consists of one or more
+   of the following tuples:
+
+
+
+
+
+Abraitis, et al.          Expires 28 June 2024                  [Page 2]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
+
+       +------------------------------------------------+
+       | Address Family Identifier (2 octets)           |
+       +------------------------------------------------+
+       | Subsequent Address Family Identifier (1 octet) |
+       +------------------------------------------------+
+       | Send/Receive (1 octet)                         |
+       +------------------------------------------------+
+
+                                  Figure 1
+
+   This format is strictly defined, and by adding a new field "Paths
+   Limit", after Send/Receive flags, the format can't be changed in a
+   backward-compatible way.
+
+   Hence, we define a new BGP capability with Capability Code TBD.
+
+   The Capability Value field consists of one or more of the following
+   tuples:
+
+       +------------------------------------------------+
+       | Address Family Identifier (2 octets)           |
+       +------------------------------------------------+
+       | Subsequent Address Family Identifier (1 octet) |
+       +------------------------------------------------+
+       | Paths Limit (2 octet)                          |
+       +------------------------------------------------+
+
+                                  Figure 2
+
+   A BGP speaker who wishes to indicate support for multiple AFI/SAFIs
+   MUST do so by including the information in a single instance of the
+   PATHS-LIMIT capability.
+
+   This new PATHS-LIMIT capability MUST be used only with ADD-PATH
+   capability.  If PATHS-LIMIT capability is received, but no ADD-PATH
+   capability, then PATHS-LIMIT capability MUST be ignored.
+
+   *  Paths Limit: this field indicates the maximum paths limit the
+      receiver is able to receive from its peer.  If the Paths Limit is
+      received as zero (0), the sender SHOULD send the paths for the
+      same prefix without any limitation.
+
+   If both ADD-PATH capability, and PATHS-LIMIT are negotiated, but
+   PATHS-LIMIT capability is empty (no per AFI/SAFI limits defined), the
+   sender SHOULD not send any paths for all AFIs/SAFIs, but it can
+   accept paths limit requests.
+
+
+
+
+
+Abraitis, et al.          Expires 28 June 2024                  [Page 3]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
+
+   Paths limit is defined as 2 octets to avoid being too small for some
+   specific use cases, like huge ECMP fabrics.  But a typical use case
+   would be on the order of between 2 and 8.
+
+4.  Operation
+
+   For a BGP speaker to be able to send paths limit to its peer, that
+   BGP speaker MUST advertise the PATHS-PATH Capability and specify the
+   Paths Limit count is willing to receive.
+
+   PATHS-LIMIT capability MUST be advertised only if ADD-PATH capability
+   is supported by the sender.
+
+   If the sender wants to advertise multiple paths for the same prefix,
+   and PATHS-LIMIT capability is advertised, and received, then the
+   sender MUST respect this paths limit and send only the specified
+   maximum number of paths per prefix instead of sending all known paths
+   or as many as the sender wants.
+
+   A BGP speaker SHOULD include the best route [RFC4271] when more than
+   one path is advertised to a neighbor unless it is a path received
+   from that neighbor.
+
+   Usually, some implementations provide a few options to either send
+   all known paths or send N best paths.  The receiving implementation
+   SHOULD provide a configuration knob to specify the maximum number of
+   paths to accept from the sender for multipath prefixes.  If for
+   example, the receiver advertises paths limit as 2, but the sender has
+   6 paths to send, it MUST send only 2 best paths.
+
+5.  IANA Considerations
+
+   IANA has assigned the value TBD for the PATHS-LIMIT Capability
+   described in this document.  This registration is in the "Capability
+   Codes" registry.
+
+6.  References
+
+6.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
+              Border Gateway Protocol 4 (BGP-4)", RFC 4271,
+
+
+
+
+Abraitis, et al.          Expires 28 June 2024                  [Page 4]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
+
+              DOI 10.17487/RFC4271, January 2006,
+              <https://www.rfc-editor.org/info/rfc4271>.
+
+   [RFC7911]  Walton, D., Retana, A., Chen, E., and J. Scudder,
+              "Advertisement of Multiple Paths in BGP", RFC 7911,
+              DOI 10.17487/RFC7911, July 2016,
+              <https://www.rfc-editor.org/info/rfc7911>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+Authors' Addresses
+
+   Donatas Abraitis
+   NetDef
+
+   Email: donatas@opensourcerouting.org
+
+
+   Alvaro Retana
+   Futurewei Technologies, Inc.
+
+   Email: aretana@futurewei.com
+
+
+   Jeffrey Haas
+   Juniper Networks
+
+   Email: jhaas@juniper.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abraitis, et al.          Expires 28 June 2024                  [Page 5]
