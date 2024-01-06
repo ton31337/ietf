@@ -143,13 +143,13 @@
         <li>
           Paths Limit: this field indicates the maximum paths limit the receiver
           is able to receive from its peer. If the Paths Limit is received as zero (0),
-          the sender SHOULD send the paths for the same prefix without any limitation.
+          the capability SHOULD be ignored.
         </li>
       </ul>
       <t>
         If both ADD-PATH capability, and PATHS-LIMIT are negotiated, but PATHS-LIMIT
-        capability is empty (no per AFI/SAFI limits defined), the sender SHOULD not
-        send any paths for all AFIs/SAFIs, but it can accept paths limit requests.
+        capability is empty (no per AFI/SAFI limits defined), the capability SHOULD be
+        ignored.
       </t>
       <t>
         Paths limit is defined as 2 octets to avoid being too small for some specific

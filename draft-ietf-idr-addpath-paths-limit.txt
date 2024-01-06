@@ -5,10 +5,10 @@
 Network Working Group                                        D. Abraitis
 Internet-Draft                                                    NetDef
 Intended status: Standards Track                               A. Retana
-Expires: 28 June 2024                       Futurewei Technologies, Inc.
+Expires: 29 June 2024                       Futurewei Technologies, Inc.
                                                                  J. Haas
                                                         Juniper Networks
-                                                        26 December 2023
+                                                        27 December 2023
 
 
                  Paths Limit for Multiple Paths in BGP
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 June 2024.
+   This Internet-Draft will expire on 29 June 2024.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Abraitis, et al.          Expires 28 June 2024                  [Page 1]
+Abraitis, et al.          Expires 29 June 2024                  [Page 1]
 
 Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Abraitis, et al.          Expires 28 June 2024                  [Page 2]
+Abraitis, et al.          Expires 29 June 2024                  [Page 2]
 
 Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
 
@@ -153,26 +153,22 @@ Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
 
    *  Paths Limit: this field indicates the maximum paths limit the
       receiver is able to receive from its peer.  If the Paths Limit is
-      received as zero (0), the sender SHOULD send the paths for the
-      same prefix without any limitation.
+      received as zero (0), the capability SHOULD be ignored.
 
    If both ADD-PATH capability, and PATHS-LIMIT are negotiated, but
    PATHS-LIMIT capability is empty (no per AFI/SAFI limits defined), the
-   sender SHOULD not send any paths for all AFIs/SAFIs, but it can
-   accept paths limit requests.
-
-
-
-
-
-Abraitis, et al.          Expires 28 June 2024                  [Page 3]
-
-Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
-
+   capability SHOULD be ignored.
 
    Paths limit is defined as 2 octets to avoid being too small for some
    specific use cases, like huge ECMP fabrics.  But a typical use case
    would be on the order of between 2 and 8.
+
+
+
+Abraitis, et al.          Expires 29 June 2024                  [Page 3]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
 
 4.  Operation
 
@@ -217,20 +213,19 @@ Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
 
    [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
               Border Gateway Protocol 4 (BGP-4)", RFC 4271,
-
-
-
-
-Abraitis, et al.          Expires 28 June 2024                  [Page 4]
-
-Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
-
-
               DOI 10.17487/RFC4271, January 2006,
               <https://www.rfc-editor.org/info/rfc4271>.
 
    [RFC7911]  Walton, D., Retana, A., Chen, E., and J. Scudder,
               "Advertisement of Multiple Paths in BGP", RFC 7911,
+
+
+
+Abraitis, et al.          Expires 29 June 2024                  [Page 4]
+
+Internet-Draft    Paths Limit for Multiple Paths in BGP    December 2023
+
+
               DOI 10.17487/RFC7911, July 2016,
               <https://www.rfc-editor.org/info/rfc7911>.
 
@@ -277,4 +272,9 @@ Authors' Addresses
 
 
 
-Abraitis, et al.          Expires 28 June 2024                  [Page 5]
+
+
+
+
+
+Abraitis, et al.          Expires 29 June 2024                  [Page 5]
