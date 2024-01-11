@@ -40,16 +40,17 @@
         <email>jhaas@juniper.net</email>
       </address>
     </author>
-    <date year="2023"/>
-    <area>General</area>
-    <keyword>template</keyword>
+    <date year="2024"/>
+    <area>Routing</area>
+    <workgroup>Inter-Domain Routing</workgroup>
+    <keyword>BGP ADD-PATH</keyword>
     <abstract>
       <t>
-        This document specifies a BGP extension enabling the receiver to
-        communicate the sender about the path limit for multiple paths
-        related to a specific address prefix, thereby optimizing the
-        transmission by selectively relaying pertinent path information
-        instead of the entire set of known paths.
+        This document specifies a BGP capability that complements the 
+        ADD-PATH Capability by indicating the maximum number of paths a 
+        BGP speaker can receive from a peer, optimizing the 
+        transmission of BGP routes by selectively relaying pertinent 
+        routes instead of the entire set.
       </t>
     </abstract>
   </front>
@@ -57,7 +58,7 @@
     <section>
       <name>Introduction</name>
       <t>
-        The BGP specification <xref target="RFC7911"/> defines a BGP extension
+        BGP ADD-PATH <xref target="RFC7911"/> defines a BGP extension
         that allows the advertisement of multiple paths for the same address
         prefix without the new paths implicitly replacing any previous ones.
       </t>
@@ -65,18 +66,20 @@
         Multiple paths for a large number of prefixes may be received by a BGP
         speaker, potentially depleting memory resources or even causing
         network-wide instability, which can be considered a denial-of-service
-        attack.
+        attack. Without knowing the path limit the receiver is capable 
+        of accepting, the sender can send as many routes as it wants.  
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
+        recommendations for the use of BGP ADD-PATH while implementing 
+        specific applications.
       </t>
       <t>
-        Without knowing the path limit the receiver is capable of accepting,
-        we can't tell the sender to send an arbitrary number of paths for the
-        same prefix. Without this information, the sender can send as many paths
-        as it wants.
-      </t>
-      <t>
-        This document defines a BGP extension that allows the receiver to inform
-        the sender of the path limit of multiple paths for the same address
-        prefix instead of sending all known paths.
+        This document specifies a BGP capability 
+        <xref target="RFC5492"/> that complements the 
+        ADD-PATH Capability <xref target="RFC7911"/> by indicating the 
+        maximum number of paths a BGP speaker can receive from a peer. 
+        This indication allows the sender to optimize the transmission 
+        of BGP routes by selectively relaying pertinent routes instead 
+        of the entire set.
       </t>
     </section>
     <section anchor="simple_list">
@@ -92,34 +95,14 @@
     <section>
       <name>Paths Limit capability</name>
       <t>
-        The ADD-PATH Capability <xref target="RFC7911"/> value field consists
-        of one or more of the following tuples:
-      </t>
-      <figure anchor="addpath_capability">
-        <artwork align="left"><![CDATA[
-    +------------------------------------------------+
-    | Address Family Identifier (2 octets)           |
-    +------------------------------------------------+
-    | Subsequent Address Family Identifier (1 octet) |
-    +------------------------------------------------+
-    | Send/Receive (1 octet)                         |
-    +------------------------------------------------+
-            ]]></artwork>
-      </figure>
-      <t>
-        This format is strictly defined, and by adding a new field “Paths Limit”,
-        after Send/Receive flags, the format can't be changed in a
-        backward-compatible way.
-      </t>
-      <t>
-        Hence, we define a new BGP capability with Capability Code TBD.
-      </t>
-      <t>
-        The Capability Value field consists of one or more of the following
-        tuples:
+       The Paths Limit Capability is a BGP capability 
+       <xref target="RFC5492"/>, with Capability Code TBD.  The 
+       Capability Length field of this capability is variable.  The 
+       Capability Value field consists of one or more of the following 
+       tuples:
       </t>
       <figure anchor="paths_limit_capability">
-        <artwork align="left"><![CDATA[
+        <artwork align="center"><![CDATA[
     +------------------------------------------------+
     | Address Family Identifier (2 octets)           |
     +------------------------------------------------+
@@ -200,11 +183,17 @@
   <back>
     <references>
       <name>References</name>
-      <references title="Normative References">
-        &RFC2119;
-        &RFC4271;
-        &RFC7911;
-        &RFC8174;
+      <references>
+      <name>Normative References</name>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5492.xml"/>
+	      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7911.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+      </references>
+      <references>
+      <name>Informative References</name>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-add-paths-guidelines.xml"/>
       </references>
     </references>
   </back>
