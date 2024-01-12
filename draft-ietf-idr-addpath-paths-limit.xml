@@ -4,10 +4,6 @@
   <!ENTITY zwsp   "&#8203;">
   <!ENTITY nbhy   "&#8209;">
   <!ENTITY wj     "&#8288;">
-  <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
-  <!ENTITY RFC4271 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4271.xml">
-  <!ENTITY RFC7911 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7911.xml">
-  <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc strict="yes" ?>
@@ -17,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-ietf-idr-addpath-paths-limit-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-idr-addpath-paths-limit-00"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-00"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -40,16 +36,17 @@
         <email>jhaas@juniper.net</email>
       </address>
     </author>
-    <date year="2023"/>
-    <area>General</area>
-    <keyword>template</keyword>
+    <date year="2024"/>
+    <area>Routing</area>
+    <workgroup>Inter-Domain Routing</workgroup>
+    <keyword>BGP ADD-PATH</keyword>
     <abstract>
       <t>
-        This document specifies a BGP extension enabling the receiver to
-        communicate the sender about the path limit for multiple paths
-        related to a specific address prefix, thereby optimizing the
-        transmission by selectively relaying pertinent path information
-        instead of the entire set of known paths.
+        This document specifies a BGP capability that complements the 
+        ADD-PATH Capability by indicating the maximum number of paths a 
+        BGP speaker can receive from a peer, optimizing the 
+        transmission of BGP routes by selectively relaying pertinent 
+        routes instead of the entire set.
       </t>
     </abstract>
   </front>
@@ -57,7 +54,7 @@
     <section>
       <name>Introduction</name>
       <t>
-        The BGP specification <xref target="RFC7911"/> defines a BGP extension
+        BGP ADD-PATH <xref target="RFC7911"/> defines a BGP extension
         that allows the advertisement of multiple paths for the same address
         prefix without the new paths implicitly replacing any previous ones.
       </t>
@@ -65,18 +62,20 @@
         Multiple paths for a large number of prefixes may be received by a BGP
         speaker, potentially depleting memory resources or even causing
         network-wide instability, which can be considered a denial-of-service
-        attack.
+        attack. Without knowing the path limit the receiver is capable 
+        of accepting, the sender can send as many routes as it wants.  
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
+        recommendations for the use of BGP ADD-PATH while implementing 
+        specific applications.
       </t>
       <t>
-        Without knowing the path limit the receiver is capable of accepting,
-        we can't tell the sender to send an arbitrary number of paths for the
-        same prefix. Without this information, the sender can send as many paths
-        as it wants.
-      </t>
-      <t>
-        This document defines a BGP extension that allows the receiver to inform
-        the sender of the path limit of multiple paths for the same address
-        prefix instead of sending all known paths.
+        This document specifies a BGP capability 
+        <xref target="RFC5492"/> that complements the 
+        ADD-PATH Capability <xref target="RFC7911"/> by indicating the 
+        maximum number of paths a BGP speaker can receive from a peer. 
+        This indication allows the sender to optimize the transmission 
+        of BGP routes by selectively relaying pertinent routes instead 
+        of the entire set.
       </t>
     </section>
     <section anchor="simple_list">
@@ -90,36 +89,16 @@
       </t>
     </section>
     <section>
-      <name>Paths Limit capability</name>
+      <name>PATHS-LIMIT Capability</name>
       <t>
-        The ADD-PATH Capability <xref target="RFC7911"/> value field consists
-        of one or more of the following tuples:
-      </t>
-      <figure anchor="addpath_capability">
-        <artwork align="left"><![CDATA[
-    +------------------------------------------------+
-    | Address Family Identifier (2 octets)           |
-    +------------------------------------------------+
-    | Subsequent Address Family Identifier (1 octet) |
-    +------------------------------------------------+
-    | Send/Receive (1 octet)                         |
-    +------------------------------------------------+
-            ]]></artwork>
-      </figure>
-      <t>
-        This format is strictly defined, and by adding a new field “Paths Limit”,
-        after Send/Receive flags, the format can't be changed in a
-        backward-compatible way.
-      </t>
-      <t>
-        Hence, we define a new BGP capability with Capability Code TBD.
-      </t>
-      <t>
-        The Capability Value field consists of one or more of the following
-        tuples:
+       The PATHS-LIMIT Capability is a BGP capability 
+       <xref target="RFC5492"/>, with Capability Code TBD.  The 
+       Capability Length field of this capability is variable.  The 
+       Capability Value field consists of one or more of the following 
+       tuples:
       </t>
       <figure anchor="paths_limit_capability">
-        <artwork align="left"><![CDATA[
+        <artwork align="center"><![CDATA[
     +------------------------------------------------+
     | Address Family Identifier (2 octets)           |
     +------------------------------------------------+
@@ -130,82 +109,104 @@
             ]]></artwork>
       </figure>
       <t>
-        A BGP speaker who wishes to indicate support for multiple AFI/SAFIs MUST
+        The meaning and use of the fields are as follows:
+      </t>
+      <ul empty="true">
+       <li>
+       <dl newline="true">
+        <dt>Address Family Identifier (AFI):</dt>
+        <dd>This field is the same as the one used in 
+        <xref target="RFC4760"/>.</dd>
+
+        <dt>Subsequent Address Family Identifier (SAFI):</dt>
+        <dd>This field is the same as the one used in 
+        <xref target="RFC4760"/>.</dd>
+        <dt>Paths Limit:</dt>
+        <dd>This field indicates the maximum paths limit the receiver 
+        is able to receive from its peer. If the Paths Limit is 
+        received as zero (0), the capability SHOULD be ignored.</dd>
+       </dl>
+       </li>
+      </ul>
+
+      <t>
+        A BGP speaker that wishes to indicate support for multiple AFI/SAFIs MUST
         do so by including the information in a single instance of the
         PATHS-LIMIT capability.
       </t>
       <t>
-        This new PATHS-LIMIT capability MUST be used only with ADD-PATH capability.
-        If PATHS-LIMIT capability is received, but no ADD-PATH capability, then
-        PATHS-LIMIT capability MUST be ignored.
+        The PATHS-LIMIT capability MUST be ignored if the ADD_PATH capability is not present.
       </t>
-      <ul>
-        <li>
-          Paths Limit: this field indicates the maximum paths limit the receiver
-          is able to receive from its peer. If the Paths Limit is received as zero (0),
-          the capability SHOULD be ignored.
-        </li>
-      </ul>
       <t>
-        If both ADD-PATH capability, and PATHS-LIMIT are negotiated, but PATHS-LIMIT
+        If the PATHS-LIMIT
         capability is empty (no per AFI/SAFI limits defined), the capability SHOULD be
         ignored.
       </t>
       <t>
-        Paths limit is defined as 2 octets to avoid being too small for some specific
-        use cases, like huge ECMP fabrics. But a typical use case would be on the order
-        of between 2 and 8.
-      </t>
-    </section>
-    <section>
-      <name>Operation</name>
-      <t>
-        For a BGP speaker to be able to send paths limit to its peer, that BGP speaker
-        MUST advertise the PATHS-PATH Capability and specify the Paths Limit count is
-        willing to receive.
+       An AFI/SAFI tuple MUST be ignored if the same tuple was not received in the ADD-PATH capability.
       </t>
       <t>
-        PATHS-LIMIT capability MUST be advertised only if ADD-PATH capability is
-        supported by the sender.
+       If more than one tuple is received for the same AFI/SAFI pair, only the first tuple should be considered.  All others MUST be ignored.
       </t>
       <t>
-        If the sender wants to advertise multiple paths for the same prefix, and
-        PATHS-LIMIT capability is advertised, and received, then the sender MUST
-        respect this paths limit and send only the specified maximum number of paths
-        per prefix instead of sending all known paths or as many as the sender wants.
+        A sender advertising multiple paths for the same prefix SHOULD send only the specified maximum number of paths indicated in the PATHS-LIMIT capability.
       </t>
       <t>
-        A BGP speaker SHOULD include the best route <xref target="RFC4271"/> when more
-        than one path is advertised to a neighbor unless it is a path received from
-        that neighbor.
-      </t>
-      <t>
-        Usually, some implementations provide a few options to either send all known
-        paths or send N best paths.
-        The receiving implementation SHOULD provide a configuration knob to specify
-        the maximum number of paths to accept from the sender for multipath prefixes.
-        If for example, the receiver advertises paths limit as 2, but the sender has
-        6 paths to send, it MUST send only 2 best paths.
+        An implementation SHOULD provide a configuration knob to specify
+        the maximum number of paths to accept from a sender.
       </t>
     </section>
     <section anchor="IANA">
       <name>IANA Considerations</name>
       <t>
-        IANA has assigned the value TBD for the PATHS-LIMIT Capability
-        described in this document.  This registration is in the
-        "Capability Codes" registry.
+        IANA is requested to assign a value (TBD) for the PATHS-LIMIT 
+        Capability from the "Capability Codes" registry.
+      </t>
+    </section>
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>
+       This document defines a BGP extension that allows a receiver to 
+       better control the number of routes it receives when using BGP 
+       ADD-PATH <xref target="RFC7911"/>.  Use of the PATHS-LIMIT 
+       capability can then mitigate some of the security-related 
+       concerns expressed in <xref target="RFC7911"/>.
+      </t>
+      <t>
+       A rogue node or misconfiguration can result in the advetisement 
+       of a Paths Limit value that is too low for the application being 
+       used.  This can result in inconsistent forwarding.  Describing 
+       applications for BGP ADD-PATH is outside the scope of this 
+       document.  Users of the PATHS-LIMIT Capability are encouraged to 
+       examine the behavior and potential impact by studying the best 
+       practices described in 
+       <xref target="I-D.ietf-idr-add-paths-guidelines"/>.
       </t>
     </section>
   </middle>
   <back>
     <references>
       <name>References</name>
-      <references title="Normative References">
-        &RFC2119;
-        &RFC4271;
-        &RFC7911;
-        &RFC8174;
+      <references>
+      <name>Normative References</name>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4760.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5492.xml"/>
+	      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7911.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+      </references>
+      <references>
+      <name>Informative References</name>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-add-paths-guidelines.xml"/>
       </references>
     </references>
+
+    <section anchor="Acknowledgements" numbered="false">
+      <name>Acknowledgements</name>
+      <t>
+        TBD
+      </t>
+    </section>
+
   </back>
 </rfc>
