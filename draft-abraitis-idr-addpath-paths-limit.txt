@@ -150,7 +150,7 @@ Internet-Draft    Paths Limit for Multiple Paths in BGP     January 2024
       Paths Limit:
          This field indicates the maximum paths limit the receiver is
          able to receive from its peer.  If the Paths Limit is received
-         as zero (0), the capability SHOULD be ignored.
+         as zero (0), the tuple SHOULD be ignored.
 
    A BGP speaker that wishes to indicate support for multiple AFI/SAFIs
    MUST do so by including the information in a single instance of the
@@ -159,9 +159,9 @@ Internet-Draft    Paths Limit for Multiple Paths in BGP     January 2024
    The PATHS-LIMIT capability MUST be ignored if the ADD_PATH capability
    is not present.
 
-   If the PATHS-LIMIT capability is empty (no per AFI/SAFI limits
-   defined), the capability SHOULD be ignored.
-
+   If the PATHS-LIMIT capability is empty (i.e. the Capability Length
+   field is set to 0), it means that the sender doesn't have any
+   specific limits to communicate.
 
 
 

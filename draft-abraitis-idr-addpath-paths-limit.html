@@ -1414,7 +1414,7 @@ li > p:last-of-type {
 <dt id="section-3-4.1.1.5">Paths Limit:</dt>
             <dd style="margin-left: 1.5em" id="section-3-4.1.1.6">This field indicates the maximum paths limit the receiver 
         is able to receive from its peer. If the Paths Limit is 
-        received as zero (0), the capability SHOULD be ignored.<a href="#section-3-4.1.1.6" class="pilcrow">¶</a>
+        received as zero (0), the tuple SHOULD be ignored.<a href="#section-3-4.1.1.6" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 </dl>
@@ -1427,9 +1427,9 @@ li > p:last-of-type {
 <p id="section-3-6">
         The PATHS-LIMIT capability MUST be ignored if the ADD_PATH capability is not present.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <p id="section-3-7">
-        If the PATHS-LIMIT
-        capability is empty (no per AFI/SAFI limits defined), the capability SHOULD be
-        ignored.<a href="#section-3-7" class="pilcrow">¶</a></p>
+        If the PATHS-LIMIT capability is empty (i.e. the Capability 
+        Length field is set to 0), it means that the sender doesn't 
+        have any specific limits to communicate.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">
        An AFI/SAFI tuple MUST be ignored if the same tuple was not received in the ADD-PATH capability.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">
