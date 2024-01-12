@@ -159,9 +159,8 @@
     <section anchor="IANA">
       <name>IANA Considerations</name>
       <t>
-        IANA has assigned the value TBD for the PATHS-LIMIT Capability
-        described in this document.  This registration is in the
-        "Capability Codes" registry.
+        IANA is requested to assign a value (TBD) for the PATHS-LIMIT 
+        Capability from the "Capability Codes" registry.
       </t>
     </section>
   </middle>
