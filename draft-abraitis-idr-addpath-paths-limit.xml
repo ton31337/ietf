@@ -42,10 +42,10 @@
     <keyword>BGP ADD-PATH</keyword>
     <abstract>
       <t>
-        This document specifies a BGP capability that complements the 
-        ADD-PATH Capability by indicating the maximum number of paths a 
-        BGP speaker can receive from a peer, optimizing the 
-        transmission of BGP routes by selectively relaying pertinent 
+        This document specifies a BGP capability that complements the
+        ADD-PATH Capability by indicating the maximum number of paths a
+        BGP speaker can receive from a peer, optimizing the
+        transmission of BGP routes by selectively relaying pertinent
         routes instead of the entire set.
       </t>
     </abstract>
@@ -62,19 +62,19 @@
         Multiple paths for a large number of prefixes may be received by a BGP
         speaker, potentially depleting memory resources or even causing
         network-wide instability, which can be considered a denial-of-service
-        attack. Without knowing the path limit the receiver is capable 
-        of accepting, the sender can send as many routes as it wants.  
-        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
-        recommendations for the use of BGP ADD-PATH while implementing 
+        attack. Without knowing the path limit the receiver is capable
+        of accepting, the sender can send as many routes as it wants.
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides
+        recommendations for the use of BGP ADD-PATH while implementing
         specific applications.
       </t>
       <t>
-        This document specifies a BGP capability 
-        <xref target="RFC5492"/> that complements the 
-        ADD-PATH Capability <xref target="RFC7911"/> by indicating the 
-        maximum number of paths a BGP speaker can receive from a peer. 
-        This indication allows the sender to optimize the transmission 
-        of BGP routes by selectively relaying pertinent routes instead 
+        This document specifies a BGP capability
+        <xref target="RFC5492"/> that complements the
+        ADD-PATH Capability <xref target="RFC7911"/> by indicating the
+        maximum number of paths a BGP speaker can receive from a peer.
+        This indication allows the sender to optimize the transmission
+        of BGP routes by selectively relaying pertinent routes instead
         of the entire set.
       </t>
     </section>
@@ -91,10 +91,10 @@
     <section>
       <name>PATHS-LIMIT Capability</name>
       <t>
-       The PATHS-LIMIT Capability is a BGP capability 
-       <xref target="RFC5492"/>, with Capability Code TBD.  The 
-       Capability Length field of this capability is variable.  The 
-       Capability Value field consists of one or more of the following 
+       The PATHS-LIMIT Capability is a BGP capability
+       <xref target="RFC5492"/>, with Capability Code TBD.  The
+       Capability Length field of this capability is variable.  The
+       Capability Value field consists of one or more of the following
        tuples:
       </t>
       <figure anchor="paths_limit_capability">
@@ -115,15 +115,15 @@
        <li>
        <dl newline="true">
         <dt>Address Family Identifier (AFI):</dt>
-        <dd>This field is the same as the one used in 
+        <dd>This field is the same as the one used in
         <xref target="RFC4760"/>.</dd>
 
         <dt>Subsequent Address Family Identifier (SAFI):</dt>
-        <dd>This field is the same as the one used in 
+        <dd>This field is the same as the one used in
         <xref target="RFC4760"/>.</dd>
         <dt>Paths Limit:</dt>
-        <dd>This field indicates the maximum paths limit the receiver 
-        is able to receive from its peer. If the Paths Limit is 
+        <dd>This field indicates the maximum paths limit the receiver
+        is able to receive from its peer. If the Paths Limit is
         received as zero (0), the tuple SHOULD be ignored.</dd>
        </dl>
        </li>
@@ -135,11 +135,11 @@
         PATHS-LIMIT capability.
       </t>
       <t>
-        The PATHS-LIMIT capability MUST be ignored if the ADD_PATH capability is not present.
+        The PATHS-LIMIT capability MUST be ignored if the ADD-PATH capability is not present.
       </t>
       <t>
-        If the PATHS-LIMIT capability is empty (i.e. the Capability 
-        Length field is set to 0), it means that the sender doesn't 
+        If the PATHS-LIMIT capability is empty (i.e. the Capability
+        Length field is set to 0), it means that the sender doesn't
         have any specific limits to communicate.
       </t>
       <t>
@@ -159,27 +159,27 @@
     <section anchor="IANA">
       <name>IANA Considerations</name>
       <t>
-        IANA is requested to assign a value (TBD) for the PATHS-LIMIT 
+        IANA is requested to assign a value (TBD) for the PATHS-LIMIT
         Capability from the "Capability Codes" registry.
       </t>
     </section>
     <section anchor="security">
       <name>Security Considerations</name>
       <t>
-       This document defines a BGP extension that allows a receiver to 
-       better control the number of routes it receives when using BGP 
-       ADD-PATH <xref target="RFC7911"/>.  Use of the PATHS-LIMIT 
-       capability can then mitigate some of the security-related 
+       This document defines a BGP extension that allows a receiver to
+       better control the number of routes it receives when using BGP
+       ADD-PATH <xref target="RFC7911"/>.  Use of the PATHS-LIMIT
+       capability can then mitigate some of the security-related
        concerns expressed in <xref target="RFC7911"/>.
       </t>
       <t>
-       A rogue node or misconfiguration can result in the advetisement 
-       of a Paths Limit value that is too low for the application being 
-       used.  This can result in inconsistent forwarding.  Describing 
-       applications for BGP ADD-PATH is outside the scope of this 
-       document.  Users of the PATHS-LIMIT Capability are encouraged to 
-       examine the behavior and potential impact by studying the best 
-       practices described in 
+       A rogue node or misconfiguration can result in the advetisement
+       of a Paths Limit value that is too low for the application being
+       used.  This can result in inconsistent forwarding.  Describing
+       applications for BGP ADD-PATH is outside the scope of this
+       document.  Users of the PATHS-LIMIT Capability are encouraged to
+       examine the behavior and potential impact by studying the best
+       practices described in
        <xref target="I-D.ietf-idr-add-paths-guidelines"/>.
       </t>
     </section>
