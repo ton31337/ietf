@@ -124,7 +124,7 @@
         <dt>Paths Limit:</dt>
         <dd>This field indicates the maximum paths limit the receiver 
         is able to receive from its peer. If the Paths Limit is 
-        received as zero (0), the capability SHOULD be ignored.</dd>
+        received as zero (0), the tuple SHOULD be ignored.</dd>
        </dl>
        </li>
       </ul>
@@ -138,9 +138,9 @@
         The PATHS-LIMIT capability MUST be ignored if the ADD_PATH capability is not present.
       </t>
       <t>
-        If the PATHS-LIMIT
-        capability is empty (no per AFI/SAFI limits defined), the capability SHOULD be
-        ignored.
+        If the PATHS-LIMIT capability is empty (i.e. the Capability 
+        Length field is set to 0), it means that the sender doesn't 
+        have any specific limits to communicate.
       </t>
       <t>
        An AFI/SAFI tuple MUST be ignored if the same tuple was not received in the ADD-PATH capability.
