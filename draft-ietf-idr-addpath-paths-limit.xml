@@ -163,6 +163,26 @@
         Capability from the "Capability Codes" registry.
       </t>
     </section>
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>
+       This document defines a BGP extension that allows a receiver to 
+       better control the number of routes it receives when using BGP 
+       ADD-PATH <xref target="RFC7911"/>.  Use of the PATHS-LIMIT 
+       capability can then mitigate some of the security-related 
+       concerns expressed in <xref target="RFC7911"/>.
+      </t>
+      <t>
+       A rogue node or misconfiguration can result in the advetisement 
+       of a Paths Limit value that is too low for the application being 
+       used.  This can result in inconsistent forwarding.  Describing 
+       applications for BGP ADD-PATH is outside the scope of this 
+       document.  Users of the PATHS-LIMIT Capability are encouraged to 
+       examine the behavior and potential impact by studying the best 
+       practices described in 
+       <xref target="I-D.ietf-idr-add-paths-guidelines"/>.
+      </t>
+    </section>
   </middle>
   <back>
     <references>
