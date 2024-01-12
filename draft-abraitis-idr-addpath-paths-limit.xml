@@ -33,6 +33,13 @@
     <author fullname="Jeffrey Haas" surname="Haas">
       <organization>Juniper Networks</organization>
       <address>
+        <postal>
+          <street>1133 Innovation Way</street>
+          <city>Sunnyvale</city>
+          <region>CA</region>
+          <code>94089</code>
+          <country>US</country>
+        </postal>
         <email>jhaas@juniper.net</email>
       </address>
     </author>
@@ -61,11 +68,11 @@
       <t>
         Multiple paths for a large number of prefixes may be received by a BGP
         speaker, potentially depleting memory resources or even causing
-        network-wide instability, which can be considered a denial-of-service
-        attack. Without knowing the path limit the receiver is capable
-        of accepting, the sender can send as many routes as it wants.
-        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides
-        recommendations for the use of BGP ADD-PATH while implementing
+        network-wide instability. Such instability could be considered a denial-of-service
+        attack. Without knowing the maximum number of paths the receiver wants to receive,
+        the sender may send more than that number of paths.
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
+        recommendations for the use of BGP ADD-PATH while implementing 
         specific applications.
       </t>
       <t>
@@ -122,9 +129,9 @@
         <dd>This field is the same as the one used in
         <xref target="RFC4760"/>.</dd>
         <dt>Paths Limit:</dt>
-        <dd>This field indicates the maximum paths limit the receiver
-        is able to receive from its peer. If the Paths Limit is
-        received as zero (0), the tuple SHOULD be ignored.</dd>
+        <dd>This field indicates the maximum paths limit the receiver 
+        wants to receive from its peer. If the received Paths Limit is 
+        zero (0), the tuple SHOULD be ignored.</dd>
        </dl>
        </li>
       </ul>
