@@ -88,18 +88,18 @@ Table of Contents
 
    Multiple paths for a large number of prefixes may be received by a
    BGP speaker, potentially depleting memory resources or even causing
-   network-wide instability, which can be considered a denial-of-service
-   attack.  Without knowing the path limit the receiver is capable of
-   accepting, the sender can send as many routes as it wants.
-   [I-D.ietf-idr-add-paths-guidelines] provides recommendations for the
-   use of BGP ADD-PATH while implementing specific applications.
+   network-wide instability.  Such instability could be considered a
+   denial-of-service attack.  Without knowing the maximum number of
+   paths the receiver wants to receive, the sender may send more than
+   that number of paths.  [I-D.ietf-idr-add-paths-guidelines] provides
+   recommendations for the use of BGP ADD-PATH while implementing
+   specific applications.
 
    This document specifies a BGP capability [RFC5492] that complements
    the ADD-PATH Capability [RFC7911] by indicating the maximum number of
    paths a BGP speaker can receive from a peer.  This indication allows
    the sender to optimize the transmission of BGP routes by selectively
    relaying pertinent routes instead of the entire set.
-
 
 
 
@@ -148,9 +148,9 @@ Internet-Draft    Paths Limit for Multiple Paths in BGP     January 2024
          This field is the same as the one used in [RFC4760].
 
       Paths Limit:
-         This field indicates the maximum paths limit the receiver is
-         able to receive from its peer.  If the Paths Limit is received
-         as zero (0), the tuple SHOULD be ignored.
+         This field indicates the maximum paths limit the receiver wants
+         to receive from its peer.  If the received Paths Limit is zero
+         (0), the tuple SHOULD be ignored.
 
    A BGP speaker that wishes to indicate support for multiple AFI/SAFIs
    MUST do so by including the information in a single instance of the
@@ -267,10 +267,10 @@ Authors' Addresses
 
    Jeffrey Haas
    Juniper Networks
+   1133 Innovation Way
+   Sunnyvale, CA 94089
+   United States of America
    Email: jhaas@juniper.net
-
-
-
 
 
 
