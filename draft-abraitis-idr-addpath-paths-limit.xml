@@ -71,8 +71,8 @@
         network-wide instability. Such instability could be considered a denial-of-service
         attack. Without knowing the maximum number of paths the receiver wants to receive,
         the sender may send more than that number of paths.
-        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
-        recommendations for the use of BGP ADD-PATH while implementing 
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides
+        recommendations for the use of BGP ADD-PATH while implementing
         specific applications.
       </t>
       <t>
@@ -129,8 +129,8 @@
         <dd>This field is the same as the one used in
         <xref target="RFC4760"/>.</dd>
         <dt>Paths Limit:</dt>
-        <dd>This field indicates the maximum paths limit the receiver 
-        wants to receive from its peer. If the received Paths Limit is 
+        <dd>This field indicates the maximum paths limit the receiver
+        wants to receive from its peer. If the received Paths Limit is
         zero (0), the tuple SHOULD be ignored.</dd>
        </dl>
        </li>
@@ -157,6 +157,9 @@
       </t>
       <t>
         A sender advertising multiple paths for the same prefix SHOULD send only the specified maximum number of paths indicated in the PATHS-LIMIT capability.
+      </t>
+      <t>
+        If the sender has more paths than the maximum number of paths indicated in the PATHS-LIMIT capability, it SHOULD send only the best paths.
       </t>
       <t>
         An implementation SHOULD provide a configuration knob to specify
