@@ -13,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-01" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-00"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-01"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -71,8 +71,8 @@
         network-wide instability. Such instability could be considered a denial-of-service
         attack. Without knowing the maximum number of paths the receiver wants to receive,
         the sender may send more than that number of paths.
-        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides 
-        recommendations for the use of BGP ADD-PATH while implementing 
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/> provides
+        recommendations for the use of BGP ADD-PATH while implementing
         specific applications.
       </t>
       <t>
@@ -129,8 +129,8 @@
         <dd>This field is the same as the one used in
         <xref target="RFC4760"/>.</dd>
         <dt>Paths Limit:</dt>
-        <dd>This field indicates the maximum paths limit the receiver 
-        wants to receive from its peer. If the received Paths Limit is 
+        <dd>This field indicates the maximum paths limit the receiver
+        wants to receive from its peer. If the received Paths Limit is
         zero (0), the tuple SHOULD be ignored.</dd>
        </dl>
        </li>
@@ -166,9 +166,25 @@
     <section anchor="IANA">
       <name>IANA Considerations</name>
       <t>
-        IANA is requested to assign a value (TBD) for the PATHS-LIMIT
-        Capability from the "Capability Codes" registry.
+        IANA has assigned capability number 76 for the PATHS-LIMIT Capability
+        described in this document. This registration is in the BGP Capability Codes
+        registry.
       </t>
+      <table anchor="table_ex">
+        <name>PATHS-LIMIT Capability</name>
+        <thead>
+          <tr>
+            <th align="center">Value</th>
+            <th align="center">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="center">76</td>
+            <td align="center">PATHS-LIMIT Capability</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
     <section anchor="security">
       <name>Security Considerations</name>
@@ -190,6 +206,12 @@
        <xref target="I-D.ietf-idr-add-paths-guidelines"/>.
       </t>
     </section>
+    <section anchor="Acknowledgements" numbered="false">
+      <name>Acknowledgements</name>
+      <t>
+        TBD
+      </t>
+    </section>
   </middle>
   <back>
     <references>
@@ -208,10 +230,15 @@
       </references>
     </references>
 
-    <section anchor="Acknowledgements" numbered="false">
-      <name>Acknowledgements</name>
+    <section title="Implementation Report">
       <t>
-        TBD
+        According to RFC 7942, "This will allow reviewers and working groups to assign
+        due consideration to documents that have the benefit of running code, which may
+        serve as evidence of valuable experimentation and feedback that have made the
+        implemented protocols more mature".
+      </t>
+      <t>
+        <eref target="https://github.com/opensourcerouting/frr/commit/786cf4d2b488f38fcb43e3ea8e49de06a69ef175">FRRouting</eref> implementation.
       </t>
     </section>
 
