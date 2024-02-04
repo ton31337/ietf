@@ -13,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-01" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-02" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-01"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-02"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -240,6 +240,40 @@
       <t>
         <eref target="https://github.com/opensourcerouting/frr/commit/786cf4d2b488f38fcb43e3ea8e49de06a69ef175">FRRouting</eref> implementation.
       </t>
+    </section>
+    <section title="Deployment scenarios">
+      <section title="Best N paths">
+      <figure anchor="scenario_best_n_paths">
+        <artwork align="center"><![CDATA[
++----+
+|    | p1
+|r1  +---------------+
++----+               |
+                     |  +-----------+------------+
++----+               |  |   8 paths | rr-client1 |
+|    | p1      +-----+--+-+         +------------+
+|... +---------+    rr    |
++----+         +-----+--+-+         +------------+
+                     |  |   2 paths | rr-client2 |
++----+               |  +-----------+------------+
+|    | p1            |
+|r8  +---------------+
++----+
+            ]]></artwork>
+      </figure>
+      <t>
+        In this scenario, rr is a route reflector, and rr-client1, and
+        rr-client2 are the route reflector clients.
+      </t>
+      <t>
+        The rr-client1 is configured to receive all the known paths from rr,
+        without any limitations.
+        The rr is configured to send the best 4 paths to rr-client2, but
+        rr-client2 is not able to cope with a high number of paths due to
+        CPU, and memory limitations. Thus, the rr-client2 is configured to
+        receive only 2 best paths from rr.
+      </t>
+      </section>
     </section>
 
   </back>
