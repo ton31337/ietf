@@ -21,18 +21,18 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-13" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-14" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-13"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-14"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
         <email>donatas.abraitis@hostinger.com</email>
       </address>
     </author>
-    <date year="2023"/>
+    <date year="2024"/>
     <area>General</area>
     <keyword>template</keyword>
     <abstract>
@@ -92,7 +92,7 @@
         They utilize the BGP Capabilities Optional Parameter that contains
         one or more triples &lt;Capability Code, Capability Length, Capability Value&gt;.
         This document defines a new BGP capability, the Software Version Capability,
-        with Capability Code TBD and Capability Length and Capability Value
+        with Capability Code 75 and Capability Length and Capability Value
         as described below.
       </t>
       <t>
