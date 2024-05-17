@@ -143,7 +143,7 @@
         <li>
           The Capability Value field is encoded in UTF-8 <xref target="RFC3629"/>.
           It is unstructured data and can be formatted in any way that the
-          implementor decides.
+          implementor decides. The string is not null-terminated.
         </li>
       </ul>
       <t>
