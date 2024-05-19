@@ -99,7 +99,7 @@
       <name>PATHS-LIMIT Capability</name>
       <t>
        The PATHS-LIMIT Capability is a BGP capability
-       <xref target="RFC5492"/>, with Capability Code TBD.  The
+       <xref target="RFC5492"/>, with Capability Code 76. The
        Capability Length field of this capability is variable.  The
        Capability Value field consists of one or more of the following
        tuples:
