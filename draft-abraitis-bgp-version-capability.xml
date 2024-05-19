@@ -212,44 +212,6 @@
         existing BGP sessions and the feature MUST be explicitly configured
         before an implementation advertizes the Software Version Capability.
       </t>
-      <section>
-        <name>Example Usage</name>
-        <t>
-          Below is an example from the <xref target="FRRouting"/> and
-          <xref target="GoBGP"/> implementation showing both the received
-          and advertised Software Version Capability:
-        </t>
-        <figure anchor="frr_failed">
-          <artwork align="left"><![CDATA[
-  :~# vtysh -c 'show ip bgp summary failed'
-  ...
-  Neighbor EstdCnt DropCnt ResetTime Reason
-  ens192         3       3  00:00:35 Waiting for peer OPEN (n/a)
-  ens224         3       3  00:01:12 Waiting for NHT (frrouting/7.2)
-  eth0           3       3  00:00:14 Neighbor deleted (frrouting/7.3)
-  ...
-              ]]></artwork>
-        </figure>
-        <figure anchor="gobgp_versions">
-          <artwork align="left"><![CDATA[
-        software-version:   advertised and received
-          Local:
-             GoBGP/3.10.0
-          Remote:
-             FRRouting/8.5-dev-MyOwnFRRVersion-gdc92f44a4
-              ]]></artwork>
-        </figure>
-        <figure anchor="frr_version">
-          <artwork align="left"><![CDATA[
-  :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
-  > | jq '."198.51.100.1".neighborCapabilities.versions'
-  {
-    "advertisedVersion": "frrouting/7.2",
-    "receivedVersion": "frrouting/7.3"
-  }
-              ]]></artwork>
-        </figure>
-      </section>
     </section>
     <section anchor="IANA">
       <name>IANA Considerations</name>
@@ -325,27 +287,54 @@
         &RFC8174;
         &RFC9072;
       </references>
-      <references>
-        <name>Informative References</name>
-        <reference anchor="FRRouting" target="https://github.com/FRRouting/frr/commit/c4257900c4ca320117bcd1f88b7f036e0c8f7fcb">
-          <front>
-            <title>FRRouting - BGP Software Version Capability</title>
-            <author surname="Abraitis" fullname="Donatas Abraitis">
-              <organization abbrev="Hostinger">Hostinger</organization>
-            </author>
-            <date year="2023"/>
-          </front>
-        </reference>
-        <reference anchor="GoBGP" target="https://github.com/osrg/gobgp/commit/15f9d5c64c98d1db273cc45e95fcc11843fba4b5">
-          <front>
-            <title>Add Software Version capability</title>
-            <author surname="Abraitis" fullname="Donatas Abraitis">
-              <organization abbrev="Hostinger">Hostinger</organization>
-            </author>
-            <date year="2023"/>
-          </front>
-        </reference>
-      </references>
     </references>
+    <section title="Implementation Report">
+      <t>
+        According to RFC 7942, "This will allow reviewers and working groups to assign
+        due consideration to documents that have the benefit of running code, which may
+        serve as evidence of valuable experimentation and feedback that have made the
+        implemented protocols more mature".
+      </t>
+      <t>
+        <eref target="https://github.com/FRRouting/frr/commit/c4257900c4ca320117bcd1f88b7f036e0c8f7fcb">FRRouting</eref> implementation.
+      </t>
+      <t>
+        <eref target="https://github.com/osrg/gobgp/pull/2622/commits/15f9d5c64c98d1db273cc45e95fcc11843fba4b5">GoBGP</eref> implementation.
+      </t>
+      <t>
+        Below is an example from the FRRouting and GoBGP implementations
+        showing both the received and advertised Software Version Capability:
+      </t>
+      <figure anchor="frr_failed">
+        <artwork align="left"><![CDATA[
+  :~# vtysh -c 'show ip bgp summary failed'
+  ...
+  Neighbor EstdCnt DropCnt ResetTime Reason
+  ens192         3       3  00:00:35 Waiting for peer OPEN (n/a)
+  ens224         3       3  00:01:12 Waiting for NHT (frrouting/7.2)
+  eth0           3       3  00:00:14 Neighbor deleted (frrouting/7.3)
+  ...
+              ]]></artwork>
+      </figure>
+      <figure anchor="gobgp_versions">
+        <artwork align="left"><![CDATA[
+        software-version:   advertised and received
+          Local:
+             GoBGP/3.10.0
+          Remote:
+             FRRouting/8.5-dev-MyOwnFRRVersion-gdc92f44a4
+              ]]></artwork>
+      </figure>
+      <figure anchor="frr_version">
+        <artwork align="left"><![CDATA[
+  :~# vtysh -c 'show ip bgp neighbors 198.51.100.1 json' \
+  > | jq '."198.51.100.1".neighborCapabilities.versions'
+  {
+    "advertisedVersion": "frrouting/7.2",
+    "receivedVersion": "frrouting/7.3"
+  }
+            ]]></artwork>
+      </figure>
+    </section>
   </back>
 </rfc>
