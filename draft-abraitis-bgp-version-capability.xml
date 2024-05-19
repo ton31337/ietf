@@ -273,6 +273,13 @@
         can't be disclosed to untrusted neighbors.
       </t>
     </section>
+    <section anchor="Acknowledgements" numbered="false">
+      <name>Acknowledgements</name>
+      <t>
+        Thanks to Alvaro Retana, Jakob Heitz, Robert Raszuk, Adrian Farrel, John Scudder,
+        Jeffrey Haas, Enke Chen for the review, discussions and input to the draft.
+      </t>
+    </section>
   </middle>
   <back>
     <references>
