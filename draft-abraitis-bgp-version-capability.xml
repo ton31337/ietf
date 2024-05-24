@@ -310,6 +310,9 @@
         <eref target="https://github.com/osrg/gobgp/pull/2622/commits/15f9d5c64c98d1db273cc45e95fcc11843fba4b5">GoBGP</eref> implementation.
       </t>
       <t>
+        <eref target="https://github.com/mc36/freeRtr/commit/eb5d3490aec220ad8bfcbf1f439669bd27845199">freeRouter</eref> implementation.
+      </t>
+      <t>
         Below is an example from the FRRouting and GoBGP implementations
         showing both the received and advertised Software Version Capability:
       </t>
