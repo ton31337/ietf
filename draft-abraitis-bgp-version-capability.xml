@@ -313,7 +313,7 @@
         <eref target="https://github.com/mc36/freeRtr/commit/eb5d3490aec220ad8bfcbf1f439669bd27845199">freeRouter</eref> implementation.
       </t>
       <t>
-        <eref target="https://github.com/Exa-Networks/exabgp/pull/1223/commits/b54501c0dbec885d86b57e0140bdb1622880336f">ExaBGP</eref> implementation.
+        <eref target="https://github.com/Exa-Networks/exabgp/pull/1223/commits/d21e432c98ec9cbe1de2e471ecf7326170d7f176">ExaBGP</eref> implementation.
       </t>
       <t>
         Below is an example from the FRRouting and GoBGP implementations
