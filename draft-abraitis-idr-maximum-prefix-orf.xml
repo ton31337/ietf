@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-maximum-prefix-orf-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+  <!-- xml2rfc v2v3 conversion 3.12.8 -->
+  <front>
+    <title abbrev="Maximum Prefix Outbound Route Filter for BGP">Maximum Prefix Outbound Route Filter for BGP</title>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-maximum-prefix-limit-orf"/>
+    <author fullname="Donatas Abraitis" surname="Abraitis">
+      <organization>NetDef</organization>
+      <address>
+        <email>donatas@opensourcerouting.org</email>
+      </address>
+    </author>
+    <author fullname="Jeffrey Haas" surname="Haas">
+      <organization>Juniper Networks</organization>
+      <address>
+        <postal>
+          <street>1133 Innovation Way</street>
+          <city>Sunnyvale</city>
+          <region>CA</region>
+          <code>94089</code>
+          <country>US</country>
+        </postal>
+        <email>jhaas@juniper.net</email>
+      </address>
+    </author>
+    <date year="2024"/>
+    <area>Routing</area>
+    <workgroup>Inter-Domain Routing</workgroup>
+    <keyword>BGP MAXIMUM PREFIX ORF</keyword>
+    <abstract>
+      <t>
+        This document introduces a Maximum Prefix ORF (Outbound Route Filtering) type for BGP.
+        It aims to provide a mechanism whereby the sender of route information is informed of
+        the maximum number of prefixes that the receiver is willing to accept. This facilitates
+        improved resource management by limiting the number of routes exchanged, avoiding
+        unnecessary or excessive route propagation, and reducing memory and CPU load.
+      </t>
+    </abstract>
+  </front>
+  <middle>
+    <section>
+      <name>Introduction</name>
+      <t>
+        The Outbound Route Filtering (ORF) capability, as defined in <xref target="RFC5291"/>, provides
+        a mechanism for a BGP speaker to send to its BGP peer a set of Outbound Route Filters that can be
+        used by its peer to filter outbound routing updates to the speaker.
+      </t>
+      <t>
+        This document defines a new ORF type, called "Maximum Prefix Outbound Route Filter", which enables
+        a BGP receiver to specify the maximum number of prefixes that a sender should transmit. Rather than
+        specifying particular prefixes, the Maximum Prefix ORF allows the receiver to define a threshold for
+        the number of prefixes it is willing to accept, regardless of specific prefix ranges.
+      </t>
+      <t>
+        The Maximum Prefix ORF provides an efficient mechanism for managing resource consumption, particularly
+        in large BGP environments, by enabling a BGP speaker to limit the number of routes it propagates based
+        on the preferences of its peer.
+      </t>
+    </section>
+    <section>
+      <name>Efficiency</name>
+      <t>
+        The Maximum Prefix ORF provides significant operational efficiency by reducing unnecessary BGP UPDATE
+        messages between peers. Without this ORF, all available routes are sent to the receiver, which must then
+        filter and limit the number of prefixes it installs in its BGP table. Although the receiver filters routes
+        upon receipt, it still processes each incoming UPDATE, resulting in increased CPU and memory load,
+        especially in large networks.
+      </t>
+    </section>
+    <section>
+      <name>Operation</name>
+      <t>
+        The Maximum Prefix ORF is designed to work in conjunction with existing maximum prefix filtering mechanisms,
+        such as configuration commands like "neighbor X maximum-prefix N".
+        This configuration allows operators to set a maximum prefix limit for a BGP neighbor.
+      </t>
+      <t>
+        With the addition of the Maximum Prefix ORF, the receiver can proactively communicate this limit to its BGP peer,
+        informing the sender to enforce the same maximum prefix constraint. This ORF type is sent from the receiver to the
+        sender and allows the sender to filter updates before they are sent, aligning with the receiver's specified limit.
+      </t>
+      <t>
+        Upon receiving the Maximum Prefix ORF, the sender MUST ensure that the total number of prefixes in outbound updates
+        to this receiver does not exceed the specified limit. Any prefixes beyond this limit are filtered by the sender,
+        reducing the load on the receiver's BGP processing and eliminating unnecessary UPDATE messages.
+      </t>
+    </section>
+    <section anchor="simple_list">
+      <name>Specification of Requirements</name>
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+        they appear in all capitals, as shown here.
+      </t>
+    </section>
+    <section>
+      <name>Maximum Prefix ORF-Type</name>
+      <t>
+        The value of the ORF-Type for the Maximum Prefix ORF-Type is TBD.
+      </t>
+      <t>
+        A Maximum Prefix ORF entry is encoded as defined in the table.
+      </t>
+      <figure anchor="maximum_prefix_orf">
+        <artwork align="center"><![CDATA[
+    +------------------------------------------------+
+    | Address Family Identifier (2 octets)           |
+    +------------------------------------------------+
+    | Subsequent Address Family Identifier (1 octet) |
+    +------------------------------------------------+
+    | Prefix Limit (4 octets)                        |
+    +------------------------------------------------+
+            ]]></artwork>
+      </figure>
+      <t>
+        The meaning and use of the fields are as follows:
+      </t>
+      <ul empty="true">
+       <li>
+       <dl newline="true">
+        <dt>Address Family Identifier (AFI):</dt>
+        <dd>This field is the same as the one used in <xref target="RFC4760"/>.</dd>
+        <dt>Subsequent Address Family Identifier (SAFI):</dt>
+        <dd>This field is the same as the one used in <xref target="RFC4760"/>.</dd>
+        <dt>Prefix Limit:</dt>
+        <dd>This field indicates the maximum prefix limit the receiver
+        wants to receive from its peer. If the received Prefix Limit is
+        zero (0), the tuple SHOULD be ignored.</dd>
+       </dl>
+       </li>
+      </ul>
+    </section>
+    <section anchor="IANA">
+      <name>IANA Considerations</name>
+      <table anchor="table_ex">
+        <name>BGP Outbound Route Filtering (ORF) Types</name>
+        <thead>
+          <tr>
+            <th align="center">Value</th>
+            <th align="center">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="center">TBD</td>
+            <td align="center">Maximum Prefix ORF</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>
+        This extension to BGP does not change the underlying security issues in <xref target="RFC4271"/>.
+      </t>
+    </section>
+    <section anchor="Acknowledgements" numbered="false">
+      <name>Acknowledgements</name>
+      <t>
+        TBD
+      </t>
+    </section>
+  </middle>
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+      <name>Normative References</name>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4760.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5291.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+      </references>
+    </references>
+  </back>
+</rfc>
