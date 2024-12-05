@@ -24,19 +24,6 @@
         <email>donatas@opensourcerouting.org</email>
       </address>
     </author>
-    <author fullname="Jeffrey Haas" surname="Haas">
-      <organization>Juniper Networks</organization>
-      <address>
-        <postal>
-          <street>1133 Innovation Way</street>
-          <city>Sunnyvale</city>
-          <region>CA</region>
-          <code>94089</code>
-          <country>US</country>
-        </postal>
-        <email>jhaas@juniper.net</email>
-      </address>
-    </author>
     <date year="2024"/>
     <area>Routing</area>
     <workgroup>Inter-Domain Routing</workgroup>
