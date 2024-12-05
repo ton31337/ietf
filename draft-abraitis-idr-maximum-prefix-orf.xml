@@ -17,7 +17,7 @@
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Maximum Prefix Outbound Route Filter for BGP">Maximum Prefix Outbound Route Filter for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-maximum-prefix-orf"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-maximum-prefix-orf-00"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
