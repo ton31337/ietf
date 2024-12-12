@@ -20,7 +20,7 @@
   <front>
     <title>Link-Local Next Hop Capability for BGP</title>
     <author fullname="Russ White" surname="White">
-      <organization>Juniper Networks</organization>
+      <organization>Akamai Technologies</organization>
       <address>
         <postal>
           <street/>
@@ -29,7 +29,7 @@
       </address>
     </author>
     <author fullname="Jeff Tantsura" surname="Tantsura">
-      <organization>Microsoft</organization>
+      <organization>Nvidia</organization>
       <address>
         <postal>
           <street/>

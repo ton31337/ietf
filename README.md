@@ -1,3 +1,9 @@
+## Generate txt/html
+
+```bash
+$ xml2rfc --v3 --no-external-css --no-external-js --text --html draft.xml
+```
+
 ## IETF drafts
 
 * [Software Version Capability for BGP](https://datatracker.ietf.org/doc/html/draft-abraitis-bgp-version-capability)
