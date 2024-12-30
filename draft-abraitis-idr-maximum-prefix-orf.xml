@@ -1,7 +1,3 @@
-<!-- TODO:
-How to signal the receiver: receiver is unaware of the exceeded limits and cannot react to it
--->
-
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE rfc [
   <!ENTITY nbsp    "&#160;">
