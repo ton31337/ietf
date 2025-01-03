@@ -69,6 +69,9 @@ providing global IPv6 addresses in these kinds of networks can be
 detrimental to Zero Touch Provisioning (ZTP).</t>
       <t>This draft standardizes the operation of BGP over a point-to-point
 link using link-local IPv6 addressing only.</t>
+      <t>Since link-local IPv6 addresses are not required to be globally unique,
+      implementations must ensure that they are strictly associated with a specific
+      interface.</t>
     </abstract>
   </front>
   <middle>
