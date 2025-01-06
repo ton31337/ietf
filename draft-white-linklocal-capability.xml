@@ -221,7 +221,7 @@ malformed UPDATE message using the approach of "treat-as-withdraw", as
 described in section 7.3 of <xref target="RFC7606" format="default"/>. It MAY send a
 NOTIFICATION message as described in section 4 of <xref target="RFC4271" format="default"/>,
 using the UPDATE error message code (8 - Invalid NEXT_HOP Attribute) indicating
-there is an invalid NEXT_HOP field</t>
+there is an invalid NEXT_HOP field.</t>
       <t>If the Next Hop field is properly formed, but the link-local next hop is not
 reachable (as determined by an examination of the IPv6 neighbor table), the
 implementation MAY handle the malformed UPDATE message using the approach
