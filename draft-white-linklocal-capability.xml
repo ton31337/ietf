@@ -46,30 +46,29 @@
         <email>donatas.abraitis@gmail.com</email>
       </address>
     </author>
-    <date year="2024"/>
+    <date year="2025"/>
     <area>Routing</area>
     <workgroup>Interdomain Routing</workgroup>
     <abstract>
-      <t>BGP, described in <xref target="RFC4271" format="default"/>, was originally designed
+      <t>BGP<xref target="RFC4271" format="default"/>, was originally designed
 to provide reachability between domains and between the edges of a domain.
 As such, BGP assumes the next hop towards any reachable destination may
 not reside on the advertising speaker, but rather may either be through
 a router connected to the same subnet as the speaker, or through a router
 only reachable by traversing multiple hops through the network. Because
-of this, BGP does not recognize the use of IPv6 link-local addresses, as
-described in <xref target="RFC4291" format="default"/>, as a valid next hop for forwarding
-purposes.</t>
-      <t>However, BGP speakers are now often deployed on point-to-point links
+of this, as per <xref target="RFC4291" format="default"/> - BGP does not recognize  IPv6 link-local addresses, 
+as a valid next hop for the forwarding purposes.</t>
+      <t>However, in many current deplyments, BGP peering is often deployed on point-to-point links
 in networks where multihop reachability of any kind is not assumed or
 desired (all next hops are assumed to be the speaker reachable through
 a directly connected point-to-point link). This is common, for instance,
-in data center fabrics. In these situations, a global IPv6 address is
+in data center fabrics<xref target="RFC7938" format="default"/>. In these situations, a global IPv6 address is
 not required for the advertisement of reachability information; in fact,
 providing global IPv6 addresses in these kinds of networks can be
 detrimental to Zero Touch Provisioning (ZTP).</t>
       <t>This draft standardizes the operation of BGP over a point-to-point
 link using link-local IPv6 addressing only.</t>
-      <t>Since link-local IPv6 addresses are not required to be globally unique,
+ <t>Since link-local IPv6 addresses are not required to be globally unique,
       implementations must ensure that they are strictly associated with a specific
       interface.</t>
     </abstract>
@@ -77,19 +76,20 @@ link using link-local IPv6 addressing only.</t>
   <middle>
     <section numbered="true" toc="default">
       <name>Introduction</name>
-      <t>BGP, described in <xref target="RFC4271" format="default"/>, was originally designed to
+      <t>BGP<xref target="RFC4271" format="default"/>, was originally designed to
 provide reachability between domains and between the edges of a domain.
 As such, BGP assumes the next hop towards any reachable destination may not
 reside on the advertising speaker, but rather may either be through a router
 connected to the same subnet as the speaker, or through a router only
-reachable by traversing multiple hops through the network. Because of this,
-BGP does not recognize the use of IPv6 link-local addresses, as described
-in <xref target="RFC4271" format="default"/>, as a valid next hop for forwarding purposes.</t>
+reachable by traversing multiple hops through the network. Because
+of this, as per <xref target="RFC4291" format="default"/> - BGP does not recognize  IPv6 link-local addresses, 
+as a valid next hop for the forwarding
+purposes.</t>
       <t>However, BGP speakers are now often deployed on point-to-point links in
 networks where multihop reachability of any kind is not assumed or desired
 (all next hops are assumed to be the speaker reachable through a directly
 connected point-to-point link). This is common, for instance, in data center
-fabrics. In these situations, a global IPv6 address is not required for the
+fabrics<xref target="RFC7938" format="default"/>. In these situations, a global IPv6 address is not required for the
 advertisement of reachability information; in fact, providing global IPv6
 addresses in these kinds of networks can be detrimental to
 Zero Touch Provisioning (ZTP).</t>
@@ -129,10 +129,9 @@ IPv6 (32 bytes next hop), which should continue to be supported as before.
 The Capability Code for this capability is TBA (based on the procedure described
 in the IANA Considerations section of this document). The Capability Length field
 of this capability is 0.</t>
-      <t>The advantage of using this capability is that it can let two conforming
+      <t>The advantage of using this capability is that in contrast to the current situation. it can let two conforming
 implementations interoperate correctly without additional
-configuration, in contrast to the current situation. Existing implementations
-of using a BGP next hop over an IPv6 link-local address are inconsistent, and
+configuration. Existing implementations utilizing BGP next hop over an IPv6 link-local address are inconsistent, and
 can't readily change their behavior without negative side effects.</t>
       <t>A BGP speaker that is willing to use (send and receive) only link-local
 addresses as next hops with a peer SHOULD advertise the Link-Local Next Hop
@@ -169,8 +168,8 @@ the length of the Next Hop field to 32 and include both the IPv6 link-local
 and global IPv6 forwarding addresses in the Next Hop field. If both link
 local and global IPv6 forwarding addresses are carried in the Next Hop Field,
 the speaker SHOULD provide a local configuration option to determine which
-address is preferred for forwarding.</t>
-      <t>For internal BGP peers configured as a route-reflector, when route-reflector
+address should be preferred for forwarding.</t>
+      <t>For iBGP peers configured as a route-reflector <xref target="RFC4456" format="default"/>, when route-reflector
 isn't configured to be in the data-path, the proposed link-local (only)
 next hops MUST NOT be reflected.</t>
       <t>A single (only) link-local next hop address needs to always be reset as
@@ -221,7 +220,7 @@ malformed UPDATE message using the approach of "treat-as-withdraw", as
 described in section 7.3 of <xref target="RFC7606" format="default"/>. It MAY send a
 NOTIFICATION message as described in section 4 of <xref target="RFC4271" format="default"/>,
 using the UPDATE error message code (8 - Invalid NEXT_HOP Attribute) indicating
-there is an invalid NEXT_HOP field.</t>
+there is an invalid NEXT_HOP field</t>
       <t>If the Next Hop field is properly formed, but the link-local next hop is not
 reachable (as determined by an examination of the IPv6 neighbor table), the
 implementation MAY handle the malformed UPDATE message using the approach
@@ -240,8 +239,8 @@ intervention is initiated.</t>
 
 <section numbered="true" toc="default">
       <name>Acknowledgements</name>
-      <t>The authors would like to thank Vipin Kumar, Dinesh Dutt, Jeff Haas,
-      Brian E. Carpenter, and for their contributions to this draft.</t>
+      <t>The authors would like to thank Vipin Kumar, Dinesh Dutt, Jeff Haas, and Brian Carpenter 
+for their contributions to this draft.</t>
     </section>
     <!-- end of Acknowledgements section -->
 
@@ -259,7 +258,7 @@ error subcode, code (TBA), with a value of
 <section numbered="true" toc="default">
       <name>Security Considerations</name>
       <t>The mechanism described in this draft can be used as a component of ZTP for
-building BGP adjacencies across point-to-point links. This method, then, can be
+building BGP peering across point-to-point links. This method, then, can be
 used by an attacker to form a peering session with a BGP speaker, ultimately
 advertising incorrect routing information into a routing domain in order to
 misdirect traffic or cause a denial of service. By using link-local IPv6
@@ -272,10 +271,9 @@ BGP session requests, as well as other mechanisms described in
 <xref target="RFC7454" format="default"/>.</t>
       <t>Operators MAY also use some form of cryptographic validation on links
 within the network to prevent unauthorized devices from forming BGP
-peering sessions. Authentication, such as the TCP authentication described
-in <xref target="RFC5925" format="default"/>, may provide some relief if it is present
+peering sessions. Authentication, such as the TCP authentication <xref target="RFC5925" format="default"/>, may provide some relief if it is present
 and correctly configured. However, the distribution and management of
-keys in an environment where global addresses are not present on BGP speakers
+keys in an environment where global addresses  on BGP speakers are not present
 may be challenging.</t>
       <t>Operators also MAY instruct a BGP peer which has received an UPDATE
 with an unreachable NEXT_HOP to disable the peering session over which
@@ -292,11 +290,13 @@ the invalid NEXT_HOP was received pending manual intervention.</t>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2545.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4291.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4456.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5492.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5309.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5925.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7606.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7454.xml"/>
+         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7938.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8950.xml"/>
       </references>
     </references>
