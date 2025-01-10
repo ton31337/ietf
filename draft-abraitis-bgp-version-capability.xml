@@ -10,6 +10,7 @@
   <!ENTITY RFC4272 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
   <!ENTITY RFC5082 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
   <!ENTITY RFC6973 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml">
+  <!ENTITY RFC7942 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7942.xml">
   <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
   <!ENTITY RFC9072 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9072.xml">
 ]>
@@ -21,18 +22,18 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-16" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-17" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-16"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-17"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
-        <email>donatas.abraitis@hostinger.com</email>
+        <email>donatas.abraitis@gmail.com</email>
       </address>
     </author>
-    <date year="2024"/>
+    <date year="2025"/>
     <area>Routing</area>
     <workgroup>Inter-Domain Routing</workgroup>
     <keyword>template</keyword>
@@ -292,13 +293,14 @@
         &RFC4272;
         &RFC5082;
         &RFC6973;
+        &RFC7942;
         &RFC8174;
         &RFC9072;
       </references>
     </references>
     <section title="Implementation Report">
       <t>
-        According to RFC 7942, "This will allow reviewers and working groups to assign
+        According to <xref target="RFC7942" format="default"/>, "This will allow reviewers and working groups to assign
         due consideration to documents that have the benefit of running code, which may
         serve as evidence of valuable experimentation and feedback that have made the
         implemented protocols more mature".
