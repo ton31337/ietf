@@ -344,7 +344,7 @@ the invalid NEXT_HOP was received pending manual intervention.</t>
         implemented protocols more mature".
       </t>
       <t>
-        <eref target="TBA">FRRouting</eref> implementation.
+        <eref target="https://github.com/FRRouting/frr/pull/17871">FRRouting</eref> implementation.
       </t>
     </section>
   </back>
