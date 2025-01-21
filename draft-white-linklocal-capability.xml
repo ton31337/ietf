@@ -215,12 +215,18 @@ or 0::0/0 included with an IPv6 link-local address when the length of
 the Next Hop Field is set to 32; in this case, the implementation SHOULD
 report the existence of this additional information so the operator can
 correct the sending BGP implementation.</t>
+      <t>And if a BGP speaker receiving an MP_REACH_NLRI with the length
+of the Next Hop Field set to 16, where the update contains a link-local
+IPv6 address, SHOULD consider this a malformed UPDATE message, and handle
+the malformed UPDATE message using the approach of "treat-as-withdraw",
+as described in section 7.3 of <xref target="RFC7606" format="default"/>.</t>
       <t>If the Next Hop field is malformed, the implementation MUST handle the
 malformed UPDATE message using the approach of "treat-as-withdraw", as
-described in section 7.3 of <xref target="RFC7606" format="default"/>. It MAY send a
-NOTIFICATION message as described in section 4 of <xref target="RFC4271" format="default"/>,
-using the UPDATE error message code (8 - Invalid NEXT_HOP Attribute) indicating
-there is an invalid NEXT_HOP field.</t>
+described in section 7.3 of <xref target="RFC7606" format="default"/>.</t>
+      <t>In both cases, it MAY send a NOTIFICATION message as described in section 4 of
+<xref target="RFC4271" format="default"/>, using the UPDATE error message
+code (8 - Invalid NEXT_HOP Attribute) indicating there is an invalid
+NEXT_HOP field.</t>
       <t>If the Next Hop field is properly formed, but the link-local next hop is not
 reachable (as determined by an examination of the IPv6 neighbor table), the
 implementation MAY handle the malformed UPDATE message using the approach
@@ -239,8 +245,8 @@ intervention is initiated.</t>
 
 <section numbered="true" toc="default">
       <name>Acknowledgements</name>
-      <t>The authors would like to thank Vipin Kumar, Dinesh Dutt, Jeff Haas, and Brian Carpenter
-for their contributions to this draft.</t>
+      <t>The authors would like to thank Vipin Kumar, Dinesh Dutt, Donald Sharp,
+Jeff Haas, and Brian Carpenter for their contributions to this draft.</t>
     </section>
     <!-- end of Acknowledgements section -->
 
