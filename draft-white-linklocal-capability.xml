@@ -96,7 +96,7 @@ in simplifying orchestration and configuration management. This
 proposal is a step in that direction.</t>
       <t>With the requirement of any global interface address being removed by
 this new capability, BGP neighbor configuration can be further
-simplified by making it (look) address-family independent. E.g. BGP
+simplified by making it (look) address-family independent. For example, BGP
 can just take the interface name for the peer config and link-local IPv6
 address of the peer can be learned via a discovery protocol running
 on the link or by an out-of-band tool. In essence, link-local next
