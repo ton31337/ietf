@@ -9,6 +9,7 @@
   <!ENTITY RFC4271 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4271.xml">
   <!ENTITY RFC4272 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4272.xml">
   <!ENTITY RFC5082 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5082.xml">
+  <!ENTITY RFC5492 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5492.xml">
   <!ENTITY RFC6973 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml">
   <!ENTITY RFC7942 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7942.xml">
   <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
@@ -40,7 +41,7 @@
     <abstract>
       <t>
         In this document, we introduce a new BGP capability that allows the
-        advertisement of a BGP speaker's routing daemon version.
+        advertisement of a BGP speaker's routing software version.
       </t>
       <t>
         This BGP capability is an optional advertisement. Implementations are
@@ -53,23 +54,27 @@
     <section>
       <name>Introduction</name>
       <t>
-        In modern data center designs, we tend to have conventional routers
-        participating in the routing process. And the fleet of routers has
-        different versions of routing daemon. This means that knowing which
-        versions of the routing daemons are running the various routers in the
+        In modern data center designs, conventional routers
+        participating in routing. These routers may have
+        different versions of routing software. Knowing which
+        versions of the routing software that are running on the various routers in the
         network can be a crucial factor in quickly identifying the root cause
-        of any protocol or network problems.
+        of protocol or network problems.
       </t>
       <t>
-        This BGP capability is an optional advertisement. Implementations are
-        not required to advertise the version nor to process received advertisements.
+	This document specifies a BGP capability that carries the routing
+	software version.
+        This BGP capability is a optional. Implementations are
+        not required to advertise their software version nor to process it on
+	receipt.
       </t>
       <t>
-        Information about the version of the routing daemon could also be exchanged
+        Information about the version of the routing software could also be exchanged
         in protocols such as LLDP and CDP. However, in containerized environments,
-        it is very hard and not recommended to exchange this information between
-        background processes. Therefore, and to help minimize operational costs, it
-        is helpful to exchange the routing daemon information between BGP peers directly.
+	<!-- XXX JMH - is it necessary to more rigorously define containerized?  -->
+        it is difficult and not recommended to exchange this information between
+        background processes. To assist in minimizing operational costs, it
+        is helpful to exchange the routing software versions between BGP peers directly.
       </t>
     </section>
     <section anchor="simple_list">
@@ -90,8 +95,8 @@
         the implementation behaviors.
       </t>
       <t>
-        Capabilities advertisements with BGP are defined in [RFC5492].
-        They utilize the BGP Capabilities Optional Parameter that contains
+        BGP capability advertisement is defined in <xref target="RFC5492"/>.
+        BGP Capabilities contain
         one or more triples &lt;Capability Code, Capability Length, Capability Value&gt;.
         This document defines a new BGP capability, the Software Version Capability,
         with Capability Code 75 and Capability Length and Capability Value
@@ -100,8 +105,8 @@
       <t>
         The inclusion of the Software Version Capability is OPTIONAL. If an
         implementation supports the inclusion of the capability, the
-        implementation MUST include a configuration switch to enable or
-        disable its use, and that switch MUST be off by default.
+        implementation MUST include a configuration option to enable or
+        disable its use, and MUST default to disabled.
       </t>
       <t>
         The Software Version Capability is intended for environments where more visibility
@@ -111,7 +116,8 @@
       </t>
       <t>
         An implementation that does not recognize or support the Software Version
-        Capability but receives one must ignore it, as described in [RFC5492].
+        Capability but receives one must ignore it, as described in <xref
+	target="RFC5492" section="3"/>.
       </t>
       <t>
         The triple for the Software Version Capability is as follows:
@@ -127,23 +133,24 @@
       <t>Capability Length</t>
       <ul empty="true" spacing="normal">
         <li>
+          Capability Length is a one-octet unsigned binary integer that
+          contains the length of the Capability Value field in octets.
+        </li>
+        <li>
           The Capability Length for the Software Version Capability MUST
           be greater than zero. A value of zero SHALL be treated
           as an encoding error and the Capability MUST be ignored.
         </li>
         <li>
-          The Capability Length SHOULD be no greater than 64. This is the
-          limit to allow other capabilities as much space as they require.
-        </li>
-        <li>
-          Capability Length is a one-octet unsigned binary integer that
-          contains the length of the Capability Value field in octets.
+          The Capability Length SHOULD be no greater than 64. This length
+          leaves space for other capabilities.
         </li>
       </ul>
       <t>Capability Value</t>
       <ul empty="true" spacing="normal">
         <li>
-          The Capability Value field is encoded in UTF-8 <xref target="RFC3629"/>.
+          The Capability Value field is the software version encoded as a UTF-8 <xref
+	  target="RFC3629"/> string.
           It is unstructured data and can be formatted in any way that the
           implementor decides. The string is not null-terminated.
         </li>
@@ -155,9 +162,11 @@
         <li>
             The Version field MUST be encoded using UTF-8. A receiving BGP speaker
             MUST NOT interpret invalid UTF-8 sequences.
+	    <!-- XXX JMH - see security considerations for RFC 9003 and decide
+	    how you think they should be integrated -->
           </li>
         <li>
-            The value of consists of one identifier, which identifies
+            The value consists of one identifier, which identifies
             the software and its significant version. Software version identifier consists of
             a product and optional product version.
           </li>
@@ -183,10 +192,14 @@
           carried by the BGP Capabilities Optional Parameter is 255 bytes. If an
           implementation is constructing a BGP Capabilities Optional Parameter
           and its length exceeds 255 bytes, there is not enough space for other
-          more important capabilities. An implementation is REQUIRED Extended Optional
+          more important capabilities.
+	</t>
+	<t>
+	  Implementations of this specification are REQUIRED Extended Optional
           Parameters Length for BGP OPEN Message support as defined in <xref target="RFC9072"/>.
         </t>
         <t>
+	  <!-- XXX JMH - I'm not 100% sure what you're trying to say here. -->
           A rogue node can prevent the proper operation of a BGP session, or the
           advertisement of other Capabilities, by not excluding the Software Version
           Capability as required in Section 3.1. This risk is equivalent to a rogue
@@ -203,7 +216,7 @@
       <t>
         Consider a group of routers each with a number of upstream nodes, and
         suppose that each router has a different operating system and
-        different routing daemon at a different version installed.  Assuming
+        different routing software at a different installed version.  Assuming
         that a specific feature is not working or that there is a bug which
         has not been fixed in a particular version of the code, knowledge of
         the routing daemon versions would allow an operator to quickly
@@ -269,10 +282,11 @@
         appropriate within the deployment context.
       </t>
       <t>
-        Sensitive information leaks can be minimized by using the <xref target="RFC5082"/>
-        mechanism or firewalls to filter out TCP 179 port from untrusted networks.
-        This capability can be disabled per neighbor, thus the sensitive information
-        can't be disclosed to untrusted neighbors.
+        Sensitive information leaks can be minimized by using the Generalized
+	TTL security mechanism <xref target="RFC5082"/>
+        or firewalls to filter out TCP 179 port from untrusted networks.
+        This capability should be enabled per neighbor, thus limiting the
+	disclosure of sensitive information to trusted neighbors.
       </t>
     </section>
     <section anchor="Acknowledgements" numbered="false">
@@ -292,6 +306,7 @@
         &RFC4271;
         &RFC4272;
         &RFC5082;
+        &RFC5492;
         &RFC6973;
         &RFC7942;
         &RFC8174;
