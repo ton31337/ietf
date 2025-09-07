@@ -23,11 +23,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-17" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-abraitis-bgp-version-capability-18" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Software Version Capability for BGP">Software Version Capability for BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-17"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-version-capability-18"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>Hostinger</organization>
       <address>
