@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rfc 
-  xmlns:xi="http://www.w3.org/2001/XInclude" 
+<rfc
+  xmlns:xi="http://www.w3.org/2001/XInclude"
   category="std"
   docName="draft-abraitis-bgp-rfd-state-ec-00"
   ipr="trust200902"
