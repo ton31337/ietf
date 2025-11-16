@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc 
+  xmlns:xi="http://www.w3.org/2001/XInclude" 
+  category="std"
+  docName="draft-abraitis-bgp-rfd-state-ec-00"
+  ipr="trust200902"
+  consensus="true"
+  obsoletes=""
+  updates=""
+  submissionType="IETF"
+  xml:lang="en"
+  tocInclude="true"
+  tocDepth="4"
+  symRefs="true"
+  sortRefs="true"
+  version="3">
+
+  <front>
+    <title abbrev="BGP RFD State EC">BGP Route Flap Damping State Extended Community</title>
+
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-bgp-rfd-state-ec-00"/>
+
+    <author fullname="Donatas Abraitis" surname="Abraitis">
+      <organization>NetDef</organization>
+      <address>
+        <email>donatas.abraitis@gmail.com</email>
+      </address>
+    </author>
+
+    <date year="2025"/>
+    <area>Routing</area>
+    <workgroup>Inter-Domain Routing</workgroup>
+
+    <abstract>
+      <t>
+        This document defines a new BGP Opaque Extended Community to carry
+        local route flap damping state information in BGP UPDATE messages.
+        The community allows BGP speakers to expose the current damping
+        penalty and configuration parameters associated with a route for
+        visibility and troubleshooting purposes.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+
+    <section anchor="intro" numbered="true">
+      <name>Introduction</name>
+
+      <t>
+        BGP Route Flap Damping (RFD) was originally specified in
+        <xref target="RFC2439"/> as a mechanism to reduce the propagation
+        of unstable routes in the Internet. Operational experience has
+        shown that aggressive damping parameters can harm convergence, and
+        <xref target="RFC7196"/> provides revised recommendations that make
+        RFD more usable in modern networks.
+      </t>
+
+      <t>
+        Today, determining whether a route is being suppressed or penalized
+        by damping at some point in the path typically requires out-of-band
+        access to each router's local configuration and state. This
+        opacity complicates troubleshooting, capacity planning, and
+        understanding the stability characteristics of specific prefixes.
+      </t>
+
+      <t>
+        This document defines a new BGP Opaque Extended Community
+        (<xref target="RFC4360"/>) referred to as the
+        BGP Route Flap Damping State Extended Community. It allows a
+        BGP speaker to attach a compact summary of its local damping state
+        to a route advertisement. The information is primarily intended for
+        visibility and troubleshooting; this document does not attempt to
+        standardize any particular RFD algorithm or parameter set.
+      </t>
+
+      <t>
+        The design is intentionally similar in spirit to the
+        BGP Prefix Origin Validation State Extended Community defined
+        in <xref target="RFC8097"/>, which carries RPKI origin validation
+        state. In both cases, local state about routing policy is exported
+        in-band using a transitive Opaque Extended Community.
+      </t>
+    </section>
+
+    <section anchor="requirements" numbered="true">
+      <name>Specification of Requirements</name>
+
+      <t>
+        The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”,
+        “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and
+        “OPTIONAL” in this document are to be interpreted as described in
+        BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and
+        only when, they appear in all capitals, as shown here.
+      </t>
+    </section>
+
+    <section anchor="ec-format" numbered="true">
+      <name>The BGP Route Flap Damping State Extended Community</name>
+
+      <t>
+        The BGP Route Flap Damping State Extended Community is an Opaque
+        Extended Community as defined in <xref target="RFC4360"/>. Its
+        high-order Type octet is taken from the "BGP Transitive Extended
+        Community Types" registry as the Transitive Opaque Extended
+        Community type, with value 0x03. The low-order Type
+        octet (the Sub-Type) is allocated by IANA from the "Transitive
+        Opaque Extended Community Sub-Types" registry
+        (<xref target="RFC7153"/>).
+      </t>
+
+      <t>
+        The Extended Community is encoded as follows:
+      </t>
+
+      <figure anchor="ec-format-fig">
+        <name>BGP Route Flap Damping State Extended Community</name>
+        <artwork><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    0x03       |     TBD      |      Flags     |   Penalty    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   Penalty    | SuppressThres | SuppressThres |   Reserved    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        ]]></artwork>
+      </figure>
+
+      <t>
+        The fields are defined as follows:
+      </t>
+
+      <dl>
+        <dt>Type (octet 0):</dt>
+        <dd>
+          <t>
+            The value 0x03 indicates a Transitive Opaque Extended Community.
+          </t>
+        </dd>
+
+        <dt>Sub-Type (octet 1):</dt>
+        <dd>
+          <t>
+            The low-order Type octet is a Sub-Type allocated by IANA from
+            the "Transitive Opaque Extended Community Sub-Types" registry.
+            In this document it is referred to as the "BGP Route Flap
+            Damping State Extended Community" and shown as "TBD".
+          </t>
+        </dd>
+
+        <dt>Flags (octet 2):</dt>
+        <dd>
+          <t>
+            The Flags field contains the following bits, numbered from the
+            most significant bit (bit 7) to the least significant bit (bit 0):
+          </t>
+
+          <ul>
+            <li>
+              <t>
+                Bit 7 (D - Damping Active): When set to 1,
+                indicates that the advertising BGP speaker currently
+                applies route flap damping to this route (that
+                is, the route is subject to some form of RFD processing as
+                described in <xref target="RFC2439"/> and/or
+                <xref target="RFC7196"/>). When set to 0, the route is not
+                currently subject to RFD at the advertising speaker.
+              </t>
+            </li>
+            <li>
+              <t>
+                Bit 6 (R - Recently Reused): When set to 1,
+                indicates that this route was previously suppressed by
+                local RFD and has been reused (unsuppressed) within a
+                locally configured "recent reuse interval". The precise
+                duration of this interval is an implementation detail. When
+                set to 0, either the route has not been suppressed since
+                the last reset of RFD state, or the reuse event occurred
+                sufficiently long ago that the implementation no longer
+                considers it "recent".
+              </t>
+            </li>
+            <li>
+              <t>
+                Bits 5-0: Reserved. These bits MUST be set to 0 on
+                transmission and MUST be ignored on reception.
+              </t>
+            </li>
+          </ul>
+        </dd>
+
+        <dt>Penalty (octets 3-4):</dt>
+        <dd>
+          <t>
+            A 16-bit unsigned integer giving the current RFD penalty
+            assigned to this route at the advertising speaker. The units
+            are the implementation's native penalty units, consistent with
+            its damping algorithm. A value of 0 indicates that no penalty
+            is currently applied.
+          </t>
+        </dd>
+
+        <dt>SuppressThres (octets 5-6):</dt>
+        <dd>
+          <t>
+            A 16-bit unsigned integer giving the suppress threshold of the
+            damping profile currently applied to this route, expressed in
+            the same penalty units as the Penalty field. When the penalty
+            equals or exceeds this value, the route is suppressed by the
+            local RFD algorithm. A value of 0 indicates that the suppress
+            threshold is not available or not being signalled.
+          </t>
+        </dd>
+
+        <dt>Reserved (octet 7):</dt>
+        <dd>
+          <t>
+            This octet is reserved for future use. It MUST be set to 0 on
+            transmission and MUST be ignored on reception.
+          </t>
+        </dd>
+      </dl>
+
+    </section>
+
+    <section anchor="operation" numbered="true">
+      <name>Operation</name>
+
+      <section anchor="sender-behaviour" numbered="true">
+        <name>Sender Behaviour</name>
+
+        <t>
+          A BGP speaker that implements this specification and that applies
+          route flap damping to a route MAY attach the BGP Route Flap
+          Damping State Extended Community to UPDATE messages that
+          advertise that route.
+        </t>
+
+        <t>
+          If the route is not subject to any local RFD processing, the
+          speaker MUST NOT attach this Extended Community.
+        </t>
+
+        <t>
+          When attaching the community, the speaker:
+        </t>
+
+        <ul>
+          <li>
+            MUST set the D bit in the Flags field to 1.
+          </li>
+          <li>
+            MUST set the Penalty field to the current penalty value for
+            the route in the speaker's RFD implementation.
+          </li>
+          <li>
+            SHOULD set the SuppressThres field to the suppress threshold
+            associated with the damping profile applied to this route. If
+            this value is not available or not meaningful, it MUST be
+            set to 0.
+          </li>
+          <li>
+            SHOULD set the R bit to 1 if the route has
+            transitioned from "suppressed" to "unsuppressed" within a
+            locally configured "recent reuse interval". Otherwise it
+            SHOULD set the R bit to 0.
+          </li>
+        </ul>
+
+        <t>
+          A speaker SHOULD attach at most one instance of the BGP Route
+          Flap Damping State Extended Community to a given path. If
+          multiple instances would otherwise be attached, the speaker
+          SHOULD retain only one.
+        </t>
+      </section>
+
+      <section anchor="receiver-behaviour" numbered="true">
+        <name>Receiver Behaviour</name>
+
+        <t>
+          A BGP speaker that receives a route with the BGP Route Flap
+          Damping State Extended Community and that supports this
+          specification:
+        </t>
+
+        <ul>
+          <li>
+            MAY use the information for operational visibility, logging,
+            or external telemetry.
+          </li>
+          <li>
+            MAY use the information as an input to local policy (for
+            example, to de-prefer routes with high penalty values or to
+            trigger additional monitoring for routes with frequent
+            damping activity).
+          </li>
+          <li>
+            MUST NOT treat the absence of this Extended Community as an
+            error or as an indication that the route is not damped.
+          </li>
+        </ul>
+
+        <t>
+          If multiple instances of the BGP Route Flap Damping State
+          Extended Community are present for the same path, the speaker:
+        </t>
+
+        <ul>
+          <li>
+            MUST select a single instance to use and MUST ignore the
+            rest.
+          </li>
+        </ul>
+
+        <t>
+          If a Penalty or SuppressThres value is outside the acceptable
+          range for the local implementation, the speaker MUST ignore that
+          Extended Community instance and SHOULD log the condition for
+          administrative review.
+        </t>
+      </section>
+
+      <section anchor="ibgp-ebgp" numbered="true">
+        <name>Interaction with iBGP and eBGP</name>
+
+        <t>
+          The BGP Route Flap Damping State Extended Community is transitive
+          and therefore propagates across both iBGP and eBGP sessions,
+          subject to normal routing policy.
+        </t>
+
+        <t>
+          By default, an implementation:
+        </t>
+
+        <ul>
+          <li>
+            SHOULD propagate the BGP Route Flap Damping State Extended
+            Community unchanged when advertising a route, unless local
+            policy explicitly removes or modifies it.
+          </li>
+          <li>
+            MAY be configured to strip, rewrite, or otherwise filter this
+            Extended Community on a per-neighbor or per-policy basis.
+          </li>
+        </ul>
+
+        <t>
+          Because the Extended Community is opaque, BGP speakers that do
+          not implement this specification will treat it as an unknown
+          transitive Extended Community and will propagate it as specified
+          in <xref target="RFC4360"/>.
+        </t>
+
+        <t>
+          For iBGP, normal propagation rules apply. A route reflector that
+          receives a route with this Extended Community MAY reflect it to
+          other clients, subject to local policy.
+        </t>
+
+        <t>
+          Although the mechanism was motivated primarily by intra-AS
+          visibility and troubleshooting use cases, there is no protocol
+          prohibition on using it across Autonomous Systems. Operators that
+          exchange the BGP Route Flap Damping State Extended Community
+          across eBGP sessions SHOULD ensure that there is an appropriate
+          trust relationship and a shared understanding of how the
+          information will be used.
+        </t>
+      </section>
+    </section>
+
+    <section anchor="deployment" numbered="true">
+      <name>Deployment Considerations</name>
+
+      <t>
+        In many deployments, not all routers in an AS will support this
+        specification. Operators MAY use routing policy to translate the
+        information carried in the BGP Route Flap Damping State Extended
+        Community into other attributes (for example, a local preference
+        adjustment or a non-transitive community) that can be understood
+        by legacy routers.
+      </t>
+
+      <t>
+        This document does not change the RFD algorithm, decay parameters,
+        or recommended default values, which remain governed by
+        <xref target="RFC2439"/> and <xref target="RFC7196"/>. Operators
+        SHOULD continue to follow best practices for RFD configuration as
+        described therein.
+      </t>
+
+      <t>
+        Because this Extended Community is transitive, information about
+        local damping state may propagate beyond the originating Autonomous
+        System. This can expose aspects of local policy (such as the use of
+        RFD and the relative aggressiveness of configured thresholds) to
+        external networks. Operators that consider this information
+        sensitive SHOULD apply export policies that remove or rewrite the
+        Extended Community at AS boundaries.
+      </t>
+    </section>
+
+    <section anchor="iana" numbered="true">
+      <name>IANA Considerations</name>
+
+      <t>
+        IANA is requested to allocate a new Sub-Type from the "Transitive
+        Opaque Extended Community Sub-Types" registry under "Border
+        Gateway Protocol (BGP) Extended Communities" with the following
+        entry:
+      </t>
+
+      <table anchor="table_ex">
+        <thead>
+          <tr>
+            <th align="center">Value</th>
+            <th align="center">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="center">TBD</td>
+            <td align="center">BGP Route Flap Damping State Extended Community</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <t>
+        No other IANA actions are required by this document.
+      </t>
+    </section>
+
+    <section anchor="security" numbered="true">
+      <name>Security Considerations</name>
+
+      <t>
+        The security considerations for BGP and RFD in general are
+        discussed in <xref target="RFC4271"/>, <xref target="RFC4272"/>,
+        <xref target="RFC4593"/>, <xref target="RFC2439"/>, and
+        <xref target="RFC7196"/>. This document does not introduce new
+        security mechanisms; it defines a new way to signal local RFD
+        state.
+      </t>
+
+      <t>
+        When the Extended Community is permitted on eBGP sessions, the
+        participating networks SHOULD have an appropriate trust
+        relationship and a clear operational agreement regarding how the
+        information will be interpreted and used.
+      </t>
+
+      <t>
+        Because this Extended Community is transitive, information about
+        local damping state may propagate beyond the originating
+        Autonomous System. Where this is considered sensitive, operators
+        SHOULD use policy to control its export.
+      </t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+      <name>Normative References</name>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2439.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4272.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4360.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4593.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7153.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7196.xml"/>
+	      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8097.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+      </references>
+    </references>
+  </back>
+
+</rfc>
