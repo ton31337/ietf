@@ -62,11 +62,11 @@
         of protocol or network problems.
       </t>
       <t>
-	This document specifies a BGP capability that carries the routing
-	software version.
+        This document specifies a BGP capability that carries the routing
+        software version.
         This BGP capability is a optional. Implementations are
         not required to advertise their software version nor to process it on
-	receipt.
+        receipt.
       </t>
       <t>
         Information about the version of the routing software could also be exchanged
@@ -117,7 +117,7 @@
       <t>
         An implementation that does not recognize or support the Software Version
         Capability but receives one must ignore it, as described in <xref
-	target="RFC5492" section="3"/>.
+        target="RFC5492" section="3"/>.
       </t>
       <t>
         The triple for the Software Version Capability is as follows:
@@ -150,7 +150,7 @@
       <ul empty="true" spacing="normal">
         <li>
           The Capability Value field is the software version encoded as a UTF-8 <xref
-	  target="RFC3629"/> string.
+          target="RFC3629"/> string.
           It is unstructured data and can be formatted in any way that the
           implementor decides. The string is not null-terminated.
         </li>
@@ -193,17 +193,10 @@
           implementation is constructing a BGP Capabilities Optional Parameter
           and its length exceeds 255 bytes, there is not enough space for other
           more important capabilities.
-	</t>
-	<t>
-	  Implementations of this specification are REQUIRED Extended Optional
-          Parameters Length for BGP OPEN Message support as defined in <xref target="RFC9072"/>.
         </t>
         <t>
-	  <!-- XXX JMH - I'm not 100% sure what you're trying to say here. -->
-          A rogue node can prevent the proper operation of a BGP session, or the
-          advertisement of other Capabilities, by not excluding the Software Version
-          Capability as required in Section 3.1. This risk is equivalent to a rogue
-          node simply not advertising a specific Capability and is not new to BGP.
+          Implementations of this specification are REQUIRED Extended Optional
+          Parameters Length for BGP OPEN Message support as defined in <xref target="RFC9072"/>.
         </t>
       </section>
     </section>
@@ -283,10 +276,10 @@
       </t>
       <t>
         Sensitive information leaks can be minimized by using the Generalized
-	TTL security mechanism <xref target="RFC5082"/>
+        TTL security mechanism <xref target="RFC5082"/>
         or firewalls to filter out TCP 179 port from untrusted networks.
         This capability should be enabled per neighbor, thus limiting the
-	disclosure of sensitive information to trusted neighbors.
+        disclosure of sensitive information to trusted neighbors.
       </t>
     </section>
     <section anchor="Acknowledgements" numbered="false">
