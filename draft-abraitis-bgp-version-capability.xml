@@ -46,7 +46,16 @@
       <t>
         This BGP capability is an optional advertisement. Implementations are
         not required to advertise the version nor to process received
-        advertisements.
+        advertisements. The capability is intended only for use within networks
+        under common administrative control, primarily for troubleshooting and
+        debugging purposes in environments such as containerized BGP deployments
+        where alternative version discovery mechanisms are inadequate.
+      </t>
+      <t>
+        This document includes comprehensive analysis of security risks,
+        including fingerprinting and targeted exploitation concerns, and
+        provides strict guidance on appropriate and inappropriate deployment
+        scenarios.
       </t>
     </abstract>
   </front>
@@ -54,28 +63,109 @@
     <section>
       <name>Introduction</name>
       <t>
-        In modern data center designs, conventional routers
-        participating in routing. These routers may have
-        different versions of routing software. Knowing which
-        versions of the routing software that are running on the various routers in the
-        network can be a crucial factor in quickly identifying the root cause
-        of protocol or network problems.
+        In modern data center designs, conventional routers participate in
+        routing. These routers may have different versions of routing software.
+        Knowing which versions of the routing software are running on the various
+        routers in the network can be a crucial factor in quickly identifying the
+        root cause of protocol or network problems.
       </t>
       <t>
         This document specifies a BGP capability that carries the routing
-        software version.
-        This BGP capability is a optional. Implementations are
+        software version. This BGP capability is optional. Implementations are
         not required to advertise their software version nor to process it on
-        receipt.
+        receipt. Due to significant security implications described in
+        <xref target="Security"/>, the capability MUST be disabled by default
+        and MUST only be enabled in carefully controlled environments where the
+        operational benefits justify the security risks.
       </t>
       <t>
-        Information about the version of the routing software could also be exchanged
-        in protocols such as LLDP and CDP. However, in containerized environments,
-	<!-- XXX JMH - is it necessary to more rigorously define containerized?  -->
-        it is difficult and not recommended to exchange this information between
-        background processes. To assist in minimizing operational costs, it
-        is helpful to exchange the routing software versions between BGP peers directly.
+        Information about the version of the routing software could also be
+        exchanged in protocols such as LLDP and CDP. However, in containerized
+        environments, it is difficult and not recommended to exchange this
+        information between background processes. To assist in minimizing
+        operational costs in such environments, it is helpful to exchange the
+        routing software versions between BGP peers directly. The rationale for
+        using BGP rather than alternative mechanisms is discussed in detail below.
       </t>
+    </section>
+    <section>
+      <name>Rationale for BGP-based Version Advertisement</name>
+      <t>
+        This section addresses why BGP is an appropriate mechanism for version
+        advertisement in specific operational environments, particularly
+        containerized BGP deployments.
+      </t>
+      <section>
+        <name>Operational Context</name>
+        <t>
+          Modern network operations increasingly deploy BGP speakers in containerized
+          environments where traditional inventory and monitoring approaches face
+          significant challenges. In these environments:
+        </t>
+        <ul>
+          <li>BGP speakers run in isolated containers with minimal tooling and
+              no direct access to host-level inventory systems</li>
+          <li>Container orchestration systems may dynamically create, destroy, and
+              migrate BGP speakers across physical hosts</li>
+          <li>Traditional LLDP and CDP operate at Layer 2 and cannot traverse the
+              virtual networking layers common in containerized deployments</li>
+          <li>Multiple BGP speaker containers may run on the same physical host,
+              making physical-layer identification ambiguous</li>
+        </ul>
+      </section>
+      <section>
+        <name>Why Existing Approaches Are Insufficient</name>
+        <t>
+          While inventory management systems can identify what software versions
+          are supposed to be running, they face critical operational gaps:
+        </t>
+        <ul>
+          <li>Container image tags may not reflect actual running code (e.g., due
+              to local modifications, rollbacks, or deployment errors)</li>
+          <li>External inventory systems require additional authentication,
+              authorization, and network paths to query</li>
+          <li>Debugging connectivity issues may require knowing the peer's version
+              before external inventory systems are accessible</li>
+          <li>Real-time troubleshooting during BGP session establishment failures
+              benefits from immediate version visibility without querying
+              external systems</li>
+        </ul>
+        <t>
+          The BGP protocol session itself provides an authenticated, direct
+          communication channel between peers that is available precisely when
+          version information is most valuable for debugging.
+        </t>
+      </section>
+      <section>
+        <name>Specific Use Cases</name>
+        <t>
+          The primary intended use cases are:
+        </t>
+        <ul>
+          <li>Rapid identification of version-specific bugs during BGP session
+              establishment or operation</li>
+          <li>Automated correlation of BGP behavior anomalies with known
+              software issues across a fleet of routers</li>
+          <li>Verification that intended software versions are actually running
+              after upgrades or rollbacks</li>
+          <li>Operational visibility in environments where BGP speakers are the
+              only directly accessible component (e.g., route reflectors in
+              Kubernetes clusters)</li>
+          <li>Network troubleshooting using packet captures: when analyzing BGP
+              OPEN messages in packet captures (e.g., using tcpdump, Wireshark,
+              or similar tools), the version capability allows immediate
+              identification of the software version used by each peer without
+              requiring access to the devices themselves or external inventory
+              systems. This is particularly valuable when troubleshooting
+              historical issues from archived packet captures or when analyzing
+              traffic from devices that are no longer accessible.</li>
+        </ul>
+        <t>
+          These use cases are specifically scoped to environments under common
+          administrative control where the debugging benefits justify accepting
+          the security risks described in <xref target="Security"/>.
+        </t>
+      </section>
     </section>
     <section anchor="simple_list">
       <name>Specification of Requirements</name>
@@ -109,10 +199,19 @@
         disable its use, and MUST default to disabled.
       </t>
       <t>
-        The Software Version Capability is intended for environments where more visibility
-        is needed for troubleshooting purposes. It is NOT RECOMMENDED for use
-        outside a single Autonomous System, or a set of Autonomous Systems under
-        a common administration.
+        The Software Version Capability is intended ONLY for environments where
+        more visibility is needed for troubleshooting purposes within a trust
+        boundary. It is NOT RECOMMENDED for use outside a single Autonomous System,
+        or a set of Autonomous Systems under a common administration. It MUST NOT
+        be enabled on BGP sessions that cross organizational or administrative
+        boundaries without explicit agreement from both parties and thorough
+        evaluation of the security risks described in <xref target="Security"/>.
+      </t>
+      <t>
+        Implementations SHOULD provide configuration mechanisms that make it
+        difficult to accidentally enable this capability on external BGP sessions,
+        such as requiring per-session or per-peer-group explicit configuration
+        rather than global enablement.
       </t>
       <t>
         An implementation that does not recognize or support the Software Version
@@ -216,10 +315,108 @@
         identify the pattern of which versions are affected.
       </t>
       <t>
+        A particularly valuable operational scenario involves packet capture
+        analysis. When troubleshooting BGP session establishment problems or
+        analyzing protocol behavior, operators often capture network traffic
+        using tools such as tcpdump or Wireshark. The Software Version Capability
+        appears in the BGP OPEN message and is therefore immediately visible in
+        the packet capture. This allows operators to identify the exact software
+        version of both peers without needing:
+      </t>
+      <ul>
+        <li>Interactive access to the BGP speaker devices</li>
+        <li>Access to external inventory or management systems</li>
+        <li>Correlation with separate logging or monitoring data</li>
+      </ul>
+      <t>
+        This is especially useful when analyzing packet captures from production
+        incidents after the fact, when reviewing archived captures, or when
+        troubleshooting issues reported by remote teams who can provide packet
+        captures but may not have detailed system access.
+      </t>
+      <t>
         Enabling (i.e., turning on) this capability requires bouncing all
         existing BGP sessions and the feature MUST be explicitly configured
         before an implementation advertizes the Software Version Capability.
       </t>
+    </section>
+    <section>
+      <name>Deployment Status and Recommendations</name>
+      <t>
+        This section documents the current deployment status of the Software
+        Version Capability and provides guidance on appropriate deployment
+        scenarios.
+      </t>
+      <section>
+        <name>Current Implementation Status</name>
+        <t>
+          At the time of writing, the Software Version Capability has been
+          implemented in several known BGP implementations and tools:
+        </t>
+        <ul>
+          <li>FRRouting</li>
+          <li>GoBGP</li>
+          <li>freeRouter</li>
+          <li>ExaBGP</li>
+          <li>Flock networks</li>
+          <li>Wireshark</li>
+        </ul>
+        <t>
+          Deployment of the capability in production networks is believed to be
+          limited primarily to internal/iBGP sessions within single organizations,
+          particularly in containerized and cloud-native environments where
+          traditional inventory mechanisms are insufficient.
+        </t>
+        <t>
+          The capability has proven valuable for its intended debugging and
+          troubleshooting use cases in these controlled environments. However,
+          widespread deployment across organizational boundaries has not occurred
+          and is explicitly NOT RECOMMENDED by this document.
+        </t>
+      </section>
+      <section>
+        <name>Recommended Deployment Scenarios</name>
+        <t>
+          This capability is designed for and RECOMMENDED only in the following
+          scenarios:
+        </t>
+        <ul>
+          <li>iBGP sessions within a single Autonomous System</li>
+          <li>BGP sessions between ASes under unified administrative control
+              (e.g., multiple ASes of the same organization)</li>
+          <li>Route reflector infrastructures within data centers</li>
+          <li>Containerized BGP environments where alternative version discovery
+              is impractical</li>
+          <li>Laboratory, testing, and development environments</li>
+        </ul>
+        <t>
+          In all cases, deployment MUST be limited to environments where all
+          BGP speakers are trusted and under administrative control of the
+          deploying organization.
+        </t>
+      </section>
+      <section>
+        <name>Explicitly Discouraged Deployment Scenarios</name>
+        <t>
+          This capability MUST NOT be deployed in the following scenarios:
+        </t>
+        <ul>
+          <li>eBGP sessions with Internet service providers</li>
+          <li>eBGP sessions with customers</li>
+          <li>eBGP sessions with peers at Internet exchange points</li>
+          <li>Any BGP session crossing organizational trust boundaries</li>
+          <li>BGP sessions with external parties who have not explicitly
+              agreed to exchange this information</li>
+          <li>Default configurations or deployment templates that apply
+              to unspecified sessions</li>
+        </ul>
+        <t>
+          The use of this capability on any BGP session with an untrusted or
+          external party exposes the deploying organization to the security
+          risks described in <xref target="Security"/> without corresponding
+          benefits.
+        </t>
+      </section>
     </section>
     <section anchor="IANA">
       <name>IANA Considerations</name>
@@ -247,40 +444,94 @@
     <section anchor="Security">
       <name>Security Considerations</name>
       <t>
-        The Software Version Capability should be treated as sensitive information: it
-        could be easier for an attacker to exploit the system if they know the
-        specific software version and manufacturer of a BGP speaker. This
-        information could be gathered by inspecting BGP OPEN messages that carry
-        the Software Version Capability defined in this document. Furthermore, this
-        knowledge may facilitate a number of social-engineering attacks.
+        This section provides a comprehensive analysis of the security risks
+        associated with advertising software version information over BGP, and
+        guidance on when and how to deploy this capability safely.
       </t>
-      <t>
-        Modifying the information advertised by a router might lead to attacks
-        including bogus software upgrades and also might mask the causes of
-        faults in the network.
-      </t>
-      <t>
-        Users of this mechanism should be aware that unless a transport that
-        provides integrity is used for the BGP session in question, the Software Version
-        Capability can be forged. Unless a transport that provides
-        confidentiality is used, the Version Capability could be snooped by an
-        attacker. These issues are common to any BGP message but may be of
-        greater interest in the context of this extension as explained above.
-        Refer to the related considerations in <xref target="RFC4271"/> and
-        <xref target="RFC4272"/>.
-      </t>
-      <t>
-        Users of this mechanism should consider applying data minimization
-        practices as outlined in Section 6.1 of <xref target="RFC6973"/>, as
-        appropriate within the deployment context.
-      </t>
-      <t>
-        Sensitive information leaks can be minimized by using the Generalized
-        TTL security mechanism <xref target="RFC5082"/>
-        or firewalls to filter out TCP 179 port from untrusted networks.
-        This capability should be enabled per neighbor, thus limiting the
-        disclosure of sensitive information to trusted neighbors.
-      </t>
+      <section>
+        <name>Threat Model and Attack Vectors</name>
+        <t>
+          The Software Version Capability exposes implementation details that
+          create several categories of security risk:
+        </t>
+        <section>
+          <name>Fingerprinting Attacks</name>
+          <t>
+            Version information enables attackers to precisely identify the BGP
+            implementation and version, facilitating targeted exploitation of
+            known vulnerabilities. An attacker who can observe BGP OPEN messages
+            (either through network access or compromised infrastructure) gains:
+          </t>
+          <ul>
+            <li>Exact software version information for exploit targeting</li>
+            <li>Knowledge of which CVEs and security advisories apply</li>
+            <li>Ability to enumerate network infrastructure and identify
+                high-value targets</li>
+            <li>Intelligence for planning multi-stage attacks</li>
+          </ul>
+          <t>
+            This risk is significantly elevated when the capability is used on
+            inter-provider links or any BGP sessions involving untrusted parties.
+          </t>
+        </section>
+        <section>
+          <name>Feature Proxy and Implementation Inference</name>
+          <t>
+            Beyond direct exploitation, version information can serve as a proxy
+            for inferring:
+          </t>
+          <ul>
+            <li>Which BGP features and extensions are likely supported</li>
+            <li>Performance characteristics and scaling limitations</li>
+            <li>Vendor and operational practices</li>
+            <li>Network architecture and design patterns</li>
+          </ul>
+          <t>
+            This information asymmetry may advantage competitors or adversaries
+            in both technical and business contexts.
+          </t>
+        </section>
+      </section>
+      <section>
+        <name>Risk vs. Benefit Analysis</name>
+        <t>
+          Deployment of this capability MUST be preceded by careful analysis of
+          whether the operational benefits outweigh the security risks in the
+          specific deployment context.
+        </t>
+        <section>
+          <name>When Benefits May Outweigh Risks</name>
+          <t>
+            The capability is most appropriate in environments where:
+          </t>
+          <ul>
+            <li>All BGP speakers are under common administrative control
+                (single Autonomous System or tightly coordinated ASes)</li>
+            <li>Network access is strictly controlled and monitored</li>
+            <li>BGP sessions use authentication and encryption (e.g., TCP-AO, IPsec)</li>
+            <li>Rapid troubleshooting of version-specific issues provides
+                substantial operational value</li>
+            <li>Alternative version discovery mechanisms are unavailable or
+                inadequate (e.g., containerized environments)</li>
+            <li>The organization has mature security practices including timely
+                patching and vulnerability management</li>
+          </ul>
+        </section>
+        <section>
+          <name>When Risks Clearly Outweigh Benefits</name>
+          <t>
+            The capability SHOULD NOT be deployed when:
+          </t>
+          <ul>
+            <li>BGP sessions cross organizational boundaries (inter-provider BGP)</li>
+            <li>Sessions are with customers, peers, or other external parties</li>
+            <li>Network security posture is weak or untested</li>
+            <li>Software is not regularly patched or updated</li>
+            <li>Alternative troubleshooting methods are available and sufficient</li>
+            <li>The organization lacks resources for ongoing security monitoring</li>
+          </ul>
+        </section>
+      </section>
     </section>
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
@@ -296,11 +547,7 @@
       <references title="Normative References">
         &RFC2119;
         &RFC3629;
-        &RFC4271;
-        &RFC4272;
-        &RFC5082;
         &RFC5492;
-        &RFC6973;
         &RFC7942;
         &RFC8174;
         &RFC9072;
