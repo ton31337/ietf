@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-max-paths-reached-00" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+  <!-- xml2rfc v2v3 conversion 3.12.8 -->
+  <front>
+    <title abbrev="Maximum Number of Paths Reached">Maximum Number of Paths Reached Notification for BGP</title>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-max-paths-reached-00"/>
+    <author fullname="Donatas Abraitis" surname="Abraitis">
+      <organization>NetDef</organization>
+      <address>
+        <email>donatas@opensourcerouting.org</email>
+      </address>
+    </author>
+    <author fullname="Jeffrey Haas" surname="Haas">
+      <organization>Juniper Networks</organization>
+      <address>
+        <postal>
+          <street>1133 Innovation Way</street>
+          <city>Sunnyvale</city>
+          <region>CA</region>
+          <code>94089</code>
+          <country>US</country>
+        </postal>
+        <email>jhaas@juniper.net</email>
+      </address>
+    </author>
+    <date year="2026"/>
+    <area>Routing</area>
+    <workgroup>Inter-Domain Routing</workgroup>
+    <keyword>BGP ADD-PATH</keyword>
+    <keyword>BGP NOTIFICATION</keyword>
+    <keyword>BGP Cease</keyword>
+    <abstract>
+      <t>
+        This document defines a new BGP Cease NOTIFICATION message
+        subcode, "Maximum Number of Paths Reached", used when a BGP
+        speaker terminates a peering because the number of paths received
+        from a neighbor, as permitted by BGP ADD-PATH, exceeds a locally
+        configured upper bound.
+      </t>
+    </abstract>
+  </front>
+  <middle>
+    <section>
+      <name>Introduction</name>
+      <t>
+        The BGP Cease NOTIFICATION message <xref target="RFC4271"/> is used
+        when a BGP speaker terminates its peering with a neighbor.
+        <xref target="RFC4486"/> defines subcodes for the Cease
+        NOTIFICATION message to aid network operators in correlating
+        network events and diagnosing BGP peering issues, including the
+        "Maximum Number of Prefixes Reached" subcode.
+      </t>
+      <t>
+        BGP ADD-PATH <xref target="RFC7911"/> permits a BGP speaker to
+        advertise multiple paths for the same address prefix.  As a result,
+        a BGP speaker may enforce a locally configured upper bound on the
+        number of paths it accepts from a peer, distinct from any bound on
+        the number of prefixes.  No existing Cease subcode precisely
+        describes the termination of a peering for this reason.
+      </t>
+      <t>
+        This document defines the "Maximum Number of Paths Reached" Cease
+        NOTIFICATION subcode for this purpose.
+      </t>
+    </section>
+    <section anchor="simple_list">
+      <name>Requirements Language</name>
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+        they appear in all capitals, as shown here.
+      </t>
+    </section>
+    <section anchor="subcode">
+      <name>Maximum Number of Paths Reached Subcode</name>
+      <t>
+        The value TBD (suggested value 11, see <xref target="IANA"/>) has
+        been allocated by IANA for the "Maximum Number of Paths Reached"
+        Cease NOTIFICATION message subcode.  When a BGP speaker terminates
+        a peering because the number of paths <xref target="RFC7911"/>
+        received from the neighbor for one or more &lt;AFI, SAFI&gt; exceeds
+        a locally configured upper bound, the BGP speaker SHOULD send a
+        NOTIFICATION message with the error code "Cease" and the error
+        subcode "Maximum Number of Paths Reached".  The Data field of the
+        NOTIFICATION message is unused.
+      </t>
+    </section>
+    <section anchor="operational">
+      <name>Operational Considerations</name>
+      <t>
+        This subcode is meaningful only when BGP ADD-PATH
+        <xref target="RFC7911"/> has been negotiated for at least one
+        &lt;AFI, SAFI&gt; with the peer.  A speaker that bounds only the
+        number of prefixes continues to use the "Maximum Number of Prefixes
+        Reached" subcode <xref target="RFC4486"/>.
+      </t>
+      <t>
+        The PATHS-LIMIT Capability
+        <xref target="I-D.abraitis-idr-addpath-paths-limit"/>, when
+        supported by both peers, lets a receiver negotiate with the sender
+        the maximum number of paths it is willing to receive, per
+        &lt;AFI, SAFI&gt;, so that the sender can avoid exceeding that bound
+        in the first place.  This subcode is the complementary
+        enforcement signal: it indicates termination when the number of
+        received paths exceeds the receiver's locally configured upper
+        bound regardless of whether the PATHS-LIMIT Capability was
+        negotiated, for example because the sender does not support it,
+        ignored it, or sent more paths than indicated.  Where feasible,
+        graceful handling that preserves the session, as recommended in
+        <xref target="I-D.ietf-idr-add-paths-guidelines"/>, is preferred
+        over termination.
+      </t>
+      <t>
+        When BGP Graceful Restart with NOTIFICATION support has been
+        negotiated, a speaker that sends or receives this subcode follows
+        the procedures of <xref target="RFC8538"/>.  A speaker whose local
+        policy requires the immediate discard of the routes received from
+        the peer uses the Hard Reset mechanism of <xref target="RFC8538"/>,
+        carrying the "Cease" code and "Maximum Number of Paths Reached"
+        subcode in the Data field of the Hard Reset message.
+      </t>
+    </section>
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>
+        This document defines a subcode for the BGP Cease NOTIFICATION
+        message that provides information to aid network operators in
+        correlating network events and diagnosing BGP peering issues.  This
+        subcode is purely informational and has no impact on the BGP Finite
+        State Machine beyond that already documented by
+        <xref target="RFC4271"/>, Sections 6.6 and 6.7.
+      </t>
+    </section>
+    <section anchor="IANA">
+      <name>IANA Considerations</name>
+      <t>
+        IANA is requested to assign a value (suggested value 11) from the
+        "BGP Cease NOTIFICATION message subcodes" registry, with the name
+        "Maximum Number of Paths Reached" and a reference to this document.
+      </t>
+    </section>
+    <section anchor="Acknowledgements" numbered="false">
+      <name>Acknowledgements</name>
+      <t>
+        TBD
+      </t>
+    </section>
+  </middle>
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+      <name>Normative References</name>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4486.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7911.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8538.xml"/>
+      </references>
+      <references>
+      <name>Informative References</name>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-add-paths-guidelines.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.abraitis-idr-addpath-paths-limit.xml"/>
+      </references>
+    </references>
+  </back>
+</rfc>
