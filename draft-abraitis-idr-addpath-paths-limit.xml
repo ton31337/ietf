@@ -13,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-04" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-05" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-04"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-05"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -31,19 +31,12 @@
       </address>
     </author>
     <author fullname="Jeffrey Haas" surname="Haas">
-      <organization>Juniper Networks</organization>
+      <organization>HPE</organization>
       <address>
-        <postal>
-          <street>1133 Innovation Way</street>
-          <city>Sunnyvale</city>
-          <region>CA</region>
-          <code>94089</code>
-          <country>US</country>
-        </postal>
-        <email>jhaas@juniper.net</email>
+        <email>jeffrey.haas@hpe.com</email>
       </address>
     </author>
-    <date year="2025"/>
+    <date year="2026"/>
     <area>Routing</area>
     <workgroup>Inter-Domain Routing</workgroup>
     <keyword>BGP ADD-PATH</keyword>
