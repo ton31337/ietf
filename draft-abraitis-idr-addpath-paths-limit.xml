@@ -155,6 +155,14 @@
         An implementation SHOULD provide a configuration knob to specify
         the maximum number of paths to accept from a sender.
       </t>
+      <t>
+        If a BGP speaker terminates the peering because the number of
+        paths received from the peer for an AFI/SAFI exceeds the Paths
+        Limit it advertised, or its locally configured maximum number of
+        paths, it MUST send a NOTIFICATION message with the error code
+        "Cease" and the error subcode "Maximum Number of Paths Reached"
+        <xref target="I-D.abraitis-idr-maximum-paths-subcode"/>.
+      </t>
     </section>
     <section anchor="IANA">
       <name>IANA Considerations</name>
@@ -217,6 +225,7 @@
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5492.xml"/>
 	      <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7911.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.abraitis-idr-maximum-paths-subcode.xml"/>
       </references>
       <references>
       <name>Informative References</name>
