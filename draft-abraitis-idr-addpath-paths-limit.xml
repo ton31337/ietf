@@ -13,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-06" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-07" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-06"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-07"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -176,6 +176,16 @@
       </t>
       <t>
         A sender advertising multiple paths for the same prefix SHOULD send only the specified maximum number of paths indicated in the PATHS-LIMIT capability.
+      </t>
+      <t>
+        When the number of candidate paths for a prefix exceeds the Paths
+        Limit, the sender MUST advertise paths that it
+        considers usable (e.g., paths with a resolvable NEXT_HOP) over
+        paths that it does not.  The sender's view of the usability of a
+        path may differ from the receiver's (e.g., due to differing
+        reachability of the NEXT_HOP), so this does not remove the need for
+        the receiver considerations described in
+        <xref target="operational"/>.
       </t>
       <t>
         An implementation SHOULD provide a configuration knob to specify
@@ -375,18 +385,5 @@
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-add-paths-guidelines.xml"/>
       </references>
     </references>
-
-    <section title="Implementation Report">
-      <t>
-        According to RFC 7942, "This will allow reviewers and working groups to assign
-        due consideration to documents that have the benefit of running code, which may
-        serve as evidence of valuable experimentation and feedback that have made the
-        implemented protocols more mature".
-      </t>
-      <t>
-        <eref target="https://github.com/opensourcerouting/frr/commit/786cf4d2b488f38fcb43e3ea8e49de06a69ef175">FRRouting</eref> implementation.
-      </t>
-    </section>
-
   </back>
 </rfc>
