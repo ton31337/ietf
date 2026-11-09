@@ -13,11 +13,11 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-07" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" docName="draft-abraitis-idr-addpath-paths-limit-08" ipr="trust200902" consensus="true" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.8 -->
   <front>
     <title abbrev="Paths Limit for Multiple Paths in BGP">Paths Limit for Multiple Paths in BGP</title>
-    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-07"/>
+    <seriesInfo name="Internet-Draft" value="draft-abraitis-idr-addpath-paths-limit-08"/>
     <author fullname="Donatas Abraitis" surname="Abraitis">
       <organization>NetDef</organization>
       <address>
@@ -279,6 +279,59 @@
         the peer uses the Hard Reset mechanism of <xref target="RFC8538"/>,
         carrying the "Cease" code and "Maximum Number of Paths Reached"
         subcode in the Data field of the Hard Reset message.
+      </t>
+    </section>
+    <section anchor="implementation">
+      <name>Implementation Considerations</name>
+      <t>
+        Many BGP implementations improve outbound performance by grouping
+        peers that share the same outbound policy and negotiated
+        capabilities (commonly called "update groups" or "peer groups").
+        UPDATE messages are then generated once per group and copied to
+        each member, instead of being generated separately for each peer.
+      </t>
+      <t>
+        The Paths Limit is chosen by the receiver and can differ from peer
+        to peer.  Peers that advertise different Paths Limit values for the
+        same &lt;AFI, SAFI&gt; can be sent different sets of paths, and
+        therefore might not be able to share the same update group.  As a
+        result, using the PATHS-LIMIT Capability can increase the number of
+        update groups.  This, in turn, can increase the processing and
+        memory cost of generating and sending UPDATE messages.
+      </t>
+      <t>
+        Implementations can reduce this impact as follows:
+      </t>
+      <ul>
+        <li>
+          The Paths Limit is exchanged in the OPEN message, so an
+          implementation can use the received Paths Limit as one of the
+          criteria for update group membership when the session is
+          established.  Membership only needs to be reevaluated if the
+          Paths Limit changes during the session (for example, through a
+          dynamic capability mechanism).
+        </li>
+        <li>
+          What matters is the effective number of paths to be advertised
+          to a peer: the smaller of the received Paths Limit and the number
+          of paths the sender is locally configured to advertise.  Peers
+          whose received Paths Limit is equal to or greater than the
+          sender's locally configured number receive the same set of paths
+          and can share an update group, even if the values they advertised
+          differ.
+        </li>
+        <li>
+          The sender selects which paths to advertise (see
+          <xref target="capability"/>).  If it does so deterministically,
+          for example by using the same ordering of candidate paths for all
+          peers, then peers with the same effective number of paths
+          receive the same paths and can share an update group.
+        </li>
+      </ul>
+      <t>
+        Operators can also reduce the impact by configuring the same Paths
+        Limit on peers that are expected to share outbound policy (for
+        example, all clients of a route reflector).
       </t>
     </section>
     <section anchor="IANA">
